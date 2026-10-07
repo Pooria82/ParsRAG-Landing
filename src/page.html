@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="{{lang}}" dir="{{dir}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{meta.title}}</title>
+  <meta name="description" content="{{meta.description}}">
+  <meta name="keywords" content="Persian RAG, Farsi RAG, RAG فارسی, chat with PDF, document question answering, local LLM, Ollama, LlamaIndex, Qdrant, OCR, offline AI">
+  <meta name="author" content="Pooria Madani">
+  <link rel="canonical" href="{{meta.url}}">
+  <link rel="alternate" hreflang="en" href="https://pooria82.github.io/ParsRAG/">
+  <link rel="alternate" hreflang="fa" href="https://pooria82.github.io/ParsRAG/fa/">
+  <link rel="alternate" hreflang="x-default" href="https://pooria82.github.io/ParsRAG/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ParsRAG">
+  <meta property="og:title" content="{{meta.title}}">
+  <meta property="og:description" content="{{meta.ogDescription}}">
+  <meta property="og:url" content="{{meta.url}}">
+  <meta property="og:image" content="https://pooria82.github.io/ParsRAG/assets/img/og-card.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:locale" content="{{ogLocale}}">
+  <meta property="og:locale:alternate" content="{{ogLocaleAlt}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0F2E27">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="{{root}}assets/img/parsrag-mark.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{root}}assets/img/apple-touch-icon.png">
+  <link rel="preload" href="{{root}}assets/fonts/Vazirmatn-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{root}}assets/fonts/MarkaziText-{{displaySubset}}.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{root}}assets/css/site.css">
+  <script>
+    document.documentElement.classList.add('js');
+    window.__revealFailsafe = setTimeout(function () { document.documentElement.classList.add('is-ready', 'is-static'); }, 5000);
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "ParsRAG",
+    "alternateName": "پارس‌رگ",
+    "description": "Bilingual, offline-first retrieval-augmented generation (RAG) workspace for chatting with Persian (Farsi) and English documents using local LLMs, with cited sources.",
+    "url": "https://pooria82.github.io/ParsRAG/",
+    "codeRepository": "https://github.com/Pooria82/ParsRAG",
+    "programmingLanguage": ["Python", "TypeScript"],
+    "runtimePlatform": ["Docker", "Python 3.12"],
+    "license": "https://github.com/Pooria82/ParsRAG/blob/main/LICENSE",
+    "keywords": "Persian, Farsi, RAG, retrieval-augmented generation, document question answering, OCR, local LLM, Ollama, LlamaIndex, Qdrant",
+    "inLanguage": ["en", "fa"],
+    "softwareVersion": "0.2.0",
+    "author": { "@type": "Person", "name": "Pooria Madani" },
+    "image": "https://pooria82.github.io/ParsRAG/assets/img/og-card.png"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">{{a11y.skip}}</a>
+
+  <header class="topbar" data-topbar>
+    <div class="topbar__inner">
+      <a class="brand" href="./" aria-label="{{a11y.home}}">
+        {{@mark}}
+        <span class="brand__name">{{brand}}</span>
+      </a>
+      <nav class="topnav" aria-label="{{a11y.nav}}">
+        <a href="#demo">{{nav.demo}}</a>
+        <a href="#journey">{{nav.journey}}</a>
+        <a href="#modes">{{nav.modes}}</a>
+        <a href="#privacy">{{nav.privacy}}</a>
+        <a href="#install">{{nav.install}}</a>
+      </nav>
+      <div class="topbar__end">
+        <a class="lang-link" href="{{alt.href}}" hreflang="{{alt.lang}}" lang="{{alt.lang}}">{{alt.label}}</a>
+        <a class="btn btn--line btn--sm" href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{nav.github}}</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero: Persian letters drift like ink dust, then gather into the mark. -->
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="hero__field" aria-hidden="true"></canvas>
+      <div class="hero__content">
+        <div class="hero__slot" aria-hidden="true">{{@mark}}</div>
+        <a class="pill" data-hero="pill" href="https://github.com/Pooria82/ParsRAG/blob/main/CHANGELOG.md"><span class="pill__dot" aria-hidden="true"></span>{{hero.pill}}</a>
+        <h1 class="hero__title" id="hero-title" data-words>{{hero.title}}</h1>
+        <p class="hero__lead" data-hero="lead">{{hero.lead}}</p>
+        <div class="hero__actions" data-hero="actions">
+          <a class="btn btn--gold" href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{hero.primary}}</span></a>
+          <a class="btn btn--line" href="#install">{{hero.secondary}}</a>
+        </div>
+      </div>
+      <a class="hero__cue" href="#demo" data-hero="cue"><span class="hero__cue-thread" aria-hidden="true"></span><span class="visually-hidden">{{hero.scroll}}</span></a>
+    </section>
+
+    <!-- Marginalia: a pinned, scroll-driven answer whose citations are tied to their sources by gold threads. -->
+    <section class="demo" id="demo" aria-labelledby="demo-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="demo-title">{{demo.title}}</h2>
+        <p class="lead">{{demo.lead}}</p>
+      </div>
+      <div class="demo__pin">
+        <div class="demo__stage" data-demo>
+          <svg class="threads" aria-hidden="true"></svg>
+          <article class="folio paper" aria-label="{{demo.folio}}">
+            <div class="folio__main">
+              <div class="composer" data-composer>
+                <p class="composer__text" data-question><span class="chip" data-seg="chip">@budget.pdf</span><span data-seg>{{demo.q1}}</span><span class="chip" data-seg="chip">@timeline.docx</span><span data-seg>{{demo.q2}}</span><span class="caret" aria-hidden="true"></span></p>
+                <div class="composer__bar">
+                  <span class="composer__mode">{{@book}}{{demo.mode}}</span>
+                  <span class="composer__send" aria-hidden="true">{{@arrow}}</span>
+                </div>
+              </div>
+              <ol class="stages">
+                <li data-stage><span class="stages__tick" aria-hidden="true"></span>{{demo.stage1}}</li>
+                <li data-stage><span class="stages__tick" aria-hidden="true"></span>{{demo.stage2}}</li>
+                <li data-stage><span class="stages__tick" aria-hidden="true"></span>{{demo.stage3}}</li>
+              </ol>
+              <div class="answer">
+                <p><span data-stream="1">{{demo.a1}}</span><sup class="cite" data-cite="1"><a href="#note-1">1</a></sup> <span data-stream="2">{{demo.a2}}</span><sup class="cite" data-cite="2"><a href="#note-2">2</a></sup></p>
+              </div>
+            </div>
+            <aside class="folio__margin" aria-label="{{demo.margin}}">
+              <p class="note" id="note-1" data-note="1"><span class="note__n">1</span><span class="note__file">budget.pdf</span><span class="note__loc">{{demo.loc1}}</span></p>
+              <p class="note" id="note-2" data-note="2"><span class="note__n">2</span><span class="note__file">timeline.docx</span><span class="note__loc">{{demo.loc2}}</span></p>
+            </aside>
+          </article>
+          <div class="sources">
+            <figure class="doc" data-doc="1">
+              <figcaption class="doc__cap"><span class="doc__type doc__type--pdf">PDF</span><span class="doc__name">budget.pdf</span><span class="doc__loc">{{demo.loc1}}</span></figcaption>
+              <div class="doc__page">
+                <p class="doc__title">{{demo.doc1Title}}</p>
+                <p>{{demo.doc1l1}}</p>
+                <p class="doc__muted">{{demo.doc1l2}}</p>
+                <p class="doc__hl" data-hl="1"><mark>{{demo.doc1hl}}</mark></p>
+                <p class="doc__muted">{{demo.doc1l3}}</p>
+                <span class="doc__bar" style="--w:86%"></span><span class="doc__bar" style="--w:64%"></span>
+              </div>
+            </figure>
+            <figure class="doc" data-doc="2">
+              <figcaption class="doc__cap"><span class="doc__type doc__type--docx">DOCX</span><span class="doc__name">timeline.docx</span><span class="doc__loc">{{demo.loc2}}</span></figcaption>
+              <div class="doc__page">
+                <p class="doc__title">{{demo.doc2Title}}</p>
+                <p>{{demo.doc2l1}}</p>
+                <p class="doc__muted">{{demo.doc2l2}}</p>
+                <p class="doc__hl" data-hl="2"><mark>{{demo.doc2hl}}</mark></p>
+                <p class="doc__muted">{{demo.doc2l3}}</p>
+                <span class="doc__bar" style="--w:72%"></span>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <p class="wrap caption">{{demo.caption}}</p>
+    </section>
+
+    <!-- A page's journey: one object morphs through the real ingestion sequence while the steps advance. -->
+    <section class="journey" id="journey" aria-labelledby="journey-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="journey-title">{{journey.title}}</h2>
+        <p class="lead">{{journey.lead}}</p>
+      </div>
+      <div class="journey__pin" data-journey data-file="{{journey.file}}" data-lang-tag="{{journey.lang}}" data-collection="{{journey.collection}}" data-answer="{{journey.answer}}" data-cite="{{journey.cite}}">
+        <ol class="steps">
+          <li class="step" data-step><span class="step__n">{{journey.n1}}</span><div><h3>{{journey.s1t}}</h3><p>{{journey.s1d}}</p></div></li>
+          <li class="step" data-step><span class="step__n">{{journey.n2}}</span><div><h3>{{journey.s2t}}</h3><p>{{journey.s2d}}</p></div></li>
+          <li class="step" data-step><span class="step__n">{{journey.n3}}</span><div><h3>{{journey.s3t}}</h3><p>{{journey.s3d}}</p></div></li>
+          <li class="step" data-step><span class="step__n">{{journey.n4}}</span><div><h3>{{journey.s4t}}</h3><p>{{journey.s4d}}</p></div></li>
+          <li class="step" data-step><span class="step__n">{{journey.n5}}</span><div><h3>{{journey.s5t}}</h3><p>{{journey.s5d}}</p></div></li>
+          <li class="step" data-step><span class="step__n">{{journey.n6}}</span><div><h3>{{journey.s6t}}</h3><p>{{journey.s6d}}</p></div></li>
+        </ol>
+        <div class="jstage" aria-hidden="true"><div class="jstage__box" data-jstage></div></div>
+      </div>
+    </section>
+
+    <!-- Answer modes: one question, three answers. -->
+    <section class="modes" id="modes" aria-labelledby="modes-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="modes-title">{{modes.title}}</h2>
+        <p class="lead">{{modes.lead}}</p>
+      </div>
+      <div class="wrap modes__body" data-modes>
+        <div class="seg" role="tablist" aria-label="{{modes.tabs}}">
+          <span class="seg__thumb" aria-hidden="true"></span>
+          <button class="seg__btn" role="tab" id="tab-strict" aria-controls="panel-strict" aria-selected="true">{{modes.strict}}</button>
+          <button class="seg__btn" role="tab" id="tab-hybrid" aria-controls="panel-hybrid" aria-selected="false" tabindex="-1">{{modes.hybrid}}</button>
+          <button class="seg__btn" role="tab" id="tab-free" aria-controls="panel-free" aria-selected="false" tabindex="-1">{{modes.free}}</button>
+        </div>
+        <div class="sheet paper">
+          <p class="sheet__q">{{modes.question}}</p>
+          <div class="sheet__panels">
+            <div class="sheet__panel" role="tabpanel" id="panel-strict" aria-labelledby="tab-strict">
+              <p class="sheet__answer"><span class="seg-doc" data-stream>{{modes.docText}}</span><span class="cite-chip">{{modes.cite}}</span> <span class="seg-gap" data-stream>{{modes.strictGap}}</span></p>
+              <dl class="facts"><div><dt>{{modes.retrieval}}</dt><dd>{{modes.strictR}}</dd></div><div><dt>{{modes.knowledge}}</dt><dd>{{modes.strictK}}</dd></div></dl>
+            </div>
+            <div class="sheet__panel" role="tabpanel" id="panel-hybrid" aria-labelledby="tab-hybrid" hidden>
+              <p class="sheet__answer"><span class="seg-doc" data-stream>{{modes.docText}}</span><span class="cite-chip">{{modes.cite}}</span> <span class="seg-model" data-stream>{{modes.hybridModel}}</span></p>
+              <dl class="facts"><div><dt>{{modes.retrieval}}</dt><dd>{{modes.hybridR}}</dd></div><div><dt>{{modes.knowledge}}</dt><dd>{{modes.hybridK}}</dd></div></dl>
+            </div>
+            <div class="sheet__panel" role="tabpanel" id="panel-free" aria-labelledby="tab-free" hidden>
+              <p class="sheet__answer"><span class="seg-model" data-stream>{{modes.freeModel}}</span></p>
+              <dl class="facts"><div><dt>{{modes.retrieval}}</dt><dd>{{modes.freeR}}</dd></div><div><dt>{{modes.knowledge}}</dt><dd>{{modes.freeK}}</dd></div></dl>
+            </div>
+          </div>
+        </div>
+        <ul class="legend">
+          <li><span class="legend__key legend__key--doc" aria-hidden="true"></span>{{modes.legendDoc}}</li>
+          <li><span class="legend__key legend__key--model" aria-hidden="true"></span>{{modes.legendModel}}</li>
+          <li><span class="legend__key legend__key--gap" aria-hidden="true"></span>{{modes.legendGap}}</li>
+        </ul>
+        <p class="caption modes__note">{{modes.note}}</p>
+      </div>
+    </section>
+
+    <!-- Trust boundary: an illuminated frame around the workstation; the gate opens only for API providers. -->
+    <section class="privacy" id="privacy" aria-labelledby="privacy-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="privacy-title">{{privacy.title}}</h2>
+        <p class="lead">{{privacy.lead}}</p>
+      </div>
+      <div class="wrap boundary" data-boundary
+        data-frame="{{privacy.frame}}" data-docs="{{privacy.nDocs}}" data-parse="{{privacy.nParse}}" data-embed="{{privacy.nEmbed}}"
+        data-qdrant="{{privacy.nQdrant}}" data-adapter="{{privacy.nAdapter}}" data-ollama="{{privacy.nOllama}}"
+        data-private="{{privacy.nPrivate}}" data-external="{{privacy.nExternal}}" data-packet="{{privacy.packet}}">
+        <div class="seg seg--provider" role="radiogroup" aria-label="{{privacy.group}}">
+          <span class="seg__thumb" aria-hidden="true"></span>
+          <button class="seg__btn" role="radio" aria-checked="true" data-provider="local">{{privacy.local}}</button>
+          <button class="seg__btn" role="radio" aria-checked="false" data-provider="private" tabindex="-1">{{privacy.private}}</button>
+          <button class="seg__btn" role="radio" aria-checked="false" data-provider="external" tabindex="-1">{{privacy.external}}</button>
+        </div>
+        <div class="boundary__art"><svg class="boundary__svg" role="img" aria-label="{{privacy.lead}}"></svg></div>
+        <p class="boundary__note" aria-live="polite" data-note-local="{{privacy.localNote}}" data-note-private="{{privacy.privateNote}}" data-note-external="{{privacy.externalNote}}">{{privacy.localNote}}</p>
+        <p class="caption">{{privacy.always}}</p>
+      </div>
+    </section>
+
+    <!-- Formats: a shelf of book spines; pulling one out shows what it covers. -->
+    <section class="shelf" id="formats" aria-labelledby="shelf-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="shelf-title">{{shelf.title}}</h2>
+        <p class="lead">{{shelf.lead}}</p>
+      </div>
+      <div class="wrap shelf__body" data-shelf>
+        <div class="books" role="tablist" aria-label="{{shelf.label}}">
+          <span class="book book--deco" style="--h:74%;--c:#123B32" aria-hidden="true"></span>
+          <button class="book" role="tab" id="book-1" aria-controls="card-1" aria-selected="true" style="--h:96%;--c:#146A57"><span class="book__title">{{shelf.b1}}</span><span class="book__count">.pdf .docx .pptx</span></button>
+          <button class="book" role="tab" id="book-2" aria-controls="card-2" aria-selected="false" tabindex="-1" style="--h:84%;--c:#2B4E86"><span class="book__title">{{shelf.b2}}</span><span class="book__count">.png .jpg .tif</span></button>
+          <span class="book book--deco book--lean" style="--h:66%;--c:#0D2A23" aria-hidden="true"></span>
+          <button class="book" role="tab" id="book-3" aria-controls="card-3" aria-selected="false" tabindex="-1" style="--h:100%;--c:#8A6A2C"><span class="book__title">{{shelf.b3}}</span><span class="book__count">.txt .md .csv</span></button>
+          <button class="book" role="tab" id="book-4" aria-controls="card-4" aria-selected="false" tabindex="-1" style="--h:88%;--c:#5B3B4F"><span class="book__title">{{shelf.b4}}</span><span class="book__count">.html .yaml</span></button>
+          <button class="book" role="tab" id="book-5" aria-controls="card-5" aria-selected="false" tabindex="-1" style="--h:92%;--c:#1E5C6B"><span class="book__title">{{shelf.b5}}</span><span class="book__count">.py .ts .sql</span></button>
+          <span class="book book--deco" style="--h:80%;--c:#173F35" aria-hidden="true"></span>
+        </div>
+        <div class="shelf__plank" aria-hidden="true"></div>
+        <div class="cards">
+          <div class="card" role="tabpanel" id="card-1" aria-labelledby="book-1"><h3>{{shelf.b1}}</h3><p class="exts" dir="ltr">.pdf .docx .pptx</p><p>{{shelf.b1x}}</p></div>
+          <div class="card" role="tabpanel" id="card-2" aria-labelledby="book-2" hidden><h3>{{shelf.b2}}</h3><p class="exts" dir="ltr">.png .jpg .jpeg .webp .bmp .tif .tiff</p><p>{{shelf.b2x}}</p></div>
+          <div class="card" role="tabpanel" id="card-3" aria-labelledby="book-3" hidden><h3>{{shelf.b3}}</h3><p class="exts" dir="ltr">.txt .md .markdown .json .csv .tsv .log</p><p>{{shelf.b3x}}</p></div>
+          <div class="card" role="tabpanel" id="card-4" aria-labelledby="book-4" hidden><h3>{{shelf.b4}}</h3><p class="exts" dir="ltr">.html .htm .xml .yaml .yml .toml .ini .cfg</p><p>{{shelf.b4x}}</p></div>
+          <div class="card" role="tabpanel" id="card-5" aria-labelledby="book-5" hidden><h3>{{shelf.b5}}</h3><p class="exts" dir="ltr">.py .js .jsx .ts .tsx .css .sql</p><p>{{shelf.b5x}}</p></div>
+        </div>
+        <p class="caption shelf__limits">{{shelf.limits}}</p>
+      </div>
+    </section>
+
+    <!-- Two directions: drag between the Persian and English workspaces. -->
+    <section class="dirs" id="directions" aria-labelledby="dirs-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="dirs-title">{{dirs.title}}</h2>
+        <p class="lead">{{dirs.lead}}</p>
+      </div>
+      <div class="wrap">
+        <div class="compare" data-compare dir="ltr" style="--pos:50%">
+          <img class="compare__img" src="{{root}}assets/img/workspace-en-dark.png" width="1440" height="900" loading="lazy" decoding="async" alt="{{dirs.en}}">
+          <div class="compare__top"><img class="compare__img" src="{{root}}assets/img/workspace-fa-dark.png" width="1440" height="900" loading="lazy" decoding="async" alt="{{dirs.fa}}"></div>
+          <span class="compare__tag compare__tag--fa" lang="fa">{{dirs.faTag}}</span>
+          <span class="compare__tag compare__tag--en" lang="en">{{dirs.enTag}}</span>
+          <span class="compare__handle" aria-hidden="true"><span></span></span>
+          <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="{{dirs.range}}">
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick start: a terminal with the real commands for each setup. -->
+    <section class="install" id="install" aria-labelledby="install-title">
+      <div class="wrap section-head">
+        <h2 class="h2" id="install-title">{{install.title}}</h2>
+        <p class="lead">{{install.lead}}</p>
+      </div>
+      <div class="wrap">
+        <div class="term" data-term data-copy="{{install.copy}}" data-copied="{{install.copied}}">
+          <div class="term__bar">
+            <span class="term__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="term__tabs" role="tablist" aria-label="{{install.tabs}}">
+              <button role="tab" id="t-cpu" aria-controls="cmd-cpu" aria-selected="true">{{install.cpu}}</button>
+              <button role="tab" id="t-gpu" aria-controls="cmd-gpu" aria-selected="false" tabindex="-1">{{install.gpu}}</button>
+              <button role="tab" id="t-api" aria-controls="cmd-api" aria-selected="false" tabindex="-1">{{install.api}}</button>
+            </div>
+            <button class="term__copy" type="button" data-copy-btn>{{@copy}}<span data-copy-label>{{install.copy}}</span></button>
+          </div>
+          <div class="term__body" dir="ltr">
+<pre id="cmd-cpu" role="tabpanel" aria-labelledby="t-cpu"><code><span class="l">git clone https://github.com/Pooria82/ParsRAG.git</span>
+<span class="l">cd ParsRAG</span>
+<span class="l">cp .env.example .env</span>
+<span class="l">docker compose --profile local-model up -d qdrant ollama</span>
+<span class="l">docker compose --profile local-model run --rm ollama-init</span>
+<span class="l">docker compose --profile local-model up -d --build app</span></code></pre>
+<pre id="cmd-gpu" role="tabpanel" aria-labelledby="t-gpu" hidden><code><span class="l">git clone https://github.com/Pooria82/ParsRAG.git</span>
+<span class="l">cd ParsRAG</span>
+<span class="l">cp .env.example .env</span>
+<span class="l">docker compose -f compose.yaml -f compose.gpu.yaml --profile local-model up -d qdrant ollama</span>
+<span class="l">docker compose -f compose.yaml -f compose.gpu.yaml --profile local-model run --rm ollama-init</span>
+<span class="l">docker compose -f compose.yaml -f compose.gpu.yaml --profile local-model up -d --build app</span></code></pre>
+<pre id="cmd-api" role="tabpanel" aria-labelledby="t-api" hidden><code><span class="l">git clone https://github.com/Pooria82/ParsRAG.git</span>
+<span class="l">cd ParsRAG</span>
+<span class="l">cp .env.example .env</span>
+<span class="c">{{install.apiComment}}</span>
+<span class="l">docker compose up -d --build</span></code></pre>
+          </div>
+        </div>
+        <p class="install__then">{{install.then}}</p>
+        <nav class="install__links" aria-label="{{install.docs}}">
+          <a href="https://github.com/Pooria82/ParsRAG/blob/main/ARCHITECTURE.md">{{install.arch}}</a>
+          <a href="https://github.com/Pooria82/ParsRAG/blob/main/DATA.md">{{install.data}}</a>
+          <a href="https://github.com/Pooria82/ParsRAG/blob/main/CHANGELOG.md">{{install.changelog}}</a>
+          <a href="https://github.com/Pooria82/ParsRAG/blob/main/SECURITY.md">{{install.security}}</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Coda: the mark is drawn by a single gold thread. -->
+    <section class="coda" aria-labelledby="coda-title">
+      <div class="wrap coda__inner">
+        <div class="coda__mark" data-coda-mark>{{@mark}}</div>
+        <h2 class="coda__title" id="coda-title">{{coda.title}}</h2>
+        <p class="lead">{{coda.lead}}</p>
+        <div class="hero__actions">
+          <a class="btn btn--gold" href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{coda.primary}}</span></a>
+          <a class="btn btn--line" href="{{alt.href}}" hreflang="{{alt.lang}}">{{coda.secondary}}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <a class="brand" href="./" aria-label="{{a11y.home}}">{{@mark}}<span class="brand__name">{{brand}}</span></a>
+      <p>{{footer.license}}</p>
+      <p class="footer__end"><span>{{footer.copy}}</span><a href="{{alt.href}}" hreflang="{{alt.lang}}" lang="{{alt.lang}}">{{alt.label}}</a></p>
+    </div>
+  </footer>
+
+  <script src="{{root}}assets/vendor/gsap.min.js" defer></script>
+  <script src="{{root}}assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="{{root}}assets/vendor/lenis.min.js" defer></script>
+  <script type="module" src="{{root}}assets/js/main.js"></script>
+</body>
+</html>
