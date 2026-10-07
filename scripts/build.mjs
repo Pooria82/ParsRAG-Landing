@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
 const dist = join(root, 'dist');
-const SITE = 'https://pooria82.github.io/ParsRAG/';
+const SITE = 'https://pooria82.github.io/ParsRAG-Landing/';
 
 const template = await readFile(join(src, 'page.html'), 'utf8');
 

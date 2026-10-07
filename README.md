@@ -1,7 +1,8 @@
 # ParsRAG landing page
 
 The bilingual (English / Persian) landing page for [ParsRAG](https://github.com/Pooria82/ParsRAG),
-published at <https://pooria82.github.io/ParsRAG/> from the repository's `docs/` folder.
+published at <https://pooria82.github.io/ParsRAG-Landing/>. The site lives in this repository so the
+ParsRAG repository holds only the application.
 
 The design concept, tokens and principles are in [DESIGN.md](DESIGN.md).
 
@@ -17,7 +18,8 @@ src/
   og/                source for assets/img/og-card.png (the share image)
 scripts/
   build.mjs          renders dist/index.html and dist/fa/index.html, sitemap, .nojekyll
-  deploy.mjs         replaces the landing files in ParsRAG/docs with dist/
+.github/workflows/
+  pages.yml          builds and deploys dist/ to GitHub Pages on every push to main
 ```
 
 Each section has its own module in `src/static/assets/js/`: `hero.js` (glyph field that gathers
@@ -38,15 +40,8 @@ python -m http.server 8765 --directory dist
 
 ## Publish
 
-Build, then copy into the ParsRAG repository and open a pull request there:
-
-```bash
-node scripts/deploy.mjs ../ParsRAG/docs
-```
-
-`deploy.mjs` only replaces the landing files (`index.html`, `fa/`, `assets/`, `sitemap.xml`,
-`.nojekyll`); `docs/architecture/`, `docs/screenshots/`, `social-preview.png` and the Markdown
-docs are left alone.
+Push to `main`. The **Deploy site** workflow builds `dist/` and publishes it to GitHub Pages
+(Settings → Pages → Source: GitHub Actions).
 
 ## Third-party code and fonts
 

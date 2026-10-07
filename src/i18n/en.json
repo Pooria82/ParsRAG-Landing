@@ -9,7 +9,7 @@
     "title": "ParsRAG — Offline Persian (Farsi) RAG with cited answers",
     "description": "ParsRAG is a bilingual, offline-first RAG workspace for chatting with Persian (Farsi) and English PDF, Word, PowerPoint and scanned documents using local LLMs. Every answer cites its file and page.",
     "ogDescription": "Ask Persian and English documents on your own machine and see the page behind every answer. Parsing, OCR, embeddings and vector search stay local.",
-    "url": "https://pooria82.github.io/ParsRAG/"
+    "url": "https://pooria82.github.io/ParsRAG-Landing/"
   },
   "a11y": {
     "skip": "Skip to content",
