@@ -1,0 +1,94 @@
+{
+  "brand": "ParsRAG",
+  "meta": {
+    "ogLocale": "en_US",
+    "ogLocaleAlt": "fa_IR",
+    "displaySubset": "latin",
+    "keywords": "private document AI, offline PDF chatbot, Persian document AI, Farsi RAG, local RAG, self-hosted RAG, Persian OCR, chat with PDF, cited answers, Ollama, Qdrant",
+    "ldDescription": "Private, offline-first document AI for Persian (Farsi) and English: ask PDF, Word, PowerPoint and scanned documents on your own machine and get answers that cite the exact file and page."
+  },
+  "pages": {
+    "home": {
+      "title": "ParsRAG: private document AI for Persian and English, with cited answers",
+      "description": "Ask Persian and English PDF, Word, PowerPoint and scanned documents on your own machine. Every answer cites its file and page, and parsing, OCR and search stay local."
+    },
+    "tour": {
+      "title": "ParsRAG product tour: everything in the current release",
+      "description": "A complete, chapter-by-chapter presentation of what ParsRAG does today: documents, OCR, search, answer modes, citations, privacy, interface, architecture and quality."
+    }
+  },
+  "a11y": {
+    "skip": "Skip to content",
+    "home": "ParsRAG home",
+    "nav": "Primary",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "close": "Close"
+  },
+  "alt": {
+    "lang": "fa",
+    "label": "Persian",
+    "labelLong": "Read this page in Persian"
+  },
+  "nav": {
+    "demo": "Try it",
+    "how": "How it works",
+    "privacy": "Privacy",
+    "measured": "Evidence",
+    "install": "Install",
+    "tour": "Product tour",
+    "github": "GitHub",
+    "githubLong": "View source on GitHub"
+  },
+  "release": {
+    "label": "Latest release"
+  },
+  "refs": {
+    "label": "Source",
+    "title": "From the ParsRAG repository",
+    "lines": "lines",
+    "translated": "Translated from the English source"
+  },
+  "ui": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "docs": {
+    "loading": "Loading…",
+    "error": "This document couldn't be loaded. Open it on GitHub instead.",
+    "viewSource": "View on GitHub:",
+    "showOriginal": "Show the official text",
+    "copy": "Copy",
+    "citeIntro": "If you use ParsRAG in research or a publication, cite the software. These formats are generated from the repository's CITATION.cff.",
+    "titles": {
+      "license": "License",
+      "citation": "How to cite ParsRAG",
+      "security": "Security policy",
+      "contributing": "Contributing",
+      "conduct": "Code of conduct",
+      "notice": "Notice",
+      "changelog": "What's new in this release"
+    },
+    "noSummary": ""
+  },
+  "footer": {
+    "tagline": "Private document AI for Persian and English. Every answer cites the page it came from.",
+    "sourceAvailable": "Source-available, not open source.",
+    "readLicense": "Read the license",
+    "product": "Product",
+    "demo": "Live demo",
+    "releaseNotes": "Release notes",
+    "developers": "Developers",
+    "repo": "Repository",
+    "architecture": "Architecture",
+    "security": "Security policy",
+    "contributing": "Contributing",
+    "project": "Project",
+    "license": "License",
+    "cite": "How to cite",
+    "conduct": "Code of conduct",
+    "notice": "Notice",
+    "copy": "© 2026 Pooria Madani"
+  }
+}
