@@ -156,11 +156,11 @@
               <caption>{{privacy.tableCaption}}</caption>
               <thead><tr><th scope="col">{{privacy.colStep}}</th><th scope="col">{{privacy.colCloud}}</th><th scope="col">{{privacy.colLocal}}</th><th scope="col">{{privacy.colApi}}</th></tr></thead>
               <tbody>
-                <tr><th scope="row">{{privacy.rows.read}}</th><td class="is-out">{{privacy.cloud}}</td><td class="is-in">{{privacy.here}}</td><td class="is-in">{{privacy.here}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.index}}</th><td class="is-out">{{privacy.cloud}}</td><td class="is-in">{{privacy.here}}</td><td class="is-in">{{privacy.here}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.history}}</th><td class="is-out">{{privacy.cloud}}</td><td class="is-in">{{privacy.browser}}</td><td class="is-in">{{privacy.browser}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.excerpts}}</th><td class="is-out">{{privacy.cloud}}</td><td class="is-in">{{privacy.here}}</td><td class="is-out">{{privacy.third}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.answer}}</th><td class="is-out">{{privacy.cloud}}</td><td class="is-in">{{privacy.here}}</td><td class="is-out">{{privacy.third}}</td></tr>
+                <tr><th scope="row">{{privacy.rows.read}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.here}}</td></tr>
+                <tr><th scope="row">{{privacy.rows.index}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.here}}</td></tr>
+                <tr><th scope="row">{{privacy.rows.history}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.browser}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.browser}}</td></tr>
+                <tr><th scope="row">{{privacy.rows.excerpts}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-out" data-label="{{privacy.colApi}}">{{privacy.third}}</td></tr>
+                <tr><th scope="row">{{privacy.rows.answer}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-out" data-label="{{privacy.colApi}}">{{privacy.third}}</td></tr>
               </tbody>
             </table>
           </div>
@@ -257,22 +257,22 @@
           <script type="application/json" data-morph-strings>{{json:mock}}</script>
           <div class="morph__app" dir="{{dir}}" data-morph-app>
             <aside class="morph__side">
-              <p class="morph__brand">{{@mark}}<span><b data-m="brand"></b><small data-m="sub"></small></span></p>
-              <p class="morph__new" data-m="newChat"></p>
-              <p class="morph__search" data-m="search"></p>
-              <p class="morph__group" data-m="today"></p>
-              <p class="morph__item" data-m="item"></p>
-              <p class="morph__status"><i aria-hidden="true"></i><span data-m="status"></span></p>
+              <p class="morph__brand">{{@mark}}<span><b data-m="brand">{{mock.cur.brand}}</b><small data-m="sub">{{mock.cur.sub}}</small></span></p>
+              <p class="morph__new" data-m="newChat">{{mock.cur.newChat}}</p>
+              <p class="morph__search" data-m="search">{{mock.cur.search}}</p>
+              <p class="morph__group" data-m="today">{{mock.cur.today}}</p>
+              <p class="morph__item" data-m="item">{{mock.cur.item}}</p>
+              <p class="morph__status"><i aria-hidden="true"></i><span data-m="status">{{mock.cur.status}}</span></p>
             </aside>
             <div class="morph__main">
-              <p class="morph__top"><span data-m="crumb"></span><span class="morph__docs" data-m="docs"></span></p>
+              <p class="morph__top"><span data-m="crumb">{{mock.cur.crumb}}</span><span class="morph__docs" data-m="docs">{{mock.cur.docs}}</span></p>
               <div class="morph__chat">
-                <p class="morph__q" data-m="q"></p>
-                <p class="morph__badge" data-m="badge"></p>
-                <p class="morph__a"><span data-m="a"></span><span class="morph__chip" data-m="n"></span></p>
-                <p class="morph__src"><span class="morph__n" data-m="n"></span><bdi data-m="src"></bdi><span data-m="loc"></span></p>
+                <p class="morph__q" data-m="q">{{mock.cur.q}}</p>
+                <p class="morph__badge" data-m="badge">{{mock.cur.badge}}</p>
+                <p class="morph__a"><span data-m="a">{{mock.cur.a}}</span><span class="morph__chip" data-m="n">{{mock.cur.n}}</span></p>
+                <p class="morph__src"><span class="morph__n" data-m="n">{{mock.cur.n}}</span><bdi data-m="src">{{mock.cur.src}}</bdi><span data-m="loc">{{mock.cur.loc}}</span></p>
               </div>
-              <p class="morph__composer"><span data-m="placeholder"></span><span class="morph__mode" data-m="mode"></span></p>
+              <p class="morph__composer"><span data-m="placeholder">{{mock.cur.placeholder}}</span><span class="morph__mode" data-m="mode">{{mock.cur.mode}}</span></p>
             </div>
           </div>
         </div>

@@ -67,6 +67,8 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
   function selectCorpus(i, fromUser) {
     runId++;
     busy = false;
+    last = null;
+    sendBtn.disabled = false;
     corpus = data.corpora[i];
     index = createIndex(corpus.passages, data.stopwords);
     caseButtons.forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
@@ -91,7 +93,7 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
   function setMode(m, rerun) {
     mode = m;
     modeButtons.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === m)));
-    if (rerun && last && !busy) ask(last.question);
+    if (rerun && last) ask(last.question);
   }
 
   // ---------- @ mentions in the composer ----------
@@ -151,7 +153,7 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const q = input.value.trim();
-    if (!q || busy) return;
+    if (!q) return;
     input.value = '';
     hideMentions();
     ask(q);
@@ -333,7 +335,6 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
         <p class="pg__page-text">${p.id === passage.id ? `<mark>${esc(p.text)}</mark>` : esc(p.text)}</p>
       </section>`).join('')}`;
     viewer.classList.add('is-open');
-    viewer.setAttribute('aria-hidden', 'false');
     root.classList.add('has-viewer');
     root.querySelectorAll('.pg__chip, .pg__src').forEach((c) => c.classList.toggle('is-active', c === from));
     const target = viewerBody.querySelector('.is-cited');
@@ -341,13 +342,16 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
     const mark = target.querySelector('mark');
     if (!reduce) gsap.fromTo(mark, { '--hl': 0 }, { '--hl': 1, duration: 0.6, ease: 'power2.out', delay: 0.15 });
     else mark.style.setProperty('--hl', 1);
-    activeThread = { from, to: mark };
+    // The thread leaves from the passage's card in the source list, which sits at the edge of
+    // the answer, so it never crosses the answer text; the chip itself stays highlighted.
+    const card = feed.querySelector(`.pg__src[data-pid="${passage.id}"]`);
+    if (card) card.classList.add('is-active');
+    activeThread = { from: card && card.offsetParent ? card : from, to: mark };
     drawThread(true);
     if (!window.matchMedia('(min-width: 1000px)').matches) viewer.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
   }
   function closeViewer(silent) {
     viewer.classList.remove('is-open');
-    viewer.setAttribute('aria-hidden', 'true');
     root.classList.remove('has-viewer');
     activeThread = null;
     clearThreads();

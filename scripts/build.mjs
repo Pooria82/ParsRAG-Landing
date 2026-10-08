@@ -270,6 +270,10 @@ async function loadDict(lang) {
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(join(src, 'static'), dist, { recursive: true });
+// One stylesheet, concatenated from src/styles in name order.
+const styleFiles = (await readdir(join(src, 'styles'))).filter((f) => f.endsWith('.css')).sort();
+await mkdir(join(dist, 'assets', 'css'), { recursive: true });
+await writeFile(join(dist, 'assets', 'css', 'site.css'), (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n'));
 await mkdir(join(dist, 'assets', 'demo'), { recursive: true });
 for (const lang of Object.keys(LANGS)) await cp(join(src, 'content', 'demo', `${lang}.json`), join(dist, 'assets', 'demo', `${lang}.json`));
 
@@ -293,6 +297,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
         hrefEn: `${SITE}${page.path}`,
         hrefFa: `${SITE}fa/${page.path}`,
       },
+      mock: dict.mock ? { ...dict.mock, cur: dict.mock[lang] } : undefined,
       nav: { ...dict.nav, home: `${up}${L.prefix}` || './', tourHref: `${up}${L.prefix}tour/` },
     };
     const out = join(dist, rel, 'index.html');

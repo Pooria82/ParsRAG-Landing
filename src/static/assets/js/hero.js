@@ -1,5 +1,5 @@
-// Hero: Persian letters drift like ink dust, then gather into the ParsRAG mark.
-// The pointer stirs them; scrolling away lets them fall toward the page below.
+// Hero: letters of the page's own language drift like ink dust, then gather into the
+// ParsRAG mark. The pointer stirs them; scrolling away lets them fall toward the page below.
 import { splitWords, clamp } from './util.js';
 
 const MARK = {
@@ -10,9 +10,6 @@ const MARK = {
   spark2: 'M39.7 6.8c.2 1.2.95 1.95 2.15 2.15-1.2.2-1.95.95-2.15 2.15-.2-1.2-.95-1.95-2.15-2.15 1.2-.2 1.95-.95 2.15-2.15Z',
 };
 
-const LETTERS = [...'ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی'];
-const LATIN = [...'aeinorstRAG'];
-const DIGITS = [...'۰۱۲۳۴۵۶۷۸۹'];
 const COLORS = { left: '#5DA68D', right: '#8FD3BA', lines: '#EEF2EA', spark: '#E2C27E', ambient: '#79C5AA' };
 const SPRITE_FONT = 20; // px the sprite glyph is drawn at
 const SPRITE_BOX = 30; // px of the sprite canvas
@@ -29,6 +26,10 @@ export function initHero({ gsap, ST, reduce }) {
   if (!hero || !canvas || !slot) return;
   const c2d = canvas.getContext('2d');
   if (!c2d) return;
+  // Glyphs come from the page language: Latin and citation marks in English, Persian letters in Persian.
+  const GLYPHS = [...(canvas.dataset.glyphs || 'abcdefghijklmnopqrstuvwxyz')];
+  const LETTERS = GLYPHS.filter((g) => !/[0-9۰-۹]/.test(g));
+  const SPARKS = ['✦', '*', '✧'];
 
   const state = { intro: reduce ? 1 : 0, gather: reduce ? 1 : 0, scatter: 0 };
   const pointer = { x: 0, y: 0, active: false };
@@ -56,7 +57,10 @@ export function initHero({ gsap, ST, reduce }) {
     return cv;
   }
 
-  // Render the mark with a flat color per part, then sample it on a staggered grid.
+  // Render the mark with a flat color per part, then sample it on a staggered grid. The points
+  // are normalized, so they are sampled once and reused at every size.
+  let sampled = null;
+  const markPoints = () => (sampled ||= sampleMark(240));
   function sampleMark(size) {
     const off = document.createElement('canvas');
     off.width = off.height = size;
@@ -120,7 +124,7 @@ export function initHero({ gsap, ST, reduce }) {
     const small = W < 700;
     const glyphScale = clamp(size / 230, 0.7, 1.25);
 
-    parts = sampleMark(size).map((pt) => {
+    parts = markPoints().map((pt) => {
       const tx = cx + pt.x * size;
       const ty = cy + pt.y * size;
       const dist = Math.hypot(pt.x, pt.y);
@@ -130,7 +134,7 @@ export function initHero({ gsap, ST, reduce }) {
         ty,
         hx: rand(-0.05, 1.05) * W,
         hy: rand(-0.05, 1.05) * H,
-        ch: pt.kind === 'spark' ? pick(['٭', '✦', '*']) : pt.kind === 'lines' ? pick([...LETTERS, ...LATIN]) : pick(LETTERS),
+        ch: pt.kind === 'spark' ? pick(SPARKS) : pick(LETTERS),
         color: COLORS[pt.kind],
         size: (pt.kind === 'lines' ? 11 : pt.kind === 'spark' ? 12 : rand(11, 15)) * glyphScale,
         alpha: pt.kind === 'left' ? 0.55 : pt.kind === 'right' ? 0.92 : 1,
@@ -150,7 +154,7 @@ export function initHero({ gsap, ST, reduce }) {
         kind: 'ambient',
         hx: Math.random() * W,
         hy: Math.random() * H,
-        ch: pick([...LETTERS, ...DIGITS]),
+        ch: pick(GLYPHS),
         color: COLORS.ambient,
         size: rand(8, 15),
         alpha: rand(0.06, 0.2),
@@ -251,6 +255,9 @@ export function initHero({ gsap, ST, reduce }) {
   });
   hero.addEventListener('pointerleave', () => { pointer.active = false; });
 
+  // Sprites drawn before the web font arrived are redrawn with it.
+  document.fonts?.ready.then(() => sprites.clear());
+
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -266,10 +273,12 @@ export function initHero({ gsap, ST, reduce }) {
     .to(state, { intro: 1, duration: 1.1, ease: 'power1.out' }, 0)
     .to(state, { gather: 1, duration: 2.8, ease: 'none' }, 0.2)
     .fromTo('[data-hero="pill"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, 1.0)
+    .fromTo('[data-hero="kicker"]', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 1.05)
     .fromTo(title, { opacity: 0 }, { opacity: 1, duration: 0.01 }, 1.1)
     .fromTo(words, { opacity: 0, y: '0.38em', filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: 0.075, ease: 'power3.out' }, 1.1)
     .fromTo('[data-hero="lead"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.7)
     .fromTo('[data-hero="actions"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.9)
+    .fromTo('[data-hero="meta"]', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 2.2)
     .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.6)
     .add(() => words.forEach((w) => { w.style.willChange = 'auto'; w.style.filter = ''; }));
 
