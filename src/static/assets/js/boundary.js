@@ -41,7 +41,7 @@ const LAYOUTS = {
   },
 };
 
-const COLORS = { pipeline: '#79C5AA', local: '#D2B06A', private: '#79C5AA', external: '#7E9BE0' };
+const COLORS = { pipeline: '#3ee0cf', local: '#f6b94d', private: '#3ee0cf', external: '#8fa6ff' };
 
 const el = (name, attrs = {}, parent) => {
   const node = document.createElementNS(NS, name);
@@ -113,7 +113,7 @@ export function initBoundary({ gsap, ST, reduce, rtl }) {
     const cart = el('g', {}, svg);
     const tw = Math.max(150, titleText.length * 12 + 48);
     const tcx = fx + w / 2;
-    el('rect', { x: tcx - tw / 2, y: y - 20, width: tw, height: 40, rx: 20, fill: '#0A221C', stroke: '#D2B06A', 'stroke-width': 1.2 }, cart);
+    el('rect', { x: tcx - tw / 2, y: y - 20, width: tw, height: 40, rx: 20, fill: '#080b11', stroke: '#f6b94d', 'stroke-width': 1.2 }, cart);
     const tt = el('text', { class: 'b-frame-label', x: tcx, y: y + 1, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, cart);
     tt.textContent = titleText;
 
@@ -176,8 +176,8 @@ export function initBoundary({ gsap, ST, reduce, rtl }) {
     const prop = vertical ? 'y' : 'x';
     gsap.to(doors[0], { [prop]: -shift, duration: dur, ease: 'power3.inOut' });
     gsap.to(doors[1], { [prop]: shift, duration: dur, ease: 'power3.inOut' });
-    gsap.to(glow, { opacity: out ? 0.9 : 0, stroke: provider === 'external' ? '#4A6FC0' : '#79C5AA', duration: dur });
-    note.style.setProperty('--note-c', provider === 'external' ? '#7E9BE0' : provider === 'private' ? '#79C5AA' : '#D2B06A');
+    gsap.to(glow, { opacity: out ? 0.9 : 0, stroke: provider === 'external' ? '#6d8cff' : '#3ee0cf', duration: dur });
+    note.style.setProperty('--note-c', provider === 'external' ? '#8fa6ff' : provider === 'private' ? '#3ee0cf' : '#f6b94d');
   }
 
   rovingGroup({

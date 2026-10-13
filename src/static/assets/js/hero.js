@@ -1,349 +1,120 @@
-// Hero: letters of the page's own language drift like ink dust, then gather into the
-// ParsRAG mark. The pointer stirs them; scrolling away lets them fall toward the page below.
-import { splitWords, clamp } from './util.js';
+// Hero: the product window plays one real exchange. The question is typed, the answer
+// streams in with numbered citations, and each citation lights its passage on the page.
+// After that it is interactive: any citation or source row opens its page.
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const MARK = {
-  left: 'M23.9 12.2C18.2 6.8 10.7 7.5 7.4 10.6v23.8c5.2-2.8 10.7-1.5 16.5 4.1V12.2Z',
-  right: 'M24.1 12.2c5.7-5.4 13.2-4.7 16.5-1.6v23.8c-5.2-2.8-10.7-1.5-16.5 4.1V12.2Z',
-  lines: 'M24 37.8V14.2M11.8 16c3-.8 5.7-.1 8 1.7m-8 5c3-.8 5.7-.1 8 1.7m8.4-6.7c2.3-1.8 5-2.5 8-1.7m-8 8.4c2.3-1.8 5-2.5 8-1.7',
-  spark: 'M24 2.2c.35 2.2 1.7 3.55 3.9 3.9C25.7 6.45 24.35 7.8 24 10c-.35-2.2-1.7-3.55-3.9-3.9 2.2-.35 3.55-1.7 3.9-3.9Z',
-  spark2: 'M39.7 6.8c.2 1.2.95 1.95 2.15 2.15-1.2.2-1.95.95-2.15 2.15-.2-1.2-.95-1.95-2.15-2.15 1.2-.2 1.95-.95 2.15-2.15Z',
-};
+export function initHero({ reduce, rtl }) {
+  const app = document.querySelector('[data-hero-app]');
+  if (!app) return;
+  const q = app.querySelector('[data-hq]');
+  const text = app.querySelector('[data-ha]');
+  const sentences = [...text.querySelectorAll('[data-hs]')];
+  const chips = [...text.querySelectorAll('.pg__chip')];
+  const triggers = [...app.querySelectorAll('[data-hc]')];
+  const pages = [...app.querySelectorAll('[data-hp]')];
+  const stages = [...app.querySelectorAll('.app__stages li')];
+  const svg = app.querySelector('.app__beam');
+  const path = svg.querySelector('path');
+  const end = svg.querySelector('circle');
+  let current = 0;
 
-const COLORS = { left: '#5DA68D', right: '#8FD3BA', lines: '#EEF2EA', spark: '#E2C27E', ambient: '#79C5AA' };
-const SPRITE_FONT = 20; // px the sprite glyph is drawn at
-const SPRITE_BOX = 30; // px of the sprite canvas
+  const drawBeam = (animate) => {
+    const chip = chips[current - 1];
+    const mark = pages[current - 1]?.querySelector('mark');
+    if (!chip || !mark || getComputedStyle(svg).display === 'none') return;
+    const box = app.getBoundingClientRect();
+    const a = chip.getBoundingClientRect();
+    const m = mark.getClientRects()[0] || mark.getBoundingClientRect();
+    svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    const x1 = a.left + a.width / 2 - box.left;
+    const y1 = a.top + a.height / 2 - box.top;
+    // The passage's reading start: its left edge in English, its right edge in Persian.
+    const x2 = (rtl ? m.right + 4 : m.left - 4) - box.left;
+    const y2 = m.top + m.height / 2 - box.top;
+    const dx = Math.abs(x2 - x1) * 0.5;
+    const dir = x2 > x1 ? 1 : -1;
+    path.setAttribute('d', `M${x1},${y1} C${x1 + dx * dir},${y1} ${x2 - dx * dir},${y2} ${x2},${y2}`);
+    end.setAttribute('cx', x2);
+    end.setAttribute('cy', y2);
+    path.style.transition = 'none';
+    path.style.strokeDashoffset = animate ? '1' : '0';
+    end.style.opacity = animate ? '0' : '1';
+    if (!animate) return;
+    path.getBoundingClientRect();
+    path.style.transition = 'stroke-dashoffset 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+    path.style.strokeDashoffset = '0';
+    setTimeout(() => { end.style.transition = 'opacity 0.3s'; end.style.opacity = '1'; }, 800);
+  };
 
-const pick = (list) => list[(Math.random() * list.length) | 0];
-const rand = (a, b) => a + Math.random() * (b - a);
-const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-export function initHero({ gsap, ST, reduce }) {
-  const hero = document.querySelector('.hero');
-  const canvas = hero?.querySelector('.hero__field');
-  const slot = hero?.querySelector('.hero__slot');
-  const title = hero?.querySelector('[data-words]');
-  if (!hero || !canvas || !slot) return;
-  const c2d = canvas.getContext('2d');
-  if (!c2d) return;
-  // Glyphs come from the page language: Latin and citation marks in English, Persian letters in Persian.
-  const GLYPHS = [...(canvas.dataset.glyphs || 'abcdefghijklmnopqrstuvwxyz')];
-  const LETTERS = GLYPHS.filter((g) => !/[0-9۰-۹]/.test(g));
-  const SPARKS = ['✦', '*', '✧'];
-
-  const state = { intro: reduce ? 1 : 0, gather: reduce ? 1 : 0, scatter: 0 };
-  const pointer = { x: 0, y: 0, active: false };
-  const sprites = new Map();
-  let parts = [];
-  let W = 0;
-  let H = 0;
-  let dpr = 1;
-  let lastWidth = 0;
-
-  function sprite(ch, color) {
-    const key = ch + color;
-    let cv = sprites.get(key);
-    if (cv) return cv;
-    cv = document.createElement('canvas');
-    cv.width = cv.height = Math.ceil(SPRITE_BOX * dpr);
-    const g = cv.getContext('2d');
-    g.scale(dpr, dpr);
-    g.fillStyle = color;
-    g.font = `500 ${SPRITE_FONT}px Vazirmatn, "Markazi Text", sans-serif`;
-    g.textAlign = 'center';
-    g.textBaseline = 'middle';
-    g.fillText(ch, SPRITE_BOX / 2, SPRITE_BOX / 2 + 1);
-    sprites.set(key, cv);
-    return cv;
-  }
-
-  // Render the mark with a flat color per part, then sample it on a staggered grid. The points
-  // are normalized, so they are sampled once and reused at every size.
-  let sampled = null;
-  // Fewer glyphs on small or low-power devices.
-  const lowPower = window.innerWidth < 700 || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
-  const markPoints = () => (sampled ||= sampleMark(lowPower ? 180 : 240));
-  function sampleMark(size) {
-    const off = document.createElement('canvas');
-    off.width = off.height = size;
-    const g = off.getContext('2d', { willReadFrequently: true });
-    g.scale(size / 48, size / 48);
-    g.fillStyle = '#f00';
-    g.fill(new Path2D(MARK.left));
-    g.fillStyle = '#0f0';
-    g.fill(new Path2D(MARK.right));
-    g.strokeStyle = '#00f';
-    g.lineWidth = 2.4;
-    g.lineCap = 'round';
-    g.stroke(new Path2D(MARK.lines));
-    g.fillStyle = '#ff0';
-    g.fill(new Path2D(MARK.spark));
-    g.fill(new Path2D(MARK.spark2));
-    const data = g.getImageData(0, 0, size, size).data;
-    const step = Math.max(5, Math.round(size / 34));
-    const points = [];
-    for (let y = 0, row = 0; y < size; y += step * 0.88, row++) {
-      for (let x = (row % 2) * (step / 2); x < size; x += step) {
-        const px = Math.round(x);
-        const py = Math.round(y);
-        const i = (py * size + px) * 4;
-        if (data[i + 3] < 140) continue;
-        const [r, gr, b] = [data[i], data[i + 1], data[i + 2]];
-        let kind;
-        if (b > 120) kind = 'lines';
-        else if (r > 170 && gr > 170) kind = 'spark';
-        else if (r > gr) kind = 'left';
-        else kind = 'right';
-        if (kind === 'left' && Math.random() < 0.3) continue;
-        points.push({ x: px / size - 0.5, y: py / size - 0.5, kind });
-      }
-    }
-    // The spark is tiny; give it a few more glyphs so it reads as a star.
-    for (let k = 0; k < 10; k++) {
-      const a = (k / 10) * Math.PI * 2;
-      const rr = k % 2 ? 0.035 : 0.065;
-      // The large spark is centered at (24, 6.1) in the 48-unit mark.
-      points.push({ x: Math.cos(a) * rr, y: 6.1 / 48 - 0.5 + Math.sin(a) * rr, kind: 'spark' });
-    }
-    return points;
-  }
-
-  function build() {
-    const hr = hero.getBoundingClientRect();
-    const sr = slot.getBoundingClientRect();
-    W = hr.width;
-    H = hr.height;
-    lastWidth = W;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    c2d.setTransform(dpr, 0, 0, dpr, 0, 0);
-    sprites.clear();
-
-    const size = Math.round(sr.width);
-    const cx = sr.left - hr.left + sr.width / 2;
-    const cy = sr.top - hr.top + sr.height / 2;
-    const small = W < 700;
-    const glyphScale = clamp(size / 230, 0.7, 1.25);
-
-    parts = markPoints().map((pt) => {
-      const tx = cx + pt.x * size;
-      const ty = cy + pt.y * size;
-      const dist = Math.hypot(pt.x, pt.y);
-      return {
-        kind: pt.kind,
-        tx,
-        ty,
-        hx: rand(-0.05, 1.05) * W,
-        hy: rand(-0.05, 1.05) * H,
-        ch: pt.kind === 'spark' ? pick(SPARKS) : pick(LETTERS),
-        color: COLORS[pt.kind],
-        size: (pt.kind === 'lines' ? 11 : pt.kind === 'spark' ? 12 : rand(11, 15)) * glyphScale,
-        alpha: pt.kind === 'left' ? 0.55 : pt.kind === 'right' ? 0.92 : 1,
-        delay: Math.random() * 0.35 + dist * 0.5,
-        ph: Math.random() * Math.PI * 2,
-        sp: rand(0.15, 0.45),
-        fall: rand(120, 520),
-        drift: rand(-90, 90),
-        ox: 0,
-        oy: 0,
-      };
+  const show = (n, animate = !reduce) => {
+    if (n === current) return;
+    current = n;
+    chips.forEach((c, i) => c.classList.toggle('is-active', i === n - 1));
+    triggers.forEach((t) => t.setAttribute('aria-pressed', String(Number(t.dataset.hc) === n)));
+    pages.forEach((p, i) => {
+      p.classList.toggle('is-shown', i === n - 1);
+      p.classList.remove('is-lit');
     });
+    const page = pages[n - 1];
+    if (animate) setTimeout(() => page.classList.add('is-lit'), 260);
+    else page.classList.add('is-lit');
+    drawBeam(animate);
+  };
 
-    const ambient = small || lowPower ? 40 : 130;
-    for (let k = 0; k < ambient; k++) {
-      parts.push({
-        kind: 'ambient',
-        hx: Math.random() * W,
-        hy: Math.random() * H,
-        ch: pick(GLYPHS),
-        color: COLORS.ambient,
-        size: rand(8, 15),
-        alpha: rand(0.06, 0.2),
-        ph: Math.random() * Math.PI * 2,
-        sp: rand(0.08, 0.25),
-        fall: rand(60, 260),
-        drift: rand(-40, 40),
-        ox: 0,
-        oy: 0,
-      });
+  triggers.forEach((t) => t.addEventListener('click', () => {
+    app.classList.add('is-done');
+    show(Number(t.dataset.hc));
+  }));
+  new ResizeObserver(() => current && drawBeam(false)).observe(app);
+
+  const finish = () => {
+    app.classList.add('is-done', 'is-answered');
+    show(1, false);
+  };
+  if (reduce) { finish(); return; }
+
+  const question = q.textContent;
+  const words = sentences.map((s) => s.textContent.split(/(\s+)/));
+
+  async function play() {
+    app.classList.add('is-playing');
+    q.textContent = '';
+    sentences.forEach((s) => { s.textContent = ''; });
+    // Type the question in short bursts, the way people type.
+    for (let i = 0; i < question.length; i += 2) {
+      q.textContent = question.slice(0, i + 2);
+      await wait(26);
     }
-  }
-
-  function draw(now) {
-    const t = now * 0.001;
-    c2d.clearRect(0, 0, W, H);
-    const { gather, scatter, intro } = state;
-    const R = 120;
-    for (const p of parts) {
-      let x;
-      let y;
-      let a;
-      const fx = p.hx + Math.sin(t * p.sp + p.ph) * 22;
-      const fy = p.hy + Math.cos(t * p.sp * 0.8 + p.ph) * 16;
-      if (p.kind === 'ambient') {
-        x = fx;
-        y = fy;
-        a = p.alpha * intro;
-      } else {
-        const e = easeInOut(clamp((gather * 1.6 - p.delay) / 0.75, 0, 1));
-        const bx = p.tx + Math.sin(t * 1.4 + p.ph) * 0.7;
-        const by = p.ty + Math.cos(t * 1.2 + p.ph) * 0.7;
-        x = fx + (bx - fx) * e;
-        y = fy + (by - fy) * e;
-        a = p.alpha * (0.22 + 0.78 * e) * intro;
-        if (p.kind === 'spark') a *= 0.72 + 0.28 * Math.sin(t * 2.6 + p.ph);
-      }
-      if (scatter > 0) {
-        const s = scatter * scatter;
-        x += p.drift * s;
-        y += p.fall * s;
-        a *= 1 - scatter * 0.9;
-      }
-      let tox = 0;
-      let toy = 0;
-      if (pointer.active) {
-        const dx = x - pointer.x;
-        const dy = y - pointer.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < R * R) {
-          const d = Math.sqrt(d2) || 1;
-          const f = (1 - d / R) ** 2 * 34;
-          tox = (dx / d) * f;
-          toy = (dy / d) * f;
-        }
-      }
-      p.ox += (tox - p.ox) * 0.1;
-      p.oy += (toy - p.oy) * 0.1;
-      x += p.ox;
-      y += p.oy;
-      if (a < 0.01 || y < -20 || y > H + 20) continue;
-      const box = (p.size * SPRITE_BOX) / SPRITE_FONT;
-      c2d.globalAlpha = a;
-      c2d.drawImage(sprite(p.ch, p.color), x - box / 2, y - box / 2, box, box);
+    await wait(250);
+    app.classList.add('is-asked');
+    for (const li of stages) {
+      li.classList.add('is-active');
+      await wait(520);
+      li.classList.remove('is-active');
+      li.classList.add('is-done');
     }
-    c2d.globalAlpha = 1;
+    app.classList.add('is-answering');
+    for (let s = 0; s < sentences.length; s++) {
+      for (let i = 0; i < words[s].length; i++) {
+        sentences[s].textContent += words[s][i];
+        if (words[s][i].trim()) await wait(45);
+      }
+      chips[s].classList.add('is-in');
+      await wait(140);
+    }
+    app.classList.add('is-answered');
+    await wait(500);
+    show(1);
+    await wait(2600);
+    if (!app.classList.contains('is-done')) show(2);
+    app.classList.add('is-done');
   }
 
-  build();
-
-  // Static composition for reduced motion: the gathered mark, no loop.
-  if (reduce) {
-    draw(0);
-    let timer;
-    window.addEventListener('resize', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { build(); draw(0); }, 150);
-    });
-    return;
-  }
-
-  // Render loop, paused when the hero is off screen.
-  let running = false;
-  // Full frame rate while the letters move with purpose; half rate while they only drift.
-  let frame = 0;
-  let lastScatter = -1;
-  const tick = () => {
-    frame++;
-    const idle = state.gather >= 1 && !pointer.active && state.scatter === lastScatter;
-    lastScatter = state.scatter;
-    if (idle && frame % 2) return;
-    draw(performance.now());
-  };
-  const setRunning = (on) => {
-    if (on === running) return;
-    running = on;
-    if (on) gsap.ticker.add(tick);
-    else gsap.ticker.remove(tick);
-  };
-  new IntersectionObserver(([entry]) => setRunning(entry.isIntersecting)).observe(hero);
-
-  hero.addEventListener('pointermove', (e) => {
-    const r = hero.getBoundingClientRect();
-    pointer.x = e.clientX - r.left;
-    pointer.y = e.clientY - r.top;
-    pointer.active = true;
-  });
-  hero.addEventListener('pointerleave', () => { pointer.active = false; });
-
-  // Sprites drawn before the web font arrived are redrawn with it.
-  document.fonts?.ready.then(() => sprites.clear());
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      if (Math.abs(hero.getBoundingClientRect().width - lastWidth) > 2) build();
-    }, 180);
-  });
-
-  // The one orchestrated moment: ink gathers, then the words arrive.
-  const words = title ? splitWords(title) : [];
-
-  // A gold thread from the headline's last word ("page") down to the live demo below.
-  const NS = 'http://www.w3.org/2000/svg';
-  const threadSvg = document.createElementNS(NS, 'svg');
-  threadSvg.setAttribute('class', 'hero__thread');
-  threadSvg.setAttribute('aria-hidden', 'true');
-  const threadPath = document.createElementNS(NS, 'path');
-  threadPath.setAttribute('class', 'thread');
-  threadPath.setAttribute('pathLength', '1');
-  threadSvg.append(threadPath);
-  hero.append(threadSvg);
-  const cue = hero.querySelector('.hero__cue');
-  const content = hero.querySelector('.hero__content');
-  const rtl = document.documentElement.dir === 'rtl';
-  // The thread leaves the end of the headline, runs down the outside of the text and the
-  // buttons, and comes back in to the scroll cue, so it never crosses the copy.
-  const routeThread = () => {
-    const last = words[words.length - 1];
-    if (!last || !cue || !content) return;
-    const box = hero.getBoundingClientRect();
-    const w = last.getBoundingClientRect();
-    const c = cue.getBoundingClientRect();
-    const k = content.getBoundingClientRect();
-    const side = rtl ? -1 : 1;
-    const sx = (rtl ? w.left - 6 : w.right + 6) - box.left;
-    const sy = w.top + w.height * 0.62 - box.top;
-    const edge = Math.min(box.width - 12, Math.max(12, (rtl ? k.left - 36 : k.right + 36) - box.left));
-    const ex = c.left + c.width / 2 - box.left;
-    const ey = c.top - box.top;
-    const bend = Math.min(90, (ey - sy) / 4);
-    threadSvg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
-    threadPath.setAttribute('d', [
-      `M${sx},${sy}`,
-      `C${edge},${sy} ${edge},${sy} ${edge},${sy + bend}`,
-      `L${edge},${ey - bend * 2}`,
-      `C${edge},${ey - bend * 0.6} ${ex + side * bend},${ey - bend * 0.9} ${ex},${ey}`,
-    ].join(' '));
-  };
-  routeThread();
-  new ResizeObserver(routeThread).observe(hero);
-  document.fonts?.ready.then(routeThread);
-  // The copy is painted at once (it is the largest thing on screen); only the headline
-  // sharpens from soft ink, word by word, while the letters gather into the mark.
-  gsap.set(words, { filter: 'blur(12px)', y: '0.22em' });
-  const intro = gsap.timeline({ delay: 0.05 });
-  intro
-    .to(state, { intro: 1, duration: 1.1, ease: 'power1.out' }, 0)
-    .to(state, { gather: 1, duration: 2.8, ease: 'none' }, 0.2)
-    .to(words, { y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.07, ease: 'power3.out' }, 0.35)
-    .fromTo(threadPath, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', onStart: routeThread }, 1.7)
-    .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.2)
-    .add(() => words.forEach((w) => { w.style.willChange = 'auto'; w.style.filter = ''; }));
-
-  // Leaving the hero: the letters fall toward the page below and the copy lifts away.
-  ST.create({
-    trigger: hero,
-    start: 'top top',
-    end: 'bottom top',
-    scrub: true,
-    onUpdate: (self) => { state.scatter = self.progress; },
-  });
-  gsap.to('.hero__content', {
-    yPercent: -14,
-    opacity: 0,
-    ease: 'none',
-    scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom 15%', scrub: true },
-  });
+  // Start once the window is on screen (it is below the fold on short phones).
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    setTimeout(() => play().catch(finish), 500);
+  }, { threshold: 0.15 });
+  io.observe(app);
 }
