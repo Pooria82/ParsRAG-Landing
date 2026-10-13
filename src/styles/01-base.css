@@ -210,6 +210,8 @@ code { font-family: var(--mono); font-size: 0.88em; }
   background-clip: text;
   color: transparent;
 }
+/* The light starts where reading starts. */
+[dir="rtl"] .grad-text { background-image: linear-gradient(260deg, var(--turq) 0%, #8fe7c4 38%, var(--saffron) 100%); }
 
 .lead {
   color: var(--text-2);
