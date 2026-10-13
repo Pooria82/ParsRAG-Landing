@@ -181,12 +181,12 @@
 
     <!-- How it works: one page morphs through the real ingestion and answer sequence. -->
     <section class="journey" id="how" aria-labelledby="how-title">
-      <div class="wrap section-head section-head--split">
+      <div class="wrap section-head journey__head">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.03}}</span>{{how.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="how-title">{{how.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{how.lead}}</p>
       </div>
-      <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}">
+      <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}" data-hint="{{how.hint}}" data-close="{{a11y.close}}">
         <ol class="steps">
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.1}}</span><div><h3>{{how.s1t}}</h3><div class="step__body"><p>{{how.s1d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s1x}}{{ref:archives}}{{ref:duplicates}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.2}}</span><div><h3>{{how.s2t}}</h3><div class="step__body"><p>{{how.s2d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s2x}}{{ref:persian-pdf}}{{ref:ocr-rotated}}</p></div></div></li>

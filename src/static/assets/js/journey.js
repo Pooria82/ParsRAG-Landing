@@ -29,6 +29,8 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
   const frame = root.querySelector('.jstage');
   const stepsList = root.querySelector('.steps');
   const steps = [...root.querySelectorAll('[data-step]')];
+  const section = root.closest('section');
+  const pinTarget = matchMedia('(min-width: 900px)').matches ? section : root;
   if (rtl) box.dataset.rtl = '';
 
   const progressBar = document.createElement('span');
@@ -200,6 +202,11 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
         file: root.dataset.file,
         answer: root.dataset.answer,
         cite: root.dataset.cite,
+        hint: root.dataset.hint,
+        closeLabel: root.dataset.close,
+        // Each part of the model opens the same details as its step in the list.
+        steps: steps.map((li) => ({ title: li.querySelector('h3').textContent, html: li.querySelector('.step__body').innerHTML })),
+        onSelect: (i) => steps.forEach((li, k) => li.classList.toggle('is-focus', k === i)),
       });
       stack3d.setTime(tl.time());
       frame.classList.add('is-3d');
@@ -211,7 +218,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
       io.disconnect();
       load3d();
     }, { rootMargin: '600px 0px' });
-    io.observe(root);
+    io.observe(section);
   }
 
   // Step labels follow the drawing itself, so they never run ahead of the scrubbed animation.
@@ -220,11 +227,13 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
     setActive(Math.min(5, Math.floor(t + 0.05)), Math.min(1, t / 5.4));
     stack3d?.setTime(t);
   });
+  // Wide screens pin the whole section (heading, steps and model share one view, so there is
+  // no gap above the steps); narrow screens pin the steps and model under the heading.
   ST.create({
-    trigger: root,
+    trigger: pinTarget,
+    pin: pinTarget,
     start: 'top top',
     end: () => `+=${Math.round(window.innerHeight * 4.6)}`,
-    pin: true,
     scrub: 0.6,
     animation: tl,
     anticipatePin: 1,

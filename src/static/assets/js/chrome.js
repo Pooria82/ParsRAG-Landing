@@ -293,14 +293,17 @@ function initRefs() {
   document.querySelectorAll('.ref[data-ref]').forEach((a) => {
     a.setAttribute('aria-expanded', 'false');
     a.setAttribute('aria-haspopup', 'dialog');
-    a.addEventListener('click', (e) => {
+  });
+  // One listener for every marker, including copies made later (the 3D model's panels).
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('.ref[data-ref]');
+    if (a) {
       e.preventDefault();
       if (current === a) hide();
       else show(a);
-    });
-  });
-  document.addEventListener('click', (e) => {
-    if (current && !pop.contains(e.target) && !e.target.closest('.ref')) hide();
+      return;
+    }
+    if (current && !pop.contains(e.target)) hide();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && current) {
