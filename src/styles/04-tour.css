@@ -290,3 +290,25 @@
 
 /* Only the front card shows its text; the cards behind are just its stack. */
 .deck__card:not(:first-child) > * { visibility: hidden; }
+
+/* Chapter icons in the index, the teaser and the chapter headings. */
+.tour-index__icon { display: inline-grid; place-items: center; width: 30px; height: 30px; flex: none; border-radius: 10px; background: rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 0 1px var(--border); color: var(--text-3); transition: color var(--t-fast), background-color var(--t-fast); }
+.tour-index__icon .icon { width: 17px; height: 17px; }
+.tour-index a:hover .tour-index__icon,
+.tour-index a[aria-current="true"] .tour-index__icon { color: var(--turq); background: var(--turq-dim); }
+.teaser__chapters .tour-index__icon { width: 28px; height: 28px; }
+.teaser__chapters a:hover .tour-index__icon { color: var(--saffron); background: var(--saffron-dim); }
+.tour__toc .tour-index__n { display: none; }
+.chapter__badge { display: inline-flex; align-items: center; gap: 12px; justify-self: start; }
+.chapter__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: linear-gradient(160deg, rgba(62, 224, 207, 0.18), rgba(62, 224, 207, 0.04));
+  box-shadow: inset 0 0 0 1px rgba(62, 224, 207, 0.35), 0 10px 30px -12px rgba(62, 224, 207, 0.5);
+  color: var(--turq);
+}
+.chapter__icon .icon { width: 26px; height: 26px; }
+@media (max-width: 1023.98px) { .tour__toc .tour-index__icon { width: 26px; height: 26px; } }

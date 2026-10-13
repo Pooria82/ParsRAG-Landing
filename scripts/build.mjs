@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { build as bundle, transform } from 'esbuild';
 import { Marked } from 'marked';
 import YAML from 'yaml';
+import { chapterIcon } from '../src/static/assets/js/chapter-icons.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
@@ -198,12 +199,12 @@ function renderBlock(b, dict, lang) {
 function renderTour(dict, lang) {
   const chapters = dict.tour.chapters;
   const index = chapters
-    .map((c, i) => `<li><a href="{{nav.tourHref}}#${c.id}"><span class="tour-index__n">${digits(i + 1, lang)}</span><span>${c.title}</span></a></li>`)
+    .map((c, i) => `<li><a href="{{nav.tourHref}}#${c.id}"><span class="tour-index__icon">${chapterIcon(c.id)}</span><span class="tour-index__n">${digits(i + 1, lang)}</span><span>${c.title}</span></a></li>`)
     .join('');
   const body = chapters.map((c, i) => `
       <section class="chapter" id="${c.id}" aria-labelledby="ch-${c.id}" data-chapter>
         <header class="chapter__head">
-          <span class="chapter__n" aria-hidden="true">${digits(String(i + 1).padStart(2, '0'), lang)}</span>
+          <span class="chapter__badge" aria-hidden="true"><span class="chapter__icon">${chapterIcon(c.id)}</span><span class="chapter__n">${digits(String(i + 1).padStart(2, '0'), lang)}</span></span>
           <h2 class="chapter__title" id="ch-${c.id}">${c.title}</h2>
           <p class="chapter__lede">${c.lede}</p>
         </header>

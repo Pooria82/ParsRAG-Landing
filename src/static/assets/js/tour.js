@@ -34,7 +34,9 @@ export function initTour(ctx) {
       card.style.setProperty('--k', k);
       card.setAttribute('aria-hidden', 'true');
       // Spans, not headings: the deck is a button, which may only hold phrasing content.
-      card.append(...[...ch.querySelector('.chapter__head').children].map((n) => {
+      const head = ch.querySelector('.chapter__head');
+      const parts = [head.querySelector('.chapter__n'), head.querySelector('.chapter__title'), head.querySelector('.chapter__lede')].filter(Boolean);
+      card.append(...parts.map((n) => {
         const c = document.createElement('span');
         c.className = n.className;
         if (!n.classList.contains('chapter__n')) c.style.display = 'block';
