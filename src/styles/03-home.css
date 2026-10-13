@@ -924,7 +924,11 @@
 .step__more span:first-child { color: var(--saffron-2); font-weight: 650; }
 
 .jstage { position: relative; width: 100%; max-width: 600px; aspect-ratio: 560 / 520; justify-self: center; }
-.jstage__box { position: absolute; left: 0; top: 0; width: 560px; height: 520px; transform-origin: 0 0; direction: ltr; }
+.jstage__box { position: absolute; left: 0; top: 0; width: 560px; height: 520px; transform-origin: 0 0; direction: ltr; transition: opacity 0.5s; }
+/* The 3D stack replaces the drawing once three.js has loaded. */
+.jstage__gl { position: absolute; inset: -12% -18%; width: 136%; height: 124%; opacity: 0; transition: opacity 0.8s var(--ease-out); }
+.jstage.is-3d .jstage__gl { opacity: 1; }
+.jstage.is-3d .jstage__box { opacity: 0; pointer-events: none; }
 .jstage__box > * { position: absolute; left: 0; top: 0; }
 .jp-page { background: linear-gradient(180deg, var(--page), var(--page-2)); border-radius: 6px; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9); }
 .jp-file { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 10px; background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--border-2); font-size: 14px; white-space: nowrap; }

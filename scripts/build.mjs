@@ -280,12 +280,16 @@ const styleFiles = (await readdir(join(src, 'styles'))).filter((f) => f.endsWith
 await mkdir(join(dist, 'assets', 'css'), { recursive: true });
 const css = (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n');
 await writeFile(join(dist, 'assets', 'css', 'site.css'), (await transform(css, { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] })).code);
-// The page modules are bundled and minified into one file.
+// The page modules are bundled and minified into main.js. The 3D scenes (three.js) are
+// split into a chunk that loads only when a scene comes near the viewport.
 const jsDir = join(dist, 'assets', 'js');
 await rm(jsDir, { recursive: true, force: true });
 await bundle({
   entryPoints: [join(src, 'static', 'assets', 'js', 'main.js')],
-  outfile: join(jsDir, 'main.js'),
+  outdir: jsDir,
+  entryNames: '[name]',
+  chunkNames: 'chunks/[name]-[hash]',
+  splitting: true,
   bundle: true,
   format: 'esm',
   minify: true,
