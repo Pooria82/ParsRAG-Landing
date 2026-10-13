@@ -113,14 +113,12 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
       ? items.map((d, i) => `<li role="option" id="pg-m-${i}" aria-selected="${i === 0}" data-i="${i}"><span class="pg__type pg__type--${d.type.toLowerCase()}">${d.type}</span><bdi>${esc(d.name)}</bdi></li>`).join('')
       : `<li class="pg__mentions-empty">${esc(T.noMentions)}</li>`;
     mentionList.hidden = false;
-    input.setAttribute('aria-expanded', 'true');
     input.setAttribute('aria-activedescendant', items.length ? 'pg-m-0' : '');
     mentionList.querySelectorAll('[data-i]').forEach((li) => li.addEventListener('mousedown', (e) => { e.preventDefault(); pickMention(+li.dataset.i); }));
   }
   function hideMentions() {
     mentionMatch = null;
     mentionList.hidden = true;
-    input.setAttribute('aria-expanded', 'false');
     input.removeAttribute('aria-activedescendant');
   }
   function pickMention(i) {

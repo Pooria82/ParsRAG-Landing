@@ -10,6 +10,7 @@
 import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { build as bundle, transform } from 'esbuild';
 import { Marked } from 'marked';
 import YAML from 'yaml';
 
@@ -166,6 +167,9 @@ async function buildDocs(lang, dict) {
 
 // ---------- Product tour ----------
 
+// Intrinsic sizes of the screenshots in assets/img/shots (all others are 1440x900).
+const SHOT_SIZES = { 'model-en-light': [580, 1010], 'model-fa-light': [580, 968] };
+
 // Chapters are structured content in src/i18n/<lang>/tour.json. Text may contain {{keys}}
 // and {{ref:id}} citations; they are resolved with the rest of the page.
 function renderBlock(b, dict, lang) {
@@ -175,14 +179,15 @@ function renderBlock(b, dict, lang) {
   if (b.list) return `<ul class="tour__list">${b.list.map((li) => `<li>${li}</li>`).join('')}</ul>`;
   if (b.code) return `<pre class="tour__code" dir="ltr"><code>${escapeHtml(b.code)}</code></pre>`;
   if (b.kv) return `<dl class="tour__kv">${b.kv.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`;
-  if (b.cards) return `<div class="tour__cards">${b.cards.map((c) => `<div class="tour__card"><h4>${c.t}</h4><p>${c.d}</p></div>`).join('')}</div>`;
+  if (b.cards) return `<div class="tour__cards">${b.cards.map((c) => `<div class="tour__card"><h3>${c.t}</h3><p>${c.d}</p></div>`).join('')}</div>`;
   if (b.table) {
     const { head, rows } = b.table;
     return `<div class="tour__table" role="region" tabindex="0" aria-label="${escapeHtml(head.join(', '))}"><table><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${c}</th>` : `<td>${c}</td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
   }
   if (b.figure) {
     const f = b.figure;
-    return `<figure class="tour__figure${f.narrow ? ' tour__figure--narrow' : ''}"><img src="{{root}}assets/img/shots/${f.src}.webp" alt="${escapeHtml(f.alt)}" loading="lazy" decoding="async" width="${f.narrow ? 580 : 1440}" height="${f.narrow ? 1000 : 900}"><figcaption>${f.cap}</figcaption></figure>`;
+    const [w, h] = SHOT_SIZES[f.src] || [1440, 900];
+    return `<figure class="tour__figure${f.narrow ? ' tour__figure--narrow' : ''}"><img src="{{root}}assets/img/shots/${f.src}.webp" alt="${escapeHtml(f.alt)}" loading="lazy" decoding="async" width="${w}" height="${h}"><figcaption>${f.cap}</figcaption></figure>`;
   }
   if (b.docs) {
     return `<p class="tour__docs">${b.docs.map((id) => `<a class="btn btn--line btn--sm" href="${REPO_URL}" data-doc="${id}">${escapeHtml(dict.docs.titles[id])}</a>`).join('')}</p>`;
@@ -273,7 +278,21 @@ await cp(join(src, 'static'), dist, { recursive: true });
 // One stylesheet, concatenated from src/styles in name order.
 const styleFiles = (await readdir(join(src, 'styles'))).filter((f) => f.endsWith('.css')).sort();
 await mkdir(join(dist, 'assets', 'css'), { recursive: true });
-await writeFile(join(dist, 'assets', 'css', 'site.css'), (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n'));
+const css = (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n');
+await writeFile(join(dist, 'assets', 'css', 'site.css'), (await transform(css, { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] })).code);
+// The page modules are bundled and minified into one file.
+const jsDir = join(dist, 'assets', 'js');
+await rm(jsDir, { recursive: true, force: true });
+await bundle({
+  entryPoints: [join(src, 'static', 'assets', 'js', 'main.js')],
+  outfile: join(jsDir, 'main.js'),
+  bundle: true,
+  format: 'esm',
+  minify: true,
+  target: 'es2020',
+  legalComments: 'none',
+  logLevel: 'warning',
+});
 await mkdir(join(dist, 'assets', 'demo'), { recursive: true });
 for (const lang of Object.keys(LANGS)) await cp(join(src, 'content', 'demo', `${lang}.json`), join(dist, 'assets', 'demo', `${lang}.json`));
 

@@ -140,8 +140,9 @@
   animation: cue 2.2s cubic-bezier(0.6, 0, 0.3, 1) infinite;
 }
 @keyframes cue { from { transform: translateY(-30px); } to { transform: translateY(100px); } }
-.js:not(.is-ready) .hero__title,
-.js:not(.is-ready) [data-hero] { opacity: 0; }
+/* The headline starts as soft ink and sharpens word by word; it is painted at once, so it
+   never delays the first meaningful paint. */
+.js:not(.is-ready):not(.is-static) .hero__title { filter: blur(12px); }
 
 /* ---------- Sections ---------- */
 

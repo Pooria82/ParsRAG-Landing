@@ -60,7 +60,9 @@ export function initHero({ gsap, ST, reduce }) {
   // Render the mark with a flat color per part, then sample it on a staggered grid. The points
   // are normalized, so they are sampled once and reused at every size.
   let sampled = null;
-  const markPoints = () => (sampled ||= sampleMark(240));
+  // Fewer glyphs on small or low-power devices.
+  const lowPower = window.innerWidth < 700 || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+  const markPoints = () => (sampled ||= sampleMark(lowPower ? 180 : 240));
   function sampleMark(size) {
     const off = document.createElement('canvas');
     off.width = off.height = size;
@@ -148,7 +150,7 @@ export function initHero({ gsap, ST, reduce }) {
       };
     });
 
-    const ambient = small ? 50 : 130;
+    const ambient = small || lowPower ? 40 : 130;
     for (let k = 0; k < ambient; k++) {
       parts.push({
         kind: 'ambient',
@@ -238,7 +240,16 @@ export function initHero({ gsap, ST, reduce }) {
 
   // Render loop, paused when the hero is off screen.
   let running = false;
-  const tick = () => draw(performance.now());
+  // Full frame rate while the letters move with purpose; half rate while they only drift.
+  let frame = 0;
+  let lastScatter = -1;
+  const tick = () => {
+    frame++;
+    const idle = state.gather >= 1 && !pointer.active && state.scatter === lastScatter;
+    lastScatter = state.scatter;
+    if (idle && frame % 2) return;
+    draw(performance.now());
+  };
   const setRunning = (on) => {
     if (on === running) return;
     running = on;
@@ -309,19 +320,16 @@ export function initHero({ gsap, ST, reduce }) {
   routeThread();
   new ResizeObserver(routeThread).observe(hero);
   document.fonts?.ready.then(routeThread);
-  const intro = gsap.timeline({ delay: 0.1 });
+  // The copy is painted at once (it is the largest thing on screen); only the headline
+  // sharpens from soft ink, word by word, while the letters gather into the mark.
+  gsap.set(words, { filter: 'blur(12px)', y: '0.22em' });
+  const intro = gsap.timeline({ delay: 0.05 });
   intro
     .to(state, { intro: 1, duration: 1.1, ease: 'power1.out' }, 0)
     .to(state, { gather: 1, duration: 2.8, ease: 'none' }, 0.2)
-    .fromTo('[data-hero="pill"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, 1.0)
-    .fromTo('[data-hero="kicker"]', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 1.05)
-    .fromTo(title, { opacity: 0 }, { opacity: 1, duration: 0.01 }, 1.1)
-    .fromTo(words, { opacity: 0, y: '0.38em', filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: 0.075, ease: 'power3.out' }, 1.1)
-    .fromTo('[data-hero="lead"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.7)
-    .fromTo('[data-hero="actions"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.9)
-    .fromTo('[data-hero="meta"]', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 2.2)
-    .fromTo(threadPath, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', onStart: routeThread }, 2.3)
-    .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.6)
+    .to(words, { y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.07, ease: 'power3.out' }, 0.35)
+    .fromTo(threadPath, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', onStart: routeThread }, 1.7)
+    .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.2)
     .add(() => words.forEach((w) => { w.style.willChange = 'auto'; w.style.filter = ''; }));
 
   // Leaving the hero: the letters fall toward the page below and the copy lifts away.

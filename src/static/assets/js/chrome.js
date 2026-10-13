@@ -187,5 +187,7 @@ export function initChrome(ctx) {
   initDrawer();
   initDocs();
   initRefs();
-  initRelease();
+  // The release check waits until the page is idle so it never competes with first paint.
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 2000));
+  idle(() => initRelease(), { timeout: 4000 });
 }
