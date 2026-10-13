@@ -48,26 +48,42 @@ Text on the ground: `#eef2f6` / `#a2acba` / `#6c7686`. The brand gradient runs t
 
 - **One family:** Vazirmatn (variable) for both scripts, in weights 500–820. English display sizes use tight tracking (−0.035 to −0.05 em); Persian is never letter-spaced and gets a taller line height (1.3–1.45 for headings, 1.95 for text).
 - **Mono** (system) for labels, file extensions, commands and English section numbers.
-- **Number badges** are fixed boxes whose digits are moved down by the font's measured offset (0.115 em Latin, 0.075 em Persian), so numbers sit in the optical middle.
+- **Number badges** are fixed boxes whose digits are moved down by Vazirmatn's offset (0.15 em Latin, 0.11 em Persian, calibrated by measuring every badge in the browser), so numbers sit within a pixel of the middle. Badges never use the monospace face, whose metrics differ.
 
 ### Shape and motion
 
 - Radius 8 / 12 / 16 / 22 / 30, pills for buttons and chips.
 - Easing: expo-out `cubic-bezier(.16,1,.3,1)` for reveals, `(.32,.72,0,1)` for sheets and drawers, `(.65,0,.35,1)` for travel, a small spring only on chips.
 
+## Depth: 3D and imagery
+
+A second review of all 30 references (screenshots at seven scroll depths, phone and desktop, plus a scan of each page for WebGL, video, Lottie, Spline and scroll-driven CSS) showed what the strongest ones share: the product's own material is the imagery. Midjourney's hero is made of words, Scale explains its product as a stack of layers, Gamma and Subframe tilt real screens in perspective, and none of them fills space with empty boxes. The site follows that:
+
+- **Text tunnel (hero, three.js):** rings of real lines from the sample documents, in the page's own language, drift toward the viewer; cited lines glow saffron. It starts on the visitor's first move and never delays the first paint.
+- **Layer stack (how it works, three.js):** the page, the text read from it, its passages, their vectors in a collection and the cited answer, as layers in space driven by the pinned scroll, with the citation line running back down to the passage.
+- **Screen wall (inside the app):** the repository's real screenshots on a tilted plane whose columns move against each other while scrolling. Each language shows only its own screens.
+
+three.js is split into chunks that load only when a scene is about to be seen; without WebGL or with reduced motion the 2D versions stay.
+
+## Presentation
+
+The product tour's slides are fixed stages (1600 x 900; 900 x 1500 on portrait phones) scaled to the screen, so every slide has the same size and none can scroll. Type grows to fill short slides and shrinks for long ones; a section that still does not fit becomes two slides. Chapters open with their own accent, line icon in an orbiting ring and a large outlined number; sections get a layout for what they hold (cards, framed tables, a terminal, a tilted screenshot, a large statement). O shows every slide as a thumbnail.
+
 ## Page structure
 
 ```
-HERO          release pill, two-line headline, product window: the question is typed,
-              the answer streams with numbered citations, the cited page lights up
+HERO          release pill, two-line headline over the text tunnel, product window: the
+              question is sent, the answer fades in word by word with numbered citations,
+              the cited page lights up
 LIVE DEMO     4 sample document sets, @ mentions, 3 modes, streamed answers, source viewer
+INSIDE        a tilted wall of the app's real screens
 EVIDENCE      claim, evidence and source joined by the line; "remove the evidence"
-HOW IT WORKS  pinned stage: one page through 6 real steps; "under the hood" per step
+HOW IT WORKS  pinned 3D layer stack: one page through 6 real steps; "under the hood" per step
 PRIVACY       workstation frame with a gate; where-each-step-happens table (cards on phones)
 MEASURED      only numbers the repository records, each cited, plus the honest caveat
-FORMATS       book spines on a glass ledge
+FORMATS       the selected format's card beside book spines on a glass ledge
 LANGUAGES     a live workspace preview that flips RTL/LTR on request
-INSTALL       terminal for the visitor's OS and setup
+INSTALL       instructions beside a terminal for the visitor's OS and setup
 TOUR TEASER   the 14 chapters in a lit panel
 CODA          the mark drawn by a line of light; "Your documents. Your machine. Your evidence."
 FOOTER        columns, release, documents (open in a sheet), a large faded wordmark

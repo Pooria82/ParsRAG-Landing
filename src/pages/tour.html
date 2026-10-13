@@ -37,15 +37,16 @@
     <div class="present__bar">
       <p class="present__count" data-present-count aria-live="polite"></p>
       <div class="present__progress" aria-hidden="true"><span data-present-progress></span></div>
+      <button class="icon-btn" type="button" data-present-grid aria-pressed="false" aria-label="{{tour.overview}}">{{@grid}}</button>
       <button class="icon-btn" type="button" data-present-exit aria-label="{{tour.exit}}">{{@close}}</button>
     </div>
-    <div class="present__viewport" data-present-viewport></div>
+    <div class="present__viewport" data-present-viewport data-lenis-prevent></div>
     <div class="present__nav">
-      <button class="icon-btn present__prev" type="button" data-present-prev aria-label="{{tour.prev}}">{{@arrow}}</button>
+      <button class="icon-btn present__prev" type="button" data-present-prev aria-label="{{tour.prev}}">{{@chev}}</button>
       <p class="present__hint">{{tour.presentHint}}</p>
-      <button class="icon-btn present__next" type="button" data-present-next aria-label="{{tour.next}}">{{@arrow}}</button>
+      <button class="icon-btn present__next" type="button" data-present-next aria-label="{{tour.next}}">{{@chev}}</button>
     </div>
-    <script type="application/json" data-present-strings>{"slideOf":"{{tour.slideOf}}"}</script>
+    <script type="application/json" data-present-strings>{"slideOf":"{{tour.slideOf}}","chapterOf":"{{tour.chapterOf}}","cont":"{{tour.cont}}"}</script>
   </div>
 
   {{@footer}}

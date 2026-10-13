@@ -13,6 +13,7 @@ import { initTerminal } from './terminal.js';
 import { initCoda } from './coda.js';
 import { initTour } from './tour.js';
 import { initTrail } from './trail.js';
+import { initGallery } from './gallery.js';
 
 const html = document.documentElement;
 
@@ -82,6 +83,7 @@ function boot() {
   // Order matters for pinned sections: create them top to bottom.
   run(initHero, ctx);
   markReady(ctx.reduce);
+  run(initGallery, ctx);
   run(initContract, ctx);
   run(initJourney, ctx);
   run(initBoundary, ctx);

@@ -357,5 +357,11 @@
     "lead": "ParsRAG is for people who can't send their files to a cloud chatbot and still want answers they can check.",
     "primary": "Run it locally",
     "secondary": "View source on GitHub"
+  },
+  "gallery": {
+    "eyebrow": "Inside the app",
+    "title": "The real app, in both languages.",
+    "lead": "Screens from the ParsRAG repository: the workspace, cited sources and model settings, in light and dark.",
+    "cta": "See every screen in the tour"
   }
 }

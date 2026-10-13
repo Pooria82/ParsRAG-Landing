@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { build as bundle, transform } from 'esbuild';
 import { Marked } from 'marked';
 import YAML from 'yaml';
+import { chapterIcon } from '../src/static/assets/js/chapter-icons.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
@@ -198,12 +199,12 @@ function renderBlock(b, dict, lang) {
 function renderTour(dict, lang) {
   const chapters = dict.tour.chapters;
   const index = chapters
-    .map((c, i) => `<li><a href="{{nav.tourHref}}#${c.id}"><span class="tour-index__n">${digits(i + 1, lang)}</span><span>${c.title}</span></a></li>`)
+    .map((c, i) => `<li><a href="{{nav.tourHref}}#${c.id}"><span class="tour-index__icon">${chapterIcon(c.id)}</span><span class="tour-index__n">${digits(i + 1, lang)}</span><span>${c.title}</span></a></li>`)
     .join('');
   const body = chapters.map((c, i) => `
       <section class="chapter" id="${c.id}" aria-labelledby="ch-${c.id}" data-chapter>
         <header class="chapter__head">
-          <span class="chapter__n" aria-hidden="true">${digits(String(i + 1).padStart(2, '0'), lang)}</span>
+          <span class="chapter__badge" aria-hidden="true"><span class="chapter__icon">${chapterIcon(c.id)}</span><span class="chapter__n">${digits(String(i + 1).padStart(2, '0'), lang)}</span></span>
           <h2 class="chapter__title" id="ch-${c.id}">${c.title}</h2>
           <p class="chapter__lede">${c.lede}</p>
         </header>
@@ -280,15 +281,20 @@ const styleFiles = (await readdir(join(src, 'styles'))).filter((f) => f.endsWith
 await mkdir(join(dist, 'assets', 'css'), { recursive: true });
 const css = (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n');
 await writeFile(join(dist, 'assets', 'css', 'site.css'), (await transform(css, { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] })).code);
-// The page modules are bundled and minified into one file.
+// The page modules are bundled and minified into main.js. The 3D scenes (three.js) are
+// split into a chunk that loads only when a scene comes near the viewport.
 const jsDir = join(dist, 'assets', 'js');
 await rm(jsDir, { recursive: true, force: true });
 await bundle({
   entryPoints: [join(src, 'static', 'assets', 'js', 'main.js')],
-  outfile: join(jsDir, 'main.js'),
+  outdir: jsDir,
+  entryNames: '[name]',
+  chunkNames: 'chunks/[name]-[hash]',
+  splitting: true,
+  sourcemap: 'linked',
   bundle: true,
   format: 'esm',
-  minify: true,
+  minify: !process.env.NO_MINIFY,
   target: 'es2020',
   legalComments: 'none',
   logLevel: 'warning',
