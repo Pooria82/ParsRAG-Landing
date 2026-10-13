@@ -3,13 +3,10 @@
 // After that it is interactive: any citation or source row opens its page.
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// A cheap check only: creating a real WebGL context just to test for it costs up to a second
+// on machines without a GPU. If the scene later fails to start, the 2D version stays.
 function supportsWebGL() {
-  try {
-    const c = document.createElement('canvas');
-    return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
-  } catch {
-    return false;
-  }
+  return 'WebGLRenderingContext' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 /**
@@ -20,8 +17,15 @@ function startTunnel({ reduce, rtl }) {
   const bg = document.querySelector('.hero__bg');
   const src = document.querySelector('[data-playground]')?.dataset.src;
   if (!bg || !src || reduce || navigator.connection?.saveData || !supportsWebGL()) return;
-  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
-  idle(async () => {
+  // Start on the visitor's first move (pointer, scroll, touch or key), so the scene never
+  // competes with loading the page.
+  const events = ['pointermove', 'scroll', 'touchstart', 'keydown', 'wheel'];
+  const go = () => {
+    events.forEach((e) => removeEventListener(e, go));
+    load();
+  };
+  events.forEach((e) => addEventListener(e, go, { passive: true, once: true }));
+  const load = async () => {
     try {
       const data = await (await fetch(src)).json();
       const lines = data.corpora.flatMap((c) => c.passages.map((p) => p.text)).slice(0, 16);
@@ -29,7 +33,7 @@ function startTunnel({ reduce, rtl }) {
       createTunnel(bg, { lines, rtl, small: innerWidth < 700 });
       requestAnimationFrame(() => bg.classList.add('is-3d'));
     } catch { /* the static backdrop stays */ }
-  }, { timeout: 3000 });
+  };
 }
 
 export function initHero({ reduce, rtl }) {
@@ -103,19 +107,27 @@ export function initHero({ reduce, rtl }) {
   };
   if (reduce) { finish(); return; }
 
-  const question = q.textContent;
-  const words = sentences.map((s) => s.textContent.split(/(\s+)/));
+  // The window keeps its final size from the first frame: every word of the answer is already
+  // in place and only fades in, so the page height never changes while it plays (a changing
+  // height would make the pinned sections below recalculate on every word).
+  const words = sentences.map((s) => {
+    const parts = s.textContent.split(/(\s+)/);
+    s.textContent = '';
+    return parts.map((part) => {
+      if (!part.trim()) { s.append(part); return null; }
+      const w = document.createElement('span');
+      w.className = 'w';
+      w.textContent = part;
+      s.append(w);
+      return w;
+    }).filter(Boolean);
+  });
 
   async function play() {
     app.classList.add('is-playing');
-    q.textContent = '';
-    sentences.forEach((s) => { s.textContent = ''; });
-    // Type the question in short bursts, the way people type.
-    for (let i = 0; i < question.length; i += 2) {
-      q.textContent = question.slice(0, i + 2);
-      await wait(26);
-    }
-    await wait(250);
+    await wait(150);
+    app.classList.add('is-sent');
+    await wait(450);
     app.classList.add('is-asked');
     for (const li of stages) {
       li.classList.add('is-active');
@@ -125,12 +137,12 @@ export function initHero({ reduce, rtl }) {
     }
     app.classList.add('is-answering');
     for (let s = 0; s < sentences.length; s++) {
-      for (let i = 0; i < words[s].length; i++) {
-        sentences[s].textContent += words[s][i];
-        if (words[s][i].trim()) await wait(45);
+      for (const w of words[s]) {
+        w.classList.add('is-on');
+        await wait(55);
       }
       chips[s].classList.add('is-in');
-      await wait(140);
+      await wait(160);
     }
     app.classList.add('is-answered');
     await wait(500);

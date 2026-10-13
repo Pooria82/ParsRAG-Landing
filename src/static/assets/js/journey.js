@@ -16,13 +16,10 @@ const SLOT_ORDER = [6, 8, 12, 2]; // where the four passages land inside the col
 
 const slot = (n) => [190 + (n % 5) * 44, 214 + Math.floor(n / 5) * 40];
 
+// A cheap check only: creating a real WebGL context just to test for it costs up to a second
+// on machines without a GPU. If the scene later fails to start, the 2D version stays.
 function supportsWebGL() {
-  try {
-    const c = document.createElement('canvas');
-    return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
-  } catch {
-    return false;
-  }
+  return 'WebGLRenderingContext' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 export function initJourney({ gsap, ST, reduce, rtl, lang }) {
@@ -195,7 +192,8 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
   // Where WebGL is available, the drawing is replaced by a 3D stack of layers (three.js,
   // loaded only now). It follows the same scrubbed timeline, so the steps stay in sync.
   let stack3d = null;
-  if (supportsWebGL()) {
+  // three.js loads only when the section is about to come into view.
+  const load3d = () => {
     import('./scenes/stack3d.js').then(({ createStack }) => {
       stack3d = createStack(frame, {
         rtl, lang,
@@ -206,6 +204,14 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
       stack3d.setTime(tl.time());
       frame.classList.add('is-3d');
     }).catch(() => {});
+  };
+  if (supportsWebGL()) {
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      load3d();
+    }, { rootMargin: '600px 0px' });
+    io.observe(root);
   }
 
   // Step labels follow the drawing itself, so they never run ahead of the scrubbed animation.
