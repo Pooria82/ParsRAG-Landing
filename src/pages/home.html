@@ -127,6 +127,26 @@
       </div>
     </section>
 
+    <!-- Inside the app: a perspective wall of real screens that moves with the scroll. -->
+    <section class="gallery" id="app" aria-labelledby="gallery-title">
+      <div class="gallery__wall" aria-hidden="true" data-gallery>
+        <div class="gallery__plane">
+          <div class="gallery__col"><img src="{{root}}assets/img/shots/home-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/sources-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/workspace-{{lang}}-dark.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/home-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></div>
+          <div class="gallery__col"><img src="{{root}}assets/img/shots/workspace-{{lang}}-dark.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/model-{{lang}}-light.webp" alt="" width="580" height="1010" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/home-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/workspace-{{lang}}-dark.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></div>
+          <div class="gallery__col"><img src="{{root}}assets/img/shots/sources-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/home-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/workspace-{{lang}}-dark.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/sources-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></div>
+          <div class="gallery__col"><img src="{{root}}assets/img/shots/model-{{lang}}-light.webp" alt="" width="580" height="1010" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/workspace-{{lang}}-dark.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/sources-{{lang}}-light.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/model-{{lang}}-light.webp" alt="" width="580" height="1010" loading="lazy" decoding="async"></div>
+        </div>
+      </div>
+      <div class="wrap gallery__head">
+        <div class="gallery__card" data-reveal>
+          <p class="eyebrow">{{gallery.eyebrow}}</p>
+          <h2 class="h2" id="gallery-title">{{gallery.title}}</h2>
+          <p class="lead">{{gallery.lead}}</p>
+          <a class="btn btn--line" href="{{nav.tourHref}}">{{@slides}}<span>{{gallery.cta}}</span></a>
+        </div>
+      </div>
+    </section>
+
     <!-- Evidence contract: take the passage away and the claim disappears with it. -->
     <section class="evidence" id="evidence" aria-labelledby="evidence-title">
       <div class="wrap evidence__grid">
