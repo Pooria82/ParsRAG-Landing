@@ -181,7 +181,8 @@
     "collection": "This conversation",
     "answer": "Answer with 3 sources",
     "cite": "report.pdf, pages 3–4",
-    "eyebrow": "Under the hood"
+    "eyebrow": "Under the hood",
+    "hint": "Drag to turn it. Select a part to read about it."
   },
   "privacy": {
     "title": "You decide what leaves your machine.",
