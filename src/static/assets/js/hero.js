@@ -3,7 +3,37 @@
 // After that it is interactive: any citation or source row opens its page.
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+function supportsWebGL() {
+  try {
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The tunnel of text behind the headline (three.js). It loads after the page is idle so it
+ * never competes with the first paint, and is skipped for reduced motion or data saving.
+ */
+function startTunnel({ reduce, rtl }) {
+  const bg = document.querySelector('.hero__bg');
+  const src = document.querySelector('[data-playground]')?.dataset.src;
+  if (!bg || !src || reduce || navigator.connection?.saveData || !supportsWebGL()) return;
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+  idle(async () => {
+    try {
+      const data = await (await fetch(src)).json();
+      const lines = data.corpora.flatMap((c) => c.passages.map((p) => p.text)).slice(0, 16);
+      const { createTunnel } = await import('./scenes/hero3d.js');
+      createTunnel(bg, { lines, rtl, small: innerWidth < 700 });
+      requestAnimationFrame(() => bg.classList.add('is-3d'));
+    } catch { /* the static backdrop stays */ }
+  }, { timeout: 3000 });
+}
+
 export function initHero({ reduce, rtl }) {
+  startTunnel({ reduce, rtl });
   const app = document.querySelector('[data-hero-app]');
   if (!app) return;
   const q = app.querySelector('[data-hq]');
