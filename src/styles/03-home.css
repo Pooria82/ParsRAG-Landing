@@ -408,7 +408,7 @@
 
 .demo, .evidence, .journey, .privacy, .measured, .shelf, .langs, .install, .teaser {
   position: relative;
-  padding-block: clamp(76px, 9vw, 132px);
+  padding-block: clamp(64px, 7.5vw, 112px);
 }
 .journey, .privacy, .install, .langs { background: var(--bg-2); }
 .journey::before, .privacy::before, .install::before, .langs::before,
@@ -960,8 +960,9 @@
   }
   .jstage { order: -1; max-width: min(440px, 100%, 46svh * 560 / 520); }
   .steps::before, .steps__progress { display: none; }
-  .js:not(.is-static) .step { position: absolute; inset-inline: 0; top: 0; opacity: 0; visibility: hidden; transition: opacity 0.35s, visibility 0s 0.35s; }
-  .js:not(.is-static) .step.is-active { position: relative; opacity: 1; visibility: visible; transition: opacity 0.35s; }
+  /* One step at a time: the old one leaves quickly, then the new one fades in, so the two never overlap. */
+  .js:not(.is-static) .step { position: absolute; inset-inline: 0; top: 0; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.16s, transform 0.16s, visibility 0s 0.16s; }
+  .js:not(.is-static) .step.is-active { position: relative; opacity: 1; visibility: visible; transform: none; transition: opacity 0.35s 0.16s, transform 0.5s 0.16s var(--ease-out); }
   .js:not(.is-static) .steps { position: relative; min-height: 13em; }
   .js:not(.is-static) .step .step__body { max-height: none; opacity: 1; margin-top: 6px; }
 }
@@ -1284,6 +1285,8 @@
   line-height: 1.9;
   color: #d6e4ee;
   text-align: left;
+  /* Each line is its own block; the newlines between them in the markup are not lines. */
+  white-space: normal;
 }
 .term__body .l, .term__body .c, .term__body .note { display: block; white-space: pre; }
 .term__body .l::before { content: var(--prompt, "$ "); color: var(--turq); user-select: none; }
