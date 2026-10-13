@@ -7,32 +7,78 @@
   {{@header}}
 
   <main id="main">
-    <!-- Hero: letters drift like ink dust, then gather into the mark. -->
+    <!-- Hero: the product itself. A question, an answer with page citations, and the cited page. -->
     <section class="hero" aria-labelledby="hero-title">
-      <canvas class="hero__field" aria-hidden="true" data-glyphs="{{hero.glyphs}}"></canvas>
-      <div class="hero__content">
-        <div class="hero__slot" aria-hidden="true">{{@mark}}</div>
-        <a class="pill" data-hero="pill" href="{{release.url}}" data-doc="changelog"><span class="pill__dot" aria-hidden="true"></span><span class="pill__tag" data-release="version">{{release.version}}</span><span>{{hero.pill}}</span></a>
-        <p class="hero__kicker" data-hero="kicker">{{hero.kicker}}</p>
-        <h1 class="hero__title" id="hero-title" data-words>{{hero.title}}</h1>
-        <p class="hero__lead" data-hero="lead">{{hero.lead}}{{ref:local-pipeline}}{{ref:traceable}}</p>
-        <div class="hero__actions" data-hero="actions">
-          <a class="btn btn--gold" href="#demo">{{hero.primary}}</a>
+      <div class="hero__bg" aria-hidden="true"><span class="hero__glow"></span><span class="hero__grid"></span></div>
+      <div class="wrap hero__inner">
+        <a class="pill" href="{{release.url}}" data-doc="changelog" data-reveal style="--i:0"><span class="pill__dot" aria-hidden="true"></span><span class="pill__tag" data-release="version">{{release.version}}</span><span class="pill__text">{{hero.pill}}</span>{{@chev}}</a>
+        <h1 class="hero__title" id="hero-title" data-reveal style="--i:1"><span>{{hero.titleA}}</span> <span class="grad-text">{{hero.titleB}}</span></h1>
+        <p class="hero__lead" data-reveal style="--i:2">{{hero.lead}}{{ref:local-pipeline}}{{ref:traceable}}</p>
+        <div class="hero__actions" data-reveal style="--i:3">
+          <a class="btn btn--primary" href="#demo">{{hero.primary}}</a>
           <a class="btn btn--line" href="#install">{{hero.secondary}}</a>
         </div>
-        <p class="hero__meta" data-hero="meta">
-          <a href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{hero.github}}</span></a>
-          <a href="https://github.com/Pooria82/ParsRAG/blob/main/LICENSE" data-doc="license">{{hero.license}}</a>
-        </p>
+        <ul class="hero__meta" data-reveal style="--i:4">
+          <li><a href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{hero.github}}</span></a></li>
+          <li><span class="hero__meta-dot" aria-hidden="true"></span><span>{{hero.offline}}</span></li>
+          <li><a href="https://github.com/Pooria82/ParsRAG/blob/main/LICENSE" data-doc="license">{{hero.license}}</a></li>
+        </ul>
       </div>
-      <a class="hero__cue" href="#demo" data-hero="cue"><span class="hero__cue-thread" aria-hidden="true"></span><span class="visually-hidden">{{hero.scroll}}</span></a>
+
+      <div class="wrap wrap--wide hero__stage" data-reveal style="--i:5">
+        <figure class="app" data-hero-app aria-label="{{hero.demo.label}}">
+          <div class="app__bar">
+            <span class="app__brand">{{@mark}}<b>{{brand}}</b></span>
+            <span class="app__mode"><i aria-hidden="true"></i>{{hero.demo.mode}}</span>
+            <span class="app__local"><i aria-hidden="true"></i>{{hero.demo.local}}</span>
+          </div>
+          <div class="app__body">
+            <div class="app__chat">
+              <p class="app__q"><span data-hq>{{hero.demo.q}}</span></p>
+              <div class="app__answer">
+                <p class="app__by">{{@mark}}<b>{{brand}}</b><span class="app__badge">{{hero.demo.badge}}</span></p>
+                <ol class="app__stages" aria-hidden="true">
+                  <li>{{hero.demo.stage1}}</li>
+                  <li>{{hero.demo.stage2}}</li>
+                  <li>{{hero.demo.stage3}}</li>
+                </ol>
+                <p class="app__text" data-ha><span data-hs="1">{{hero.demo.a1}}</span><button class="pg__chip" type="button" data-hc="1" aria-label="{{hero.demo.show1}}">{{n.1}}</button> <span data-hs="2">{{hero.demo.a2}}</span><button class="pg__chip" type="button" data-hc="2" aria-label="{{hero.demo.show2}}">{{n.2}}</button></p>
+                <ul class="app__srcs">
+                  <li><button type="button" data-hc="1"><span class="app__n">{{n.1}}</span><span class="pg__type pg__type--pdf">PDF</span><bdi>{{hero.demo.file1}}</bdi><span class="app__loc">{{hero.demo.loc1}}</span></button></li>
+                  <li><button type="button" data-hc="2"><span class="app__n">{{n.2}}</span><span class="pg__type pg__type--docx">DOCX</span><bdi>{{hero.demo.file2}}</bdi><span class="app__loc">{{hero.demo.loc2}}</span></button></li>
+                </ul>
+              </div>
+              <p class="app__composer"><span>{{hero.demo.placeholder}}</span><span class="app__send" aria-hidden="true">{{@arrow}}</span></p>
+            </div>
+            <div class="app__viewer">
+              <div class="app__page paper" data-hp="1">
+                <p class="app__page-head"><span class="pg__type pg__type--pdf">PDF</span><bdi>{{hero.demo.file1}}</bdi><span>{{hero.demo.loc1}}</span></p>
+                <span class="app__line" style="--w:92%"></span><span class="app__line" style="--w:84%"></span><span class="app__line" style="--w:96%"></span>
+                <p class="app__passage"><mark>{{hero.demo.p1}}</mark></p>
+                <span class="app__line" style="--w:88%"></span><span class="app__line" style="--w:94%"></span><span class="app__line" style="--w:62%"></span>
+                <span class="app__line app__line--gap" style="--w:90%"></span><span class="app__line" style="--w:78%"></span>
+              </div>
+              <div class="app__page paper" data-hp="2">
+                <p class="app__page-head"><span class="pg__type pg__type--docx">DOCX</span><bdi>{{hero.demo.file2}}</bdi><span>{{hero.demo.loc2}}</span></p>
+                <span class="app__line" style="--w:86%"></span><span class="app__line" style="--w:95%"></span>
+                <p class="app__passage"><mark>{{hero.demo.p2}}</mark></p>
+                <span class="app__line" style="--w:90%"></span><span class="app__line" style="--w:70%"></span>
+                <span class="app__line app__line--gap" style="--w:93%"></span><span class="app__line" style="--w:85%"></span><span class="app__line" style="--w:58%"></span>
+              </div>
+            </div>
+          </div>
+          <svg class="app__beam" aria-hidden="true"><path class="thread" pathLength="1"/><circle class="thread-end" r="3.5"/></svg>
+          <figcaption class="visually-hidden">{{hero.demo.caption}}</figcaption>
+        </figure>
+      </div>
     </section>
 
     <!-- Live demo: real in-browser retrieval over sample documents, with citations you can open. -->
     <section class="demo" id="demo" aria-labelledby="demo-title">
       <div class="wrap section-head">
-        <h2 class="h2" id="demo-title">{{demo.title}}</h2>
-        <p class="lead">{{demo.lead}}{{ref:numbered-citations}}{{ref:mentions}}</p>
+        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.01}}</span>{{demo.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="demo-title">{{demo.title}}</h2>
+        <p class="lead" data-reveal style="--i:2">{{demo.lead}}{{ref:numbered-citations}}{{ref:mentions}}</p>
       </div>
       <div class="wrap wrap--wide">
         <div class="pg" data-playground data-src="{{root}}assets/demo/{{lang}}.json">
@@ -43,7 +89,7 @@
           </div>
           <div class="pg__stage">
             <svg class="pg__threads" aria-hidden="true"></svg>
-            <div class="pg__chat paper">
+            <div class="pg__chat glass">
               <div class="pg__docs" data-pg-docs role="group" aria-label="{{demo.docsLabel}}"></div>
               <div class="pg__feed" data-pg-feed aria-live="polite"></div>
               <div class="pg__suggest" data-pg-suggest>
@@ -85,8 +131,9 @@
     <section class="evidence" id="evidence" aria-labelledby="evidence-title">
       <div class="wrap evidence__grid">
         <div class="section-head">
-          <h2 class="h2" id="evidence-title">{{evidence.title}}</h2>
-          <p class="lead">{{evidence.lead}}{{ref:strict-refuses}}</p>
+          <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.02}}</span>{{evidence.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="evidence-title">{{evidence.title}}</h2>
+          <p class="lead" data-reveal style="--i:2">{{evidence.lead}}{{ref:strict-refuses}}</p>
           <p class="caption">{{evidence.note}}{{ref:strict-meaning}}</p>
         </div>
         <div class="contract" data-contract>
@@ -115,8 +162,9 @@
     <!-- How it works: one page morphs through the real ingestion and answer sequence. -->
     <section class="journey" id="how" aria-labelledby="how-title">
       <div class="wrap section-head">
-        <h2 class="h2" id="how-title">{{how.title}}</h2>
-        <p class="lead">{{how.lead}}</p>
+        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.03}}</span>{{how.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="how-title">{{how.title}}</h2>
+        <p class="lead" data-reveal style="--i:2">{{how.lead}}</p>
       </div>
       <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}">
         <ol class="steps">
@@ -134,8 +182,9 @@
     <!-- Privacy: an illuminated frame around the workstation; the gate opens only for API providers. -->
     <section class="privacy" id="privacy" aria-labelledby="privacy-title">
       <div class="wrap section-head">
-        <h2 class="h2" id="privacy-title">{{privacy.title}}</h2>
-        <p class="lead">{{privacy.lead}}{{ref:local-in-all-modes}}</p>
+        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.04}}</span>{{privacy.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="privacy-title">{{privacy.title}}</h2>
+        <p class="lead" data-reveal style="--i:2">{{privacy.lead}}{{ref:local-in-all-modes}}</p>
       </div>
       <div class="wrap boundary" data-boundary
         data-frame="{{privacy.frame}}" data-docs="{{privacy.nDocs}}" data-parse="{{privacy.nParse}}" data-embed="{{privacy.nEmbed}}"
@@ -172,39 +221,40 @@
     <!-- Measured: real numbers with their sources, and the honest caveat. -->
     <section class="measured" id="measured" aria-labelledby="measured-title">
       <div class="wrap section-head">
-        <h2 class="h2" id="measured-title">{{measured.title}}</h2>
-        <p class="lead">{{measured.lead}}</p>
+        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.05}}</span>{{measured.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="measured-title">{{measured.title}}</h2>
+        <p class="lead" data-reveal style="--i:2">{{measured.lead}}</p>
       </div>
       <div class="wrap measured__grid" data-measured>
-        <article class="metric" data-metric data-before="0.748" data-after="0.823" data-scale="1" data-better="up">
+        <article class="metric" data-spot data-metric data-before="0.748" data-after="0.823" data-scale="1" data-better="up">
           <h3>{{measured.fusionT}}{{ref:bm25}}</h3>
           <p class="metric__desc">{{measured.fusionD}}</p>
           <div class="metric__bars" aria-hidden="true"><div class="metric__bar metric__bar--before"><span></span></div><div class="metric__bar metric__bar--after"><span></span></div></div>
           <dl class="metric__vals"><div><dt>{{measured.before}}</dt><dd>{{m.fusionBefore}}</dd></div><div><dt>{{measured.after}}</dt><dd>{{m.fusionAfter}}</dd></div></dl>
           <p class="metric__note">{{measured.fusionNote}}</p>
         </article>
-        <article class="metric" data-metric data-before="0.85" data-after="0.09" data-scale="1" data-better="down">
+        <article class="metric" data-spot data-metric data-before="0.85" data-after="0.09" data-scale="1" data-better="down">
           <h3>{{measured.rotT}}{{ref:ocr-rotation}}</h3>
           <p class="metric__desc">{{measured.rotD}}</p>
           <div class="metric__bars" aria-hidden="true"><div class="metric__bar metric__bar--before"><span></span></div><div class="metric__bar metric__bar--after"><span></span></div></div>
           <dl class="metric__vals"><div><dt>{{measured.before}}</dt><dd>{{m.rotBefore}}</dd></div><div><dt>{{measured.after}}</dt><dd>{{m.rotAfter}}</dd></div></dl>
           <p class="metric__note">{{measured.rotNote}}</p>
         </article>
-        <article class="metric" data-metric data-before="0.225" data-after="0.133" data-scale="0.3" data-better="down">
+        <article class="metric" data-spot data-metric data-before="0.225" data-after="0.133" data-scale="0.3" data-better="down">
           <h3>{{measured.ocrT}}{{ref:ocr-mean}}</h3>
           <p class="metric__desc">{{measured.ocrD}}</p>
           <div class="metric__bars" aria-hidden="true"><div class="metric__bar metric__bar--before"><span></span></div><div class="metric__bar metric__bar--after"><span></span></div></div>
           <dl class="metric__vals"><div><dt>{{measured.before}}</dt><dd>{{m.ocrBefore}}</dd></div><div><dt>{{measured.after}}</dt><dd>{{m.ocrAfter}}</dd></div></dl>
           <p class="metric__note">{{measured.ocrNote}}</p>
         </article>
-        <article class="metric metric--quiet" data-metric data-before="0.672" data-after="0.682" data-scale="1" data-better="up">
+        <article class="metric metric--quiet" data-spot data-metric data-before="0.672" data-after="0.682" data-scale="1" data-better="up">
           <h3>{{measured.e5T}}{{ref:e5}}</h3>
           <p class="metric__desc">{{measured.e5D}}</p>
           <div class="metric__bars" aria-hidden="true"><div class="metric__bar metric__bar--before"><span></span></div><div class="metric__bar metric__bar--after"><span></span></div></div>
           <dl class="metric__vals"><div><dt>{{measured.before}}</dt><dd>{{m.e5Before}}</dd></div><div><dt>{{measured.after}}</dt><dd>{{m.e5After}}</dd></div></dl>
           <p class="metric__note">{{measured.e5Note}}</p>
         </article>
-        <article class="gate">
+        <article class="gate" data-spot>
           <h3>{{measured.gateT}}</h3>
           <ul>
             <li>{{measured.gate1}}{{ref:e2e-gate}}</li>
@@ -219,19 +269,20 @@
     <!-- Formats: a shelf of book spines; pulling one out shows what it covers. -->
     <section class="shelf" id="formats" aria-labelledby="shelf-title">
       <div class="wrap section-head">
-        <h2 class="h2" id="shelf-title">{{formats.title}}</h2>
-        <p class="lead">{{formats.lead}}{{ref:traceable}}</p>
+        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.06}}</span>{{formats.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="shelf-title">{{formats.title}}</h2>
+        <p class="lead" data-reveal style="--i:2">{{formats.lead}}{{ref:traceable}}</p>
       </div>
       <div class="wrap shelf__body" data-shelf>
         <div class="books" role="tablist" aria-label="{{formats.label}}">
-          <span class="book book--deco" style="--h:74%;--c:#123B32" aria-hidden="true"></span>
-          <button class="book" role="tab" id="book-1" aria-controls="card-1" aria-selected="true" style="--h:96%;--c:#146A57"><span class="book__title">{{formats.b1}}</span><span class="book__count">.pdf .docx .pptx</span></button>
-          <button class="book" role="tab" id="book-2" aria-controls="card-2" aria-selected="false" tabindex="-1" style="--h:84%;--c:#2B4E86"><span class="book__title">{{formats.b2}}</span><span class="book__count">.png .jpg .tif</span></button>
-          <span class="book book--deco book--lean" style="--h:66%;--c:#0D2A23" aria-hidden="true"></span>
-          <button class="book" role="tab" id="book-3" aria-controls="card-3" aria-selected="false" tabindex="-1" style="--h:100%;--c:#8A6A2C"><span class="book__title">{{formats.b3}}</span><span class="book__count">.txt .md .csv</span></button>
-          <button class="book" role="tab" id="book-4" aria-controls="card-4" aria-selected="false" tabindex="-1" style="--h:88%;--c:#5B3B4F"><span class="book__title">{{formats.b4}}</span><span class="book__count">.html .yaml</span></button>
-          <button class="book" role="tab" id="book-5" aria-controls="card-5" aria-selected="false" tabindex="-1" style="--h:92%;--c:#1E5C6B"><span class="book__title">{{formats.b5}}</span><span class="book__count">.py .ts .sql</span></button>
-          <span class="book book--deco" style="--h:80%;--c:#173F35" aria-hidden="true"></span>
+          <span class="book book--deco" style="--h:74%;--c:#16212f" aria-hidden="true"></span>
+          <button class="book" role="tab" id="book-1" aria-controls="card-1" aria-selected="true" style="--h:96%;--c:#13685f"><span class="book__title">{{formats.b1}}</span><span class="book__count">.pdf .docx .pptx</span></button>
+          <button class="book" role="tab" id="book-2" aria-controls="card-2" aria-selected="false" tabindex="-1" style="--h:84%;--c:#2c4a9a"><span class="book__title">{{formats.b2}}</span><span class="book__count">.png .jpg .tif</span></button>
+          <span class="book book--deco book--lean" style="--h:66%;--c:#121a26" aria-hidden="true"></span>
+          <button class="book" role="tab" id="book-3" aria-controls="card-3" aria-selected="false" tabindex="-1" style="--h:100%;--c:#8a5d16"><span class="book__title">{{formats.b3}}</span><span class="book__count">.txt .md .csv</span></button>
+          <button class="book" role="tab" id="book-4" aria-controls="card-4" aria-selected="false" tabindex="-1" style="--h:88%;--c:#5b3a6b"><span class="book__title">{{formats.b4}}</span><span class="book__count">.html .yaml</span></button>
+          <button class="book" role="tab" id="book-5" aria-controls="card-5" aria-selected="false" tabindex="-1" style="--h:92%;--c:#1d5872"><span class="book__title">{{formats.b5}}</span><span class="book__count">.py .ts .sql</span></button>
+          <span class="book book--deco" style="--h:80%;--c:#1a2638" aria-hidden="true"></span>
         </div>
         <div class="shelf__plank" aria-hidden="true"></div>
         <div class="cards">
@@ -249,8 +300,9 @@
     <section class="langs" id="languages" aria-labelledby="langs-title">
       <div class="wrap langs__grid">
         <div class="section-head">
-          <h2 class="h2" id="langs-title">{{langs.title}}</h2>
-          <p class="lead">{{langs.lead}}</p>
+          <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.07}}</span>{{langs.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="langs-title">{{langs.title}}</h2>
+          <p class="lead" data-reveal style="--i:2">{{langs.lead}}</p>
           <button class="btn btn--line" type="button" aria-pressed="false" data-morph-toggle data-to="{{langs.toggle}}" data-back="{{langs.toggleBack}}">{{langs.toggle}}</button>
         </div>
         <div class="morph" role="region" aria-label="{{langs.region}}" data-morph data-start="{{lang}}">
@@ -282,8 +334,9 @@
     <!-- Install: commands for the visitor's system and setup. -->
     <section class="install" id="install" aria-labelledby="install-title">
       <div class="wrap section-head">
-        <h2 class="h2" id="install-title">{{install.title}}</h2>
-        <p class="lead">{{install.lead}}{{ref:ram}}{{ref:offline}}</p>
+        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.08}}</span>{{install.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="install-title">{{install.title}}</h2>
+        <p class="lead" data-reveal style="--i:2">{{install.lead}}{{ref:ram}}{{ref:offline}}</p>
       </div>
       <div class="wrap">
         <div class="term" data-term>
@@ -325,10 +378,11 @@
     <section class="teaser" aria-labelledby="teaser-title">
       <div class="wrap teaser__inner">
         <div>
-          <h2 class="h2" id="teaser-title">{{teaser.title}}</h2>
-          <p class="lead">{{teaser.lead}}</p>
+          <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.09}}</span>{{teaser.eyebrow}}</p>
+        <h2 data-reveal style="--i:1" class="h2" id="teaser-title">{{teaser.title}}</h2>
+          <p class="lead" data-reveal style="--i:2">{{teaser.lead}}</p>
           <div class="hero__actions teaser__actions">
-            <a class="btn btn--gold" href="{{nav.tourHref}}">{{@slides}}<span>{{teaser.cta}}</span></a>
+            <a class="btn btn--primary" href="{{nav.tourHref}}">{{@slides}}<span>{{teaser.cta}}</span></a>
             <a class="btn btn--line" href="{{nav.tourHref}}#present">{{teaser.present}}</a>
           </div>
         </div>
@@ -336,14 +390,14 @@
       </div>
     </section>
 
-    <!-- Coda: the mark is drawn by a single gold thread. -->
+    <!-- Coda: the mark is drawn by a single line of light. -->
     <section class="coda" aria-labelledby="coda-title">
       <div class="wrap coda__inner">
         <div class="coda__mark" data-coda-mark>{{@mark}}</div>
         <h2 class="coda__title" id="coda-title">{{coda.title}}</h2>
-        <p class="lead">{{coda.lead}}</p>
+        <p class="lead" data-reveal style="--i:2">{{coda.lead}}</p>
         <div class="hero__actions">
-          <a class="btn btn--gold" href="#install">{{coda.primary}}</a>
+          <a class="btn btn--primary" href="#install">{{coda.primary}}</a>
           <a class="btn btn--line" href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{coda.secondary}}</span></a>
         </div>
       </div>

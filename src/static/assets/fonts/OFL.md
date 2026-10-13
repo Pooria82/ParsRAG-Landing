@@ -1,5 +1,4 @@
 Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)
-Copyright 2018 The Markazi Text Project Authors (https://github.com/BornaIz/markazitext)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

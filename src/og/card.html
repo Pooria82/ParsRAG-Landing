@@ -6,17 +6,20 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="../assets/css/site.css">
 <style>
-  body { margin: 0; width: 1280px; height: 640px; overflow: hidden; background: var(--night); }
-  .og { position: relative; width: 1280px; height: 640px; display: grid; grid-template-columns: 400px 1fr; align-items: center; gap: 60px; padding: 0 92px; box-sizing: border-box; }
-  .og::before { content: ""; position: absolute; inset: 0; background: radial-gradient(40% 60% at 22% 50%, rgba(121,197,170,.14), transparent 70%); }
-  [dir="rtl"] .og::before { background: radial-gradient(40% 60% at 78% 50%, rgba(121,197,170,.14), transparent 70%); }
-  .og .mark { width: 330px; height: 330px; position: relative; }
-  .kicker { color: var(--mint); font-size: 26px; font-weight: 600; margin: 0 0 14px; }
-  h1 { font-family: var(--font-display); font-weight: 500; font-size: 92px; line-height: .98; letter-spacing: -.02em; margin: 0; color: var(--text); }
-  [dir="rtl"] h1 { font-size: 84px; line-height: 1.3; letter-spacing: 0; }
-  .meta { display: flex; gap: 14px; align-items: center; margin-top: 30px; font-size: 24px; color: var(--text-2); }
-  .meta b { color: var(--gold-2); }
-  .thread { position: absolute; left: 0; right: 0; bottom: 54px; height: 1px; background: linear-gradient(90deg, transparent, rgba(210,176,106,.6), transparent); }
+  body { margin: 0; width: 1280px; height: 640px; overflow: hidden; background: var(--bg); }
+  .og { position: relative; width: 1280px; height: 640px; display: grid; grid-template-columns: 1fr 360px; align-items: center; gap: 56px; padding: 0 88px; box-sizing: border-box; isolation: isolate; }
+  .og::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(45% 70% at 80% 30%, rgba(62,224,207,.2), transparent 70%), radial-gradient(35% 55% at 95% 95%, rgba(246,185,77,.12), transparent 70%); }
+  [dir="rtl"] .og::before { background: radial-gradient(45% 70% at 20% 30%, rgba(62,224,207,.2), transparent 70%), radial-gradient(35% 55% at 5% 95%, rgba(246,185,77,.12), transparent 70%); }
+  .og::after { content: ""; position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 64px 64px; -webkit-mask-image: radial-gradient(60% 80% at 80% 20%, #000, transparent 75%); mask-image: radial-gradient(60% 80% at 80% 20%, #000, transparent 75%); }
+  [dir="rtl"] .og::after { -webkit-mask-image: radial-gradient(60% 80% at 20% 20%, #000, transparent 75%); mask-image: radial-gradient(60% 80% at 20% 20%, #000, transparent 75%); }
+  .og .mark { width: 300px; height: 300px; justify-self: center; filter: drop-shadow(0 0 60px rgba(62,224,207,.35)); }
+  .brand { display: flex; align-items: center; gap: 12px; margin: 0 0 26px; color: var(--text); font-size: 30px; font-weight: 720; letter-spacing: -.015em; }
+  .brand i { width: 9px; height: 9px; border-radius: 50%; background: var(--turq); box-shadow: 0 0 12px var(--turq); }
+  h1 { font-weight: 720; font-size: 88px; line-height: .98; letter-spacing: -.05em; margin: 0; color: var(--text); }
+  h1 span { display: block; }
+  [dir="rtl"] h1 { font-weight: 820; font-size: 78px; line-height: 1.32; letter-spacing: 0; }
+  .meta { display: flex; gap: 14px; align-items: center; margin-top: 30px; font-size: 25px; color: var(--text-2); }
+  .meta .pg__chip { font-size: 18px; min-width: 30px; height: 30px; border-radius: 15px; vertical-align: 0; margin: 0; }
 </style>
 </head>
 <body>
@@ -25,11 +28,11 @@
   const fa = new URLSearchParams(location.search).get('lang') === 'fa';
   const mark = `<svg class="mark" viewBox="0 0 48 48" fill="none"><path class="mark__left" d="M23.9 12.2C18.2 6.8 10.7 7.5 7.4 10.6v23.8c5.2-2.8 10.7-1.5 16.5 4.1V12.2Z"/><path class="mark__right" d="M24.1 12.2c5.7-5.4 13.2-4.7 16.5-1.6v23.8c-5.2-2.8-10.7-1.5-16.5 4.1V12.2Z"/><path class="mark__lines" d="M24 37.8V14.2M11.8 16c3-.8 5.7-.1 8 1.7m-8 5c3-.8 5.7-.1 8 1.7m8.4-6.7c2.3-1.8 5-2.5 8-1.7m-8 8.4c2.3-1.8 5-2.5 8-1.7"/><path class="mark__spark" d="M24 2.2c.35 2.2 1.7 3.55 3.9 3.9C25.7 6.45 24.35 7.8 24 10c-.35-2.2-1.7-3.55-3.9-3.9 2.2-.35 3.55-1.7 3.9-3.9Z"/><path class="mark__spark mark__spark--small" d="M39.7 6.8c.2 1.2.95 1.95 2.15 2.15-1.2.2-1.95.95-2.15 2.15-.2-1.2-.95-1.95-2.15-2.15 1.2-.2 1.95-.95 2.15-2.15Z"/></svg>`;
   const t = fa
-    ? { kicker: 'دستیار خصوصی اسناد فارسی و انگلیسی', title: 'هر پاسخ، با نشانی صفحه‌اش.', brand: 'پارس‌رگ', meta: 'روی رایانهٔ خودتان، با ارجاع به منبع' }
-    : { kicker: 'Private document AI for Persian and English', title: 'Every answer, traced to its page.', brand: 'ParsRAG', meta: 'On your own machine, with cited sources' };
+    ? { a: 'هر پاسخ،', b: 'با نشانی صفحه‌اش.', brand: 'پارس‌رگ', meta: 'دستیار خصوصی اسناد فارسی و انگلیسی', n: '۱' }
+    : { a: 'Every answer,', b: 'traced to its page.', brand: 'ParsRAG', meta: 'Private document AI for Persian and English', n: '1' };
   document.documentElement.lang = fa ? 'fa' : 'en';
   document.documentElement.dir = fa ? 'rtl' : 'ltr';
-  document.getElementById('og').innerHTML = `${mark}<div><p class="kicker">${t.kicker}</p><h1>${t.title}</h1><p class="meta"><b>${t.brand}</b><span>${t.meta}</span></p></div><span class="thread"></span>`;
+  document.getElementById('og').innerHTML = `<div><p class="brand"><i></i>${t.brand}</p><h1><span>${t.a}</span><span class="grad-text">${t.b}</span></h1><p class="meta"><span class="pg__chip">${t.n}</span><span>${t.meta}</span></p></div>${mark}`;
 </script>
 </body>
 </html>

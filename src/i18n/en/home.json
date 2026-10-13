@@ -1,22 +1,63 @@
 {
-  "n": { "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6" },
+  "n": {
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "01": "01",
+    "02": "02",
+    "03": "03",
+    "04": "04",
+    "05": "05",
+    "06": "06",
+    "07": "07",
+    "08": "08",
+    "09": "09"
+  },
   "m": {
-    "fusionBefore": "0.748", "fusionAfter": "0.823",
-    "rotBefore": "0.85", "rotAfter": "0.09",
-    "ocrBefore": "0.225", "ocrAfter": "0.133",
-    "e5Before": "0.672", "e5After": "0.682"
+    "fusionBefore": "0.748",
+    "fusionAfter": "0.823",
+    "rotBefore": "0.85",
+    "rotAfter": "0.09",
+    "ocrBefore": "0.225",
+    "ocrAfter": "0.133",
+    "e5Before": "0.672",
+    "e5After": "0.682"
   },
   "hero": {
-    "glyphs": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ¶§†‡0123456789",
-    "pill": "What's new",
-    "kicker": "Private document AI for Persian and English",
-    "title": "Every answer, traced to its page.",
-    "lead": "Ask your documents on your own machine, then check each answer against the exact file and page it came from.",
+    "pill": "What's new in this release",
+    "titleA": "Every answer,",
+    "titleB": "traced to its page.",
+    "lead": "Ask your documents on your own machine, and check every answer against the exact file and page it came from.",
     "primary": "Try the live demo",
-    "secondary": "Run it locally",
+    "secondary": "Run it on your machine",
     "github": "Source on GitHub",
+    "offline": "Runs offline after setup",
     "license": "Source-available license",
-    "scroll": "Scroll to the live demo"
+    "demo": {
+      "label": "A ParsRAG answer with numbered citations next to the cited pages",
+      "caption": "The answer cites budget.pdf, page 3, and timeline.docx, paragraph 7. Each citation opens the passage it came from.",
+      "mode": "Documents only",
+      "local": "Local model",
+      "q": "What is the total cost, and when is delivery?",
+      "badge": "2 sources",
+      "stage1": "Understanding the question",
+      "stage2": "Finding evidence in your documents",
+      "stage3": "Writing the answer",
+      "a1": "The total cost is 4.2 billion rials, including licenses and three months of support.",
+      "a2": "Delivery is planned for the end of Azar 1405, after the acceptance test.",
+      "show1": "Show source 1",
+      "show2": "Show source 2",
+      "file1": "budget.pdf",
+      "loc1": "page 3",
+      "file2": "timeline.docx",
+      "loc2": "paragraph 7",
+      "p1": "The total project cost is 4.2 billion rials, including licenses and three months of support.",
+      "p2": "Delivery is planned for the end of Azar 1405, after the acceptance test passes.",
+      "placeholder": "Ask about these documents, or @ one of them"
+    }
   },
   "demo": {
     "title": "Ask the sample documents.",
@@ -28,7 +69,11 @@
     "placeholder": "Ask about these documents, or type @ to mention one",
     "mentionLabel": "Mention a document",
     "modeLabel": "Answer mode",
-    "modes": { "strict": "Documents only", "hybrid": "Hybrid", "free": "Open conversation" },
+    "modes": {
+      "strict": "Documents only",
+      "hybrid": "Hybrid",
+      "free": "Open conversation"
+    },
     "hint": "Enter to send",
     "send": "Send question",
     "compare": "Compare the three modes",
@@ -61,17 +106,36 @@
       "showSource": "Show source {n}",
       "sourcesTitle": "Sources",
       "more": "{count} more passages consulted",
-      "loc": { "page": "page", "slide": "slide", "paragraph": "paragraph", "section": "section" },
+      "loc": {
+        "page": "page",
+        "slide": "slide",
+        "paragraph": "paragraph",
+        "section": "section"
+      },
       "hybridNoModel": "The documents don't cover this. In Hybrid mode a local model would answer from its own knowledge here, marked as model knowledge. This browser demo has no model.",
-      "modes": { "strict": "Documents only", "hybrid": "Documents & model knowledge", "free": "Open conversation" },
+      "modes": {
+        "strict": "Documents only",
+        "hybrid": "Documents & model knowledge",
+        "free": "Open conversation"
+      },
       "retrieval": "Retrieval",
       "knowledge": "Model knowledge",
       "facts": {
-        "strict": { "r": "Required, with an evidence gate", "k": "Excluded" },
-        "hybrid": { "r": "Required and reranked", "k": "May supplement evidence" },
-        "free": { "r": "Bypassed", "k": "Used directly" }
+        "strict": {
+          "r": "Required, with an evidence gate",
+          "k": "Excluded"
+        },
+        "hybrid": {
+          "r": "Required and reranked",
+          "k": "May supplement evidence"
+        },
+        "free": {
+          "r": "Bypassed",
+          "k": "Used directly"
+        }
       }
-    }
+    },
+    "eyebrow": "Live demo"
   },
   "evidence": {
     "title": "No evidence, no claim.",
@@ -87,7 +151,8 @@
     "refused": "The provided documents do not answer this question.",
     "statusOk": "Supported by one passage",
     "statusGone": "No supporting passage, so no claim",
-    "note": "Strict mode answers by meaning, so paraphrased and whole-document questions still work, but every fact has to come from your documents."
+    "note": "Strict mode answers by meaning, so paraphrased and whole-document questions still work, but every fact has to come from your documents.",
+    "eyebrow": "Documents-only mode"
   },
   "how": {
     "title": "What happens to a page.",
@@ -115,7 +180,8 @@
     "lang": "fas+eng",
     "collection": "This conversation",
     "answer": "Answer with 3 sources",
-    "cite": "report.pdf, pages 3–4"
+    "cite": "report.pdf, pages 3–4",
+    "eyebrow": "Under the hood"
   },
   "privacy": {
     "title": "You decide what leaves your machine.",
@@ -154,7 +220,8 @@
     "here": "Your machine",
     "browser": "Your browser",
     "third": "The API provider",
-    "always": "API keys stay in memory or environment variables, never in browser storage, logs or API responses."
+    "always": "API keys stay in memory or environment variables, never in browser storage, logs or API responses.",
+    "eyebrow": "Privacy"
   },
   "measured": {
     "title": "Measured, then shipped.",
@@ -177,7 +244,8 @@
     "gate1": "An end-to-end test uploads a Persian PDF and requires a cited answer from the right page, and at least 7 of 8 paraphrased Persian questions must cite their own section first.",
     "gate2": "Backend and frontend checks run on Linux, Windows and macOS.",
     "gate3": "Backend test coverage may not drop below 85 percent.",
-    "caveat": "The retrieval and OCR figures were measured by the maintainer on document sets that aren't published, so they can't be reproduced from the public repository. The CI checks run in the open on every change."
+    "caveat": "The retrieval and OCR figures were measured by the maintainer on document sets that aren't published, so they can't be reproduced from the public repository. The CI checks run in the open on every change.",
+    "eyebrow": "Measured"
   },
   "formats": {
     "title": "One shelf for what you read.",
@@ -193,14 +261,16 @@
     "b4x": "Visible text from markup, and plain text from configuration files.",
     "b5": "Source code",
     "b5x": "Extracted with section metadata, so answers can point into a file.",
-    "limits": "By default a conversation holds 10 files, each up to 100 MiB, with up to 500 MiB per upload. Office archives are checked for suspicious compression, and unsupported binaries are rejected rather than misread."
+    "limits": "By default a conversation holds 10 files, each up to 100 MiB, with up to 500 MiB per upload. Office archives are checked for suspicious compression, and unsupported binaries are rejected rather than misread.",
+    "eyebrow": "Formats"
   },
   "langs": {
     "title": "Persian and English, both first-class.",
     "lead": "Switch the interface language and the whole workspace changes direction, digits and labels. Each answer follows its own language.",
     "toggle": "Switch to Persian",
     "toggleBack": "Switch to English",
-    "region": "Interactive preview of the ParsRAG workspace"
+    "region": "Interactive preview of the ParsRAG workspace",
+    "eyebrow": "Two languages"
   },
   "mock": {
     "en": {
@@ -249,8 +319,16 @@
     "lead": "You need Docker Engine with Compose and 8–16 GB of RAM, depending on the model. After the first download, a local model works offline.",
     "osLabel": "Your system",
     "setupLabel": "Setup",
-    "os": { "windows": "Windows", "macos": "macOS", "linux": "Linux" },
-    "setup": { "cpu": "Local model on CPU", "gpu": "NVIDIA GPU", "api": "API model" },
+    "os": {
+      "windows": "Windows",
+      "macos": "macOS",
+      "linux": "Linux"
+    },
+    "setup": {
+      "cpu": "Local model on CPU",
+      "gpu": "NVIDIA GPU",
+      "api": "API model"
+    },
     "copy": "Copy commands",
     "copied": "Copied",
     "macGpu": "Docker Desktop doesn't give containers access to a Mac's GPU. Use the CPU setup, run Ollama natively, or connect an API model.",
@@ -264,13 +342,15 @@
     },
     "then": "Then open <code dir=\"ltr\">http://127.0.0.1:8000</code>. The first start downloads the embedding model and the reranker (about 100 MB) into the model cache.",
     "guide": "Full installation guide",
-    "native": "Run without Docker"
+    "native": "Run without Docker",
+    "eyebrow": "Install"
   },
   "teaser": {
     "title": "Everything in this release, start to finish.",
     "lead": "The product tour walks through every feature that ships today, chapter by chapter, with the same sources this page cites. Read it, or present it full screen.",
     "cta": "Open the product tour",
-    "present": "Present it"
+    "present": "Present it",
+    "eyebrow": "Product tour"
   },
   "coda": {
     "title": "Your documents. Your machine. Your evidence.",

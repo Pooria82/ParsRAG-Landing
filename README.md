@@ -91,5 +91,5 @@ run the workflow by hand.
 
 - [GSAP 3.15](https://gsap.com) with ScrollTrigger (standard "no charge" GSAP license), vendored in `assets/vendor/`.
 - [Lenis 1.3](https://github.com/darkroomengineering/lenis) (MIT) for smooth wheel scrolling on desktop pointers; off for touch and reduced motion.
-- [Vazirmatn](https://github.com/rastikerdar/vazirmatn) and [Markazi Text](https://fonts.google.com/specimen/Markazi+Text), both under the SIL Open Font License (`assets/fonts/OFL.md`).
+- [Vazirmatn](https://github.com/rastikerdar/vazirmatn), under the SIL Open Font License (`assets/fonts/OFL.md`).
 - Build tools: [marked](https://marked.js.org), [yaml](https://eemeli.org/yaml/) and [esbuild](https://esbuild.github.io).

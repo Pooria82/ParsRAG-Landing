@@ -30,15 +30,19 @@
     </div>
     <div class="wrap footer__base">
       <p>{{footer.copy}}</p>
-      <p><a href="{{release.url}}" data-release="link">{{release.label}} <span data-release="version">{{release.version}}</span></a></p>
-      <p><a href="{{alt.href}}" hreflang="{{alt.lang}}">{{alt.labelLong}}</a></p>
+      <p><a href="{{release.url}}" data-release="link" data-doc="changelog"><span class="footer__dot" aria-hidden="true"></span>{{release.label}} <span data-release="version">{{release.version}}</span></a></p>
+      <p><a href="{{alt.href}}" hreflang="{{alt.lang}}">{{@globe}}<span>{{alt.labelLong}}</span></a></p>
     </div>
+    <p class="footer__word" aria-hidden="true">{{brand}}</p>
   </footer>
 
-  <dialog class="docdlg" data-docdlg aria-labelledby="doc-title">
-    <div class="docdlg__panel">
-      <button class="icon-btn docdlg__close" type="button" data-docdlg-close aria-label="{{a11y.close}}">{{@close}}</button>
-      <div class="docdlg__body" data-docdlg-body tabindex="-1"><p class="docdlg__loading">{{docs.loading}}</p></div>
+  <dialog class="sheet" data-docdlg aria-labelledby="doc-title">
+    <div class="sheet__panel">
+      <div class="sheet__grip" aria-hidden="true"></div>
+      <button class="icon-btn sheet__close" type="button" data-docdlg-close aria-label="{{a11y.close}}">{{@close}}</button>
+      <div class="sheet__head" data-docdlg-head></div>
+      <div class="sheet__progress" aria-hidden="true"><span data-docdlg-progress></span></div>
+      <div class="sheet__body" data-docdlg-body data-lenis-prevent tabindex="-1"><p class="sheet__loading">{{docs.loading}}</p></div>
     </div>
   </dialog>
 

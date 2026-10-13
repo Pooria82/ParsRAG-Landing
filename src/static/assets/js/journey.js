@@ -91,7 +91,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
 
   // Initial (pre-upload) state.
   gsap.set([page, file], { autoAlpha: 0, y: '-=30' });
-  gsap.set(lines, { autoAlpha: 0, backgroundColor: '#7F948C', filter: 'blur(1.6px)' });
+  gsap.set(lines, { autoAlpha: 0, backgroundColor: '#7d8896', filter: 'blur(1.6px)' });
   gsap.set([beam, langTag, ...chunks, ...tags, axisX, axisY, ...others, cyl, cylTop, cylLabel, query, answer], { autoAlpha: 0 });
   gsap.set(linkEls, { attr: { 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1 } });
   gsap.set([axisX], { scaleX: 0, transformOrigin: rtl ? '100% 50%' : '0 50%' });
@@ -108,7 +108,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
   tl.addLabel('s1', 1)
     .to([beam, langTag], { autoAlpha: 1, duration: 0.1 }, 's1')
     .fromTo(beam, { y: PAGE.y }, { y: PAGE.y + PAGE.h, duration: 0.75, ease: 'none' }, 's1')
-    .to(lines, { autoAlpha: 1, backgroundColor: '#173129', filter: 'blur(0px)', duration: 0.12, stagger: 0.055, ease: 'none' }, 's1+=0.04')
+    .to(lines, { autoAlpha: 1, backgroundColor: '#111a24', filter: 'blur(0px)', duration: 0.12, stagger: 0.055, ease: 'none' }, 's1+=0.04')
     .to(beam, { autoAlpha: 0, duration: 0.12 }, 's1+=0.78');
 
   // 3 Passages: the page splits into located passages; one bridges two pages.
@@ -120,7 +120,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
     const k = Math.floor(i / 3);
     const [cx, cy] = CHUNK_POS[k];
     const w = Math.min(LINE_W[i] * 0.86, CHUNK.w - 40);
-    tl.to(line, { x: mx(cx + 20, w), y: cy + 28 + (i % 3) * 24, width: w, backgroundColor: '#B9D8CB', duration: 0.6 }, `s2+=${0.05 + i * 0.015}`);
+    tl.to(line, { x: mx(cx + 20, w), y: cy + 28 + (i % 3) * 24, width: w, backgroundColor: '#a8ece4', duration: 0.6 }, `s2+=${0.05 + i * 0.015}`);
   });
 
   // 4 Vectors: each passage collapses into a point; other documents' points appear around it.
@@ -129,7 +129,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
   chunks.forEach((chunk, k) => {
     const [x, y] = CLUSTER[k];
     tl.to(lines.slice(k * 3, k * 3 + 3), { autoAlpha: 0, width: 0, x: mx(x + 7), y: y + 7, duration: 0.45 }, `s3+=${k * 0.05}`)
-      .to(chunk, { x: mx(x, 14), y, width: 14, height: 14, borderRadius: 7, borderWidth: 0, backgroundColor: k === 2 ? '#D2B06A' : '#79C5AA', duration: 0.6 }, `s3+=${0.1 + k * 0.05}`);
+      .to(chunk, { x: mx(x, 14), y, width: 14, height: 14, borderRadius: 7, borderWidth: 0, backgroundColor: k === 2 ? '#f6b94d' : '#3ee0cf', duration: 0.6 }, `s3+=${0.1 + k * 0.05}`);
   });
   tl.to(axisX, { autoAlpha: 1, scaleX: 1, duration: 0.5 }, 's3+=0.2')
     .to(axisY, { autoAlpha: 1, scaleY: 1, duration: 0.5 }, 's3+=0.2')
@@ -147,7 +147,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
   });
   chunks.forEach((chunk, k) => {
     const [x, y] = slot(SLOT_ORDER[k]);
-    tl.to(chunk, { x: mx(x, 14), y, backgroundColor: '#79C5AA', duration: 0.55 }, `s4+=${0.2 + k * 0.03}`);
+    tl.to(chunk, { x: mx(x, 14), y, backgroundColor: '#3ee0cf', duration: 0.55 }, `s4+=${0.2 + k * 0.03}`);
   });
 
   // 6 Cited answer: the question finds its nearest passages, and they come back as sources.
@@ -156,7 +156,7 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
     .to([...others, cyl, cylTop], { autoAlpha: 0.25, duration: 0.3 }, 's5+=0.1');
   [0, 1, 2].forEach((k) => {
     const [x, y] = RISE[k];
-    tl.to(chunks[k], { x: mx(x, 14), y, backgroundColor: '#D2B06A', boxShadow: '0 0 16px rgba(210,176,106,.8)', duration: 0.4 }, `s5+=${0.2 + k * 0.05}`)
+    tl.to(chunks[k], { x: mx(x, 14), y, backgroundColor: '#f6b94d', boxShadow: '0 0 16px rgba(210,176,106,.8)', duration: 0.4 }, `s5+=${0.2 + k * 0.05}`)
       .to(linkEls[k], { attr: { 'stroke-dashoffset': 0 }, duration: 0.25 }, `s5+=${0.45 + k * 0.05}`);
   });
   tl.to(answer, { autoAlpha: 1, y: 236, duration: 0.4, ease: 'power3.out' }, 's5+=0.7')

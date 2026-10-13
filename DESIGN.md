@@ -4,75 +4,83 @@
 
 - **Subject:** ParsRAG, an offline-first workspace that answers questions about Persian and English documents and cites the exact page every claim came from.
 - **Audience:** Persian-speaking developers, researchers, students, and organizations who cannot send documents to a cloud chatbot.
-- **Primary job:** within seconds, a visitor should *try* it — ask a document, open the citation, see the passage — and understand that it runs on their own machine. Then: run it locally, or read the full product tour.
+- **Primary job:** within seconds, a visitor should *see* it work: a question, an answer with numbered citations, and the cited passage lit on its page, all on their own machine. Then: try the live demo, run it locally, or read the full product tour.
 
-## Concept: Hashiye (حاشیه, marginalia)
+## Concept: Firouzeh (turquoise)
 
-Persian manuscripts carried *hashiye*: commentary written in the margins, pointing back to the passage it explains. ParsRAG does the same with software: every answer sentence is tied to a source page.
+Two Persian colours light a night-lapis ground. **Turquoise** (firouzeh, the colour of Persian tilework) marks what stays on your machine: the local model, the reading rail, focus and progress. **Saffron** marks evidence: citation numbers, highlighted passages, and the line of light that joins a citation to its page. Documents appear as cool paper pages inside a dark glass interface, the way a real PDF sits inside the app.
 
-- answers are typeset like a manuscript page,
-- **gold citation threads** tie each claim to the passage it came from,
-- **the site cites itself:** every product claim carries a numbered marker that quotes the ParsRAG repository, verified at build time. The site behaves the way the product does.
+The one memorable element is that line of light. It appears in the hero (citation → passage), the demo, the evidence card, and the presentation progress bar. Everything else stays quiet.
 
-The gold thread is the one memorable element; it runs through the whole page: from the hero headline to the demo, between a citation and its passage, between claim, evidence and source, and down the page margin as the reading trail.
+**The site cites itself:** every product claim carries a numbered marker that quotes the ParsRAG repository, verified at build time. The site behaves the way the product does.
+
+## How the references shaped it
+
+The redesign reviewed 30 AI product sites and galleries, among them Runway, ElevenLabs, Perplexity, Claude, OpenAI, Cursor, Linear-style app sites, Raycast, Granola, Spline, Mistral, Cohere, Replicate and v0. What they share, and what this site takes from it:
+
+- **The product is the hero** (v0, Spline, Raycast, Granola): the hero is a working ParsRAG window, not an illustration.
+- **Fast UI, slow reveals:** 160–320 ms for controls, 600–1000 ms for reveals, expo-out easing.
+- **A header that changes on scroll** (Granola, Krea): transparent over the hero, then a floating glass pill with a hairline.
+- **Sheets and menus that open with intent** (Claude, Raycast): the menu opens with a clip-path reveal and staggered links; dialogs slide or scale in and lock the page behind them.
+- **A mono face for labels and numbers** next to one sans.
+
+What it avoids because it is everywhere: purple-to-blue glows and blobs, gradient text on every heading, glass stacked on glass, logo marquees, bouncy easing on content. None of the 30 handles right-to-left well; this site treats Persian as a first language, not a mirrored afterthought.
 
 ## Tokens
 
-### Color (Persian illumination on night green)
+### Colour
 
-| Name | Hex | Role |
+| Name | Value | Role |
 | --- | --- | --- |
-| Night green | `#0F2E27` | Main canvas (a colored ground, not a tinted black) |
-| Deep green | `#0A221C` | Alternate sections, panels |
-| Paper | `#E6EBE1` → `#DDE4D6` | Document pages; softened with a top light and grain so it isn't a flat white slab |
-| Brand green | `#146A57` | Product color on paper |
-| Spark mint | `#79C5AA` | Focus rings, live states, "stays local" |
-| Illumination gold | `#D2B06A` | Threads, citation markers, the primary action |
-| Lapis | `#4A6FC0` | Rare: the external-API path only |
-| Brick | `#A0472F` | Refusals and "not found" |
+| Ground | `#05070b` / `#080b11` | Page, alternate sections |
+| Panel | `#0d121a` / `#121925` | Windows, cards |
+| Glass | white at 3.5–9% | Surfaces over the ground |
+| Hairline | white at 8 / 14 / 22% | Borders: default, hover, strong |
+| Turquoise | `#3ee0cf` (light `#9cf5ea`) | Local, live, focus, progress |
+| Saffron | `#f6b94d` (light `#ffd88f`) | Citations, highlights, the line of light |
+| Lapis | `#6d8cff` | Rare: the external-API path only |
+| Rose | `#ff7a6b` | Refusals and "not found" |
+| Page | `#e9edf1` → `#dfe5ea` | Document pages, ink `#111a24` |
 
-Text on night green: `#E7EFEA` / `#A3BBB1`. Text on paper: `#173129` / `#4A6158`.
+Text on the ground: `#eef2f6` / `#a2acba` / `#6c7686`. The brand gradient runs turquoise → mint → saffron and always starts at the reading edge (left in English, right in Persian). It is used only on the hero's second line, measured results and the share cards.
 
 ### Type
 
-- **Display:** *Markazi Text*, a Naskh-derived serif for Persian and Latin, at large sizes and for answers on paper.
-- **Body/UI:** *Vazirmatn*, the product's own typeface.
-- Perfect fourth from 17px. Persian gets a larger size and 1.9 line-height. Persian text is never split into characters; reveals animate whole words.
+- **One family:** Vazirmatn (variable) for both scripts, in weights 500–820. English display sizes use tight tracking (−0.035 to −0.05 em); Persian is never letter-spaced and gets a taller line height (1.3–1.45 for headings, 1.95 for text).
+- **Mono** (system) for labels, file extensions, commands and English section numbers.
+- **Number badges** are fixed boxes whose digits are moved down by the font's measured offset (0.115 em Latin, 0.075 em Persian), so numbers sit in the optical middle.
+
+### Shape and motion
+
+- Radius 8 / 12 / 16 / 22 / 30, pills for buttons and chips.
+- Easing: expo-out `cubic-bezier(.16,1,.3,1)` for reveals, `(.32,.72,0,1)` for sheets and drawers, `(.65,0,.35,1)` for travel, a small spring only on chips.
 
 ## Page structure
 
 ```
-HERO          letters of the page language gather into the mark; headline sharpens from ink;
-              a gold thread runs from "page" around the copy to the demo
-LIVE DEMO     4 sample document sets, @ mentions, 3 modes, streamed answer, numbered chips,
-              source viewer with the cited passage highlighted, thread chip→passage,
-              refusals with the app's real messages, compare all three modes
-EVIDENCE      claim ─thread─ evidence ─thread─ source; "remove the evidence" removes the claim
-HOW IT WORKS  pinned stage: one page morphs through 6 real steps; "under the hood" per step
-PRIVACY       illuminated workstation frame with a gate; where-each-step-happens table
-              (cards on phones) compared with a cloud chatbot
+HERO          release pill, two-line headline, product window: the question is typed,
+              the answer streams with numbered citations, the cited page lights up
+LIVE DEMO     4 sample document sets, @ mentions, 3 modes, streamed answers, source viewer
+EVIDENCE      claim, evidence and source joined by the line; "remove the evidence"
+HOW IT WORKS  pinned stage: one page through 6 real steps; "under the hood" per step
+PRIVACY       workstation frame with a gate; where-each-step-happens table (cards on phones)
 MEASURED      only numbers the repository records, each cited, plus the honest caveat
-FORMATS       book spines
+FORMATS       book spines on a glass ledge
 LANGUAGES     a live workspace preview that flips RTL/LTR on request
-INSTALL       terminal for the visitor's OS (PowerShell or sh) and setup
-TOUR TEASER   the 14 chapters
-CODA          the mark drawn by a thread; "Your documents. Your machine. Your evidence."
+INSTALL       terminal for the visitor's OS and setup
+TOUR TEASER   the 14 chapters in a lit panel
+CODA          the mark drawn by a line of light; "Your documents. Your machine. Your evidence."
+FOOTER        columns, release, documents (open in a sheet), a large faded wordmark
 ```
 
-The product tour is a separate page: a sticky chapter index (a horizontal strip on narrow screens) and chapters built from structured content; "Present" turns each chapter opening and section into a slide.
+The product tour is a separate page: a hero with a stack of chapter cards that starts the presentation, a sticky chapter index (a glass card, or a pill strip on narrow screens), and chapters built from structured content. "Present" opens as a circle of light growing from the button and turns each chapter opening and section into a slide. Moving between the home page and the tour cross-fades with view transitions.
 
 ## Principles
 
-1. **One bold thing:** the gold thread. No gradient washes, glow cards or decorative blobs.
-2. **Motion explains cause and effect:** one orchestrated hero moment; after that, motion follows scroll position or a click (citation → passage, remove evidence → claim disappears, provider → data path changes).
-3. **Product-led:** the first interaction is asking a document, not watching an animation.
-4. **Evidence-first copy:** real formats, modes, limits, commands, labels and messages from the release. No invented stats or testimonials; measured numbers carry their source and their limits.
-5. **Each language is complete:** the English page contains no Persian text (including the glyph field, the share card and documents); the Persian page is designed right-to-left with Persian numerals and dates, and Persian summaries of English-only documents.
-6. **Quality floor:** responsive from 360px through tablets in both orientations, visible focus, keyboard-operable controls, `prefers-reduced-motion` (static compositions, no pinning), no layout shift, one bundled script, content painted before scripts run.
-
-## Review against generic defaults
-
-- *Dark page + one bright accent* → a saturated green ground with gold and mint from Persian illumination.
-- *Big-number stat row* → measured results shown as before/after with their method and caveat, not as hero stats.
-- *Numbered steps* only for the processing sequence and tour chapters, which are real sequences.
-- *Bento grids, fade-up sections, all-caps eyebrows, middle-dot meta strings, arrows on buttons* → absent. Button labels say what happens.
+1. **One bold thing:** the line of light between a citation and its page.
+2. **Motion explains cause and effect:** the hero plays one real exchange; after that, motion follows scroll or a click (citation → passage, remove evidence → claim disappears, provider → data path changes).
+3. **Product-led:** the first thing on screen is the product answering with sources.
+4. **Evidence-first copy:** real formats, modes, limits, commands, labels and messages from the release. No invented stats or testimonials.
+5. **Each language is complete:** the English page has no Persian text (including the share card and documents); the Persian page is written in natural Persian (not translated), right-to-left, with Persian numerals, and Persian summaries of English-only documents.
+6. **Overlays behave:** a sheet, menu or presentation locks the page behind it and stops smooth scrolling; only the overlay scrolls, with the site's own scrollbar. Escape and the backdrop close it with the same animation in reverse.
+7. **Quality floor:** responsive from 360 px through tablets in both orientations, visible focus, keyboard-operable controls, `prefers-reduced-motion` (static compositions, no pinning), no layout shift, one bundled script, content painted before scripts run.

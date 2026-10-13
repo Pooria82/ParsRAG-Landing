@@ -1,6 +1,10 @@
 // Product tour: the chapter index follows the reader, and "Present" turns the chapters
 // into full-screen slides (one for each chapter opening, one for each of its sections).
-export function initTour({ gsap, reduce, rtl, lang }) {
+// The presentation opens as a circle of light growing from the button that started it.
+import { lockScroll } from './chrome.js';
+
+export function initTour(ctx) {
+  const { gsap, reduce, rtl, lang } = ctx;
   const chapters = [...document.querySelectorAll('[data-chapter]')];
   if (!chapters.length) return;
   const links = new Map([...document.querySelectorAll('[data-toc] a')].map((a) => [a.hash.slice(1), a]));
@@ -20,6 +24,33 @@ export function initTour({ gsap, reduce, rtl, lang }) {
     }
   }, { rootMargin: '-30% 0px -60% 0px', threshold: [0, 0.01] });
   chapters.forEach((c) => io.observe(c));
+
+  // ---------- Hero deck: the first three chapter openings, stacked ----------
+  const deck = document.querySelector('[data-deck]');
+  if (deck) {
+    const icon = document.querySelector('[data-present-start] .icon')?.cloneNode(true);
+    chapters.slice(0, 3).forEach((ch, k) => {
+      const card = document.createElement('span');
+      card.className = 'deck__card';
+      card.style.setProperty('--k', k);
+      card.setAttribute('aria-hidden', 'true');
+      // Spans, not headings: the deck is a button, which may only hold phrasing content.
+      card.append(...[...ch.querySelector('.chapter__head').children].map((n) => {
+        const c = document.createElement('span');
+        c.className = n.className;
+        c.style.display = 'block';
+        c.textContent = [...n.childNodes].filter((x) => !x.classList?.contains('ref')).map((x) => x.textContent).join('');
+        return c;
+      }));
+      if (k === 0 && icon) {
+        const play = document.createElement('span');
+        play.className = 'deck__play';
+        play.append(icon);
+        card.append(play);
+      }
+      deck.append(card);
+    });
+  }
 
   // ---------- Presentation ----------
   const present = document.querySelector('[data-present]');
@@ -77,26 +108,46 @@ export function initTour({ gsap, reduce, rtl, lang }) {
     cur.scrollTop = 0;
   };
 
+  let closeTimer = 0;
   const open = (from) => {
+    clearTimeout(closeTimer);
     opener = from || document.activeElement;
-    present.hidden = false;
-    document.documentElement.classList.add('present-open');
+    // The circle grows from the centre of the button that opened it.
+    const r = from?.getBoundingClientRect?.();
+    present.style.setProperty('--cx', r ? `${r.left + r.width / 2}px` : '50%');
+    present.style.setProperty('--cy', r ? `${r.top + r.height / 2}px` : '50%');
+    present.classList.remove('is-closing');
+    if (present.hidden) {
+      present.hidden = false;
+      lockScroll(ctx, true);
+      document.documentElement.classList.add('present-open');
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => present.classList.add('is-open')));
     // Start from the chapter currently on screen.
     const current = chapters.find((c) => visible.get(c.id) > 0);
     const start = current ? slides.findIndex((s) => s.chapter === current.id) : 0;
     index = Math.max(0, start);
     slides.forEach(({ el }) => { el.hidden = true; });
     show(index);
-    present.querySelector('[data-present-next]').focus();
+    present.querySelector('[data-present-next]').focus({ preventScroll: true });
     if (location.hash !== '#present') history.replaceState(null, '', '#present');
   };
   const close = () => {
-    present.hidden = true;
-    document.documentElement.classList.remove('present-open');
+    if (present.hidden || present.classList.contains('is-closing')) return;
     if (document.fullscreenElement) document.exitFullscreen?.();
     history.replaceState(null, '', location.pathname);
-    document.getElementById(slides[index].chapter)?.scrollIntoView({ block: 'start' });
-    opener?.focus?.();
+    const chapter = document.getElementById(slides[index].chapter);
+    present.classList.add('is-closing');
+    present.classList.remove('is-open');
+    closeTimer = setTimeout(() => {
+      present.hidden = true;
+      present.classList.remove('is-closing');
+      document.documentElement.classList.remove('present-open');
+      lockScroll(ctx, false);
+      if (ctx.lenis) ctx.lenis.scrollTo(chapter, { immediate: true, offset: -8 });
+      else chapter?.scrollIntoView({ block: 'start' });
+      opener?.focus?.({ preventScroll: true });
+    }, reduce ? 0 : 560);
   };
 
   document.querySelectorAll('[data-present-start]').forEach((b) => b.addEventListener('click', () => {

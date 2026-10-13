@@ -3,7 +3,6 @@
   "meta": {
     "ogLocale": "en_US",
     "ogLocaleAlt": "fa_IR",
-    "displaySubset": "latin",
     "keywords": "private document AI, offline PDF chatbot, Persian document AI, Farsi RAG, local RAG, self-hosted RAG, Persian OCR, chat with PDF, cited answers, Ollama, Qdrant",
     "ldDescription": "Private, offline-first document AI for Persian (Farsi) and English: ask PDF, Word, PowerPoint and scanned documents on your own machine and get answers that cite the exact file and page."
   },
