@@ -1,5 +1,5 @@
-// Hero: Persian letters drift like ink dust, then gather into the ParsRAG mark.
-// The pointer stirs them; scrolling away lets them fall toward the page below.
+// Hero: letters of the page's own language drift like ink dust, then gather into the
+// ParsRAG mark. The pointer stirs them; scrolling away lets them fall toward the page below.
 import { splitWords, clamp } from './util.js';
 
 const MARK = {
@@ -10,9 +10,6 @@ const MARK = {
   spark2: 'M39.7 6.8c.2 1.2.95 1.95 2.15 2.15-1.2.2-1.95.95-2.15 2.15-.2-1.2-.95-1.95-2.15-2.15 1.2-.2 1.95-.95 2.15-2.15Z',
 };
 
-const LETTERS = [...'ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی'];
-const LATIN = [...'aeinorstRAG'];
-const DIGITS = [...'۰۱۲۳۴۵۶۷۸۹'];
 const COLORS = { left: '#5DA68D', right: '#8FD3BA', lines: '#EEF2EA', spark: '#E2C27E', ambient: '#79C5AA' };
 const SPRITE_FONT = 20; // px the sprite glyph is drawn at
 const SPRITE_BOX = 30; // px of the sprite canvas
@@ -29,6 +26,10 @@ export function initHero({ gsap, ST, reduce }) {
   if (!hero || !canvas || !slot) return;
   const c2d = canvas.getContext('2d');
   if (!c2d) return;
+  // Glyphs come from the page language: Latin and citation marks in English, Persian letters in Persian.
+  const GLYPHS = [...(canvas.dataset.glyphs || 'abcdefghijklmnopqrstuvwxyz')];
+  const LETTERS = GLYPHS.filter((g) => !/[0-9۰-۹]/.test(g));
+  const SPARKS = ['✦', '*', '✧'];
 
   const state = { intro: reduce ? 1 : 0, gather: reduce ? 1 : 0, scatter: 0 };
   const pointer = { x: 0, y: 0, active: false };
@@ -56,7 +57,12 @@ export function initHero({ gsap, ST, reduce }) {
     return cv;
   }
 
-  // Render the mark with a flat color per part, then sample it on a staggered grid.
+  // Render the mark with a flat color per part, then sample it on a staggered grid. The points
+  // are normalized, so they are sampled once and reused at every size.
+  let sampled = null;
+  // Fewer glyphs on small or low-power devices.
+  const lowPower = window.innerWidth < 700 || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+  const markPoints = () => (sampled ||= sampleMark(lowPower ? 180 : 240));
   function sampleMark(size) {
     const off = document.createElement('canvas');
     off.width = off.height = size;
@@ -120,7 +126,7 @@ export function initHero({ gsap, ST, reduce }) {
     const small = W < 700;
     const glyphScale = clamp(size / 230, 0.7, 1.25);
 
-    parts = sampleMark(size).map((pt) => {
+    parts = markPoints().map((pt) => {
       const tx = cx + pt.x * size;
       const ty = cy + pt.y * size;
       const dist = Math.hypot(pt.x, pt.y);
@@ -130,7 +136,7 @@ export function initHero({ gsap, ST, reduce }) {
         ty,
         hx: rand(-0.05, 1.05) * W,
         hy: rand(-0.05, 1.05) * H,
-        ch: pt.kind === 'spark' ? pick(['٭', '✦', '*']) : pt.kind === 'lines' ? pick([...LETTERS, ...LATIN]) : pick(LETTERS),
+        ch: pt.kind === 'spark' ? pick(SPARKS) : pick(LETTERS),
         color: COLORS[pt.kind],
         size: (pt.kind === 'lines' ? 11 : pt.kind === 'spark' ? 12 : rand(11, 15)) * glyphScale,
         alpha: pt.kind === 'left' ? 0.55 : pt.kind === 'right' ? 0.92 : 1,
@@ -144,13 +150,13 @@ export function initHero({ gsap, ST, reduce }) {
       };
     });
 
-    const ambient = small ? 50 : 130;
+    const ambient = small || lowPower ? 40 : 130;
     for (let k = 0; k < ambient; k++) {
       parts.push({
         kind: 'ambient',
         hx: Math.random() * W,
         hy: Math.random() * H,
-        ch: pick([...LETTERS, ...DIGITS]),
+        ch: pick(GLYPHS),
         color: COLORS.ambient,
         size: rand(8, 15),
         alpha: rand(0.06, 0.2),
@@ -234,7 +240,16 @@ export function initHero({ gsap, ST, reduce }) {
 
   // Render loop, paused when the hero is off screen.
   let running = false;
-  const tick = () => draw(performance.now());
+  // Full frame rate while the letters move with purpose; half rate while they only drift.
+  let frame = 0;
+  let lastScatter = -1;
+  const tick = () => {
+    frame++;
+    const idle = state.gather >= 1 && !pointer.active && state.scatter === lastScatter;
+    lastScatter = state.scatter;
+    if (idle && frame % 2) return;
+    draw(performance.now());
+  };
   const setRunning = (on) => {
     if (on === running) return;
     running = on;
@@ -251,6 +266,9 @@ export function initHero({ gsap, ST, reduce }) {
   });
   hero.addEventListener('pointerleave', () => { pointer.active = false; });
 
+  // Sprites drawn before the web font arrived are redrawn with it.
+  document.fonts?.ready.then(() => sprites.clear());
+
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -261,16 +279,57 @@ export function initHero({ gsap, ST, reduce }) {
 
   // The one orchestrated moment: ink gathers, then the words arrive.
   const words = title ? splitWords(title) : [];
-  const intro = gsap.timeline({ delay: 0.1 });
+
+  // A gold thread from the headline's last word ("page") down to the live demo below.
+  const NS = 'http://www.w3.org/2000/svg';
+  const threadSvg = document.createElementNS(NS, 'svg');
+  threadSvg.setAttribute('class', 'hero__thread');
+  threadSvg.setAttribute('aria-hidden', 'true');
+  const threadPath = document.createElementNS(NS, 'path');
+  threadPath.setAttribute('class', 'thread');
+  threadPath.setAttribute('pathLength', '1');
+  threadSvg.append(threadPath);
+  hero.append(threadSvg);
+  const cue = hero.querySelector('.hero__cue');
+  const content = hero.querySelector('.hero__content');
+  const rtl = document.documentElement.dir === 'rtl';
+  // The thread leaves the end of the headline, runs down the outside of the text and the
+  // buttons, and comes back in to the scroll cue, so it never crosses the copy.
+  const routeThread = () => {
+    const last = words[words.length - 1];
+    if (!last || !cue || !content) return;
+    const box = hero.getBoundingClientRect();
+    const w = last.getBoundingClientRect();
+    const c = cue.getBoundingClientRect();
+    const k = content.getBoundingClientRect();
+    const side = rtl ? -1 : 1;
+    const sx = (rtl ? w.left - 6 : w.right + 6) - box.left;
+    const sy = w.top + w.height * 0.62 - box.top;
+    const edge = Math.min(box.width - 12, Math.max(12, (rtl ? k.left - 36 : k.right + 36) - box.left));
+    const ex = c.left + c.width / 2 - box.left;
+    const ey = c.top - box.top;
+    const bend = Math.min(90, (ey - sy) / 4);
+    threadSvg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    threadPath.setAttribute('d', [
+      `M${sx},${sy}`,
+      `C${edge},${sy} ${edge},${sy} ${edge},${sy + bend}`,
+      `L${edge},${ey - bend * 2}`,
+      `C${edge},${ey - bend * 0.6} ${ex + side * bend},${ey - bend * 0.9} ${ex},${ey}`,
+    ].join(' '));
+  };
+  routeThread();
+  new ResizeObserver(routeThread).observe(hero);
+  document.fonts?.ready.then(routeThread);
+  // The copy is painted at once (it is the largest thing on screen); only the headline
+  // sharpens from soft ink, word by word, while the letters gather into the mark.
+  gsap.set(words, { filter: 'blur(12px)', y: '0.22em' });
+  const intro = gsap.timeline({ delay: 0.05 });
   intro
     .to(state, { intro: 1, duration: 1.1, ease: 'power1.out' }, 0)
     .to(state, { gather: 1, duration: 2.8, ease: 'none' }, 0.2)
-    .fromTo('[data-hero="pill"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, 1.0)
-    .fromTo(title, { opacity: 0 }, { opacity: 1, duration: 0.01 }, 1.1)
-    .fromTo(words, { opacity: 0, y: '0.38em', filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, stagger: 0.075, ease: 'power3.out' }, 1.1)
-    .fromTo('[data-hero="lead"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.7)
-    .fromTo('[data-hero="actions"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.9)
-    .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.6)
+    .to(words, { y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.07, ease: 'power3.out' }, 0.35)
+    .fromTo(threadPath, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', onStart: routeThread }, 1.7)
+    .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.2)
     .add(() => words.forEach((w) => { w.style.willChange = 'auto'; w.style.filter = ''; }));
 
   // Leaving the hero: the letters fall toward the page below and the copy lifts away.

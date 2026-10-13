@@ -1,0 +1,150 @@
+{
+  "local-pipeline": {
+    "en": { "file": "README.md", "quote": "Parsing, Tesseract OCR, multilingual-e5 embeddings, LlamaIndex retrieval, and Qdrant vector search run on the host." },
+    "fa": { "file": "README.fa.md", "quote": "استخراج متن، OCR با Tesseract، embedding چندزبانه، بازیابی با LlamaIndex و جست‌وجوی برداری با Qdrant روی سیستم میزبان انجام می‌شوند." }
+  },
+  "traceable": {
+    "en": { "file": "README.md", "quote": "Traceable sources: unique filenames plus page ranges, slides, paragraphs, or section locations when the parser can determine them." },
+    "fa": { "file": "README.fa.md", "quote": "منابع قابل‌ردیابی: نام یکتای فایل همراه با بازهٔ صفحه، اسلاید، پاراگراف یا بخش، هرجا که ساختار فایل اجازه دهد." }
+  },
+  "numbered-citations": {
+    "en": { "file": "CHANGELOG.md", "quote": "Numbered citations: the model cites excerpts as [n], the response lists which ones it used (cited), and the interface turns them into chips that open the cited passage." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Numbered citations: the model cites excerpts as [n], the response lists which ones it used (cited), and the interface turns them into chips that open the cited passage.", "display": "ارجاع‌های شماره‌دار: مدل به بخش‌ها با [n] ارجاع می‌دهد، پاسخ فهرست بخش‌های استفاده‌شده را برمی‌گرداند و رابط آن‌ها را به نشانه‌هایی تبدیل می‌کند که همان بخش را باز می‌کنند." }
+  },
+  "provenance": {
+    "en": { "file": "CHANGELOG.md", "quote": "Every answer shows where its content came from (documents only, documents and model knowledge, model knowledge, or not found in the documents)." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Every answer shows where its content came from (documents only, documents and model knowledge, model knowledge, or not found in the documents).", "display": "هر پاسخ نشان می‌دهد محتوایش از کجا آمده است: فقط از اسناد، اسناد و دانش مدل، دانش مدل، یا در اسناد پیدا نشد." }
+  },
+  "suggestions": {
+    "en": { "file": "CHANGELOG.md", "quote": "Questions your documents can answer: an empty conversation suggests three specific questions written from its documents" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Questions your documents can answer: an empty conversation suggests three specific questions written from its documents", "display": "پرسش‌هایی که اسناد شما پاسخ می‌دهند: گفت‌وگوی خالی سه پرسش مشخص پیشنهاد می‌کند که از روی همان اسناد نوشته شده‌اند." }
+  },
+  "streaming": {
+    "en": { "file": "CHANGELOG.md", "quote": "Answers stream token by token (POST /query/stream, Server-Sent Events)" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Answers stream token by token (POST /query/stream, Server-Sent Events)", "display": "پاسخ‌ها کلمه‌به‌کلمه و به‌صورت جریانی (Server-Sent Events) نمایش داده می‌شوند." }
+  },
+  "three-modes": {
+    "en": { "file": "README.md", "quote": "Three explicit answer modes: Strict document-only RAG, Hybrid RAG, and model-only chat." },
+    "fa": { "file": "README.fa.md", "quote": "سه روش پاسخ‌دهی روشن: فقط مبتنی بر سند، ترکیبی و فقط مبتنی بر دانش مدل." }
+  },
+  "strict-refuses": {
+    "en": { "file": "README.md", "quote": "Strict mode refuses when retrieved evidence does not meet its configured threshold. This is an application safeguard, not a universal guarantee" },
+    "fa": { "file": "README.fa.md", "quote": "حالت Strict وقتی شواهد بازیابی‌شده به حدنصاب نرسند از پاسخ قطعی خودداری می‌کند. این رفتار یک محافظ نرم‌افزاری است" }
+  },
+  "mentions": {
+    "en": { "file": "README.md", "quote": "Each clause is searched in its named file; strict mode declines a combined answer if either file lacks sufficient evidence." },
+    "fa": { "file": "README.fa.md", "quote": "هر بخش در سند نام‌برده جست‌وجو می‌شود و حالت فقط سند اگر برای یکی از آن‌ها شواهد کافی نیابد، از پاسخ ترکیبی خودداری می‌کند." }
+  },
+  "local-in-all-modes": {
+    "en": { "file": "README.md", "quote": "Embeddings and Qdrant remain local in all modes. API keys stay in process memory or environment variables; they are not written to browser storage, logs, API responses, or the persisted non-secret model configuration." },
+    "fa": { "file": "README.fa.md", "quote": "Embedding و Qdrant در همه حالت‌ها محلی می‌مانند. کلید API فقط در حافظه پردازش یا متغیر محیطی نگه‌داری می‌شود و در localStorage، لاگ، پاسخ API یا فایل تنظیمات پایدار مدل ذخیره نمی‌شود." }
+  },
+  "offline": {
+    "en": { "file": "README.md", "quote": "After images and model weights are downloaded once, local Ollama operation can remain offline." },
+    "fa": { "file": "README.fa.md", "quote": "پس از دانلود اولیه imageها و وزن مدل، حالت Ollama محلی می‌تواند آفلاین بماند." }
+  },
+  "encodings": {
+    "en": { "file": "README.md", "quote": "UTF-8, UTF-16 (with BOM), or legacy Windows-1256 (Persian) / Windows-1252 text" },
+    "fa": { "file": "README.fa.md", "quote": "متن UTF-8، UTF-16 (با BOM) یا کدگذاری قدیمی ویندوز ۱۲۵۶ (فارسی) و ۱۲۵۲" }
+  },
+  "limits": {
+    "en": { "file": "README.md", "quote": "Default capacity is 10 files per session, 100 MiB per file, and 500 MiB per upload batch." },
+    "fa": { "file": "README.fa.md", "quote": "ظرفیت پیش‌فرض ۱۰ فایل در هر سشن، ۱۰۰ مگابایت دودویی برای هر فایل و ۵۰۰ مگابایت دودویی در هر batch آپلود است." }
+  },
+  "archives": {
+    "en": { "file": "README.md", "quote": "Office archives are also checked for entry count, expanded size, and suspicious compression ratios." },
+    "fa": { "file": "README.fa.md", "quote": "فایل‌های Office از نظر تعداد ورودی‌های آرشیو، حجم بازشده و نسبت فشرده‌سازی مشکوک نیز بررسی می‌شوند." }
+  },
+  "reuse": {
+    "en": { "file": "README.md", "quote": "reuse an indexed document in another conversation without uploading it again" },
+    "fa": { "file": "README.fa.md", "quote": "استفادهٔ دوباره از سند ایندکس‌شده در گفت‌وگوی دیگر بدون آپلود مجدد" }
+  },
+  "gpu": {
+    "en": { "file": "README.md", "quote": "Adaptive compute: CPU is the portable default; optional Compose overlays accelerate both embeddings and Ollama on NVIDIA or supported AMD hosts." },
+    "fa": { "file": "README.fa.md", "quote": "استفاده تطبیقی از سخت‌افزار: CPU حالت قابل‌حمل پیش‌فرض است و پروفایل‌های جداگانه Docker، embedding و Ollama را روی NVIDIA یا AMD سازگار اجرا می‌کنند." }
+  },
+  "pwa": {
+    "en": { "file": "README.md", "quote": "model requests and document data are never service-worker cached." },
+    "fa": { "file": "README.fa.md", "quote": "درخواست‌های مدل و داده‌های اسناد در کش Service Worker قرار نمی‌گیرند." }
+  },
+  "ram": {
+    "en": { "file": "README.md", "quote": "8–16 GB RAM depending on the selected model." },
+    "fa": { "file": "README.fa.md", "quote": "مدل انتخابی حدود ۸ تا ۱۶ گیگابایت RAM." }
+  },
+  "source-available": {
+    "en": { "file": "README.md", "quote": "ParsRAG is source-available, not open source." },
+    "fa": { "file": "README.fa.md", "quote": "تغییر برند، ارائه به‌عنوان سرویس و تغییر بدون اجازه ممنوع است." }
+  },
+  "bm25": {
+    "en": { "file": "DATA.md", "quote": "On a generated set of 127 keyword-style queries, fusion raised mean reciprocal rank from 0.748 to 0.823 (0.851 with the Hybrid reranker); on 125 paraphrased questions it changed it by −0.01, within noise." },
+    "fa": { "file": "DATA.md", "quote": "On a generated set of 127 keyword-style queries, fusion raised mean reciprocal rank from 0.748 to 0.823 (0.851 with the Hybrid reranker); on 125 paraphrased questions it changed it by −0.01, within noise.", "display": "روی ۱۲۷ پرسش کلیدواژه‌ای ساخته‌شده، ترکیب جست‌وجوی کلیدواژه‌ای میانگین رتبهٔ معکوس (MRR) را از ۰٫۷۴۸ به ۰٫۸۲۳ رساند (۰٫۸۵۱ با رتبه‌بند حالت ترکیبی)؛ روی ۱۲۵ پرسش بازنویسی‌شده تغییر ۰٫۰۱− بود که در حد نوسان است." }
+  },
+  "ocr-rotation": {
+    "en": { "file": "backend/infrastructure/parsers/ocr.py", "quote": "On rendered Persian scans, character error fell from 0.85 to 0.09 for pages rotated 90 degrees and from 0.40 to 0.24 for pages skewed 5 degrees, with upright pages unchanged." },
+    "fa": { "file": "backend/infrastructure/parsers/ocr.py", "quote": "On rendered Persian scans, character error fell from 0.85 to 0.09 for pages rotated 90 degrees and from 0.40 to 0.24 for pages skewed 5 degrees, with upright pages unchanged.", "display": "روی اسکن‌های فارسیِ ساخته‌شده، خطای نویسه برای صفحه‌های ۹۰ درجه چرخیده از ۰٫۸۵ به ۰٫۰۹ و برای صفحه‌های ۵ درجه کج از ۰٫۴۰ به ۰٫۲۴ رسید و صفحه‌های صاف بدون تغییر ماندند." }
+  },
+  "ocr-mean": {
+    "en": { "file": "CHANGELOG.md", "quote": "OCR: grayscale at 200 dpi, no contrast stretching, a confidence-based second pass, and no invisible bidi marks (mean character error 0.225 → 0.133)." },
+    "fa": { "file": "CHANGELOG.md", "quote": "OCR: grayscale at 200 dpi, no contrast stretching, a confidence-based second pass, and no invisible bidi marks (mean character error 0.225 → 0.133).", "display": "OCR: خاکستری با ۲۰۰ dpi، بدون کشش کنتراست، گذر دوم بر اساس اطمینان و بدون نشانه‌های نامرئی جهت (میانگین خطای نویسه از ۰٫۲۲۵ به ۰٫۱۳۳)." }
+  },
+  "e5": {
+    "en": { "file": "DATA.md", "quote": "measured gain was small (vector-search MRR 0.672 → 0.682)" },
+    "fa": { "file": "DATA.md", "quote": "measured gain was small (vector-search MRR 0.672 → 0.682)", "display": "بهبود اندازه‌گیری‌شده کوچک بود (MRR جست‌وجوی برداری از ۰٫۶۷۲ به ۰٫۶۸۲)." }
+  },
+  "e2e-gate": {
+    "en": { "file": "backend/tests/e2e/test_end_to_end.py", "quote": "assert sum(hits) >= 7, (" },
+    "fa": { "file": "backend/tests/e2e/test_end_to_end.py", "quote": "assert sum(hits) >= 7, (", "display": "آزمون سرتاسری: دست‌کم ۷ پرسش از ۸ پرسش بازنویسی‌شدهٔ فارسی باید ابتدا بخش درست خود را ارجاع دهند." }
+  },
+  "ci-matrix": {
+    "en": { "file": ".github/workflows/quality.yml", "quote": "os: [ubuntu-latest, windows-latest, macos-latest]" },
+    "fa": { "file": ".github/workflows/quality.yml", "quote": "os: [ubuntu-latest, windows-latest, macos-latest]", "display": "بررسی‌های بک‌اند و فرانت‌اند روی لینوکس، ویندوز و مک اجرا می‌شوند." }
+  },
+  "coverage": {
+    "en": { "file": "pyproject.toml", "quote": "fail_under = 85" },
+    "fa": { "file": "pyproject.toml", "quote": "fail_under = 85", "display": "پوشش آزمون بک‌اند نباید از ۸۵ درصد کمتر شود." }
+  },
+  "dns-rebinding": {
+    "en": { "file": "CHANGELOG.md", "quote": "Requests addressed to host names other than localhost, 127.0.0.1, and ::1 are rejected (DNS rebinding)" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Requests addressed to host names other than localhost, 127.0.0.1, and ::1 are rejected (DNS rebinding)", "display": "درخواست‌هایی که نام میزبانی جز localhost، 127.0.0.1 و ::1 دارند رد می‌شوند (محافظت در برابر DNS rebinding)." }
+  },
+  "persian-normalization": {
+    "en": { "file": "CHANGELOG.md", "quote": "Persian spelling is normalized in indexed text and questions (Arabic Yeh and Kaf, presentation forms, diacritics, digits)." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Persian spelling is normalized in indexed text and questions (Arabic Yeh and Kaf, presentation forms, diacritics, digits).", "display": "املای فارسی در متن ایندکس‌شده و پرسش‌ها یکسان‌سازی می‌شود (ی و ک عربی، شکل‌های نمایشی، اِعراب و ارقام)." }
+  },
+  "persian-pdf": {
+    "en": { "file": "CHANGELOG.md", "quote": "Persian PDF text is rebuilt in reading order from glyph positions; the ezafe mark stays on its letter; text layers without usable Unicode go to OCR." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Persian PDF text is rebuilt in reading order from glyph positions; the ezafe mark stays on its letter; text layers without usable Unicode go to OCR.", "display": "متن PDFهای فارسی از روی جای حروف به ترتیب خواندن بازسازی می‌شود؛ نشانهٔ اضافه روی حرف خودش می‌ماند و لایه‌های متنی بی‌کیفیت به OCR فرستاده می‌شوند." }
+  },
+  "ocr-rotated": {
+    "en": { "file": "CHANGELOG.md", "quote": "OCR re-reads sideways, upside-down, and skewed scans" },
+    "fa": { "file": "CHANGELOG.md", "quote": "OCR re-reads sideways, upside-down, and skewed scans", "display": "OCR اسکن‌های چرخیده، وارونه و کج را دوباره می‌خواند." }
+  },
+  "duplicates": {
+    "en": { "file": "CHANGELOG.md", "quote": "Duplicate uploads are recognized by content, not only by name." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Duplicate uploads are recognized by content, not only by name.", "display": "فایل تکراری از روی محتوا شناخته می‌شود، نه فقط از روی نام." }
+  },
+  "backup": {
+    "en": { "file": "CHANGELOG.md", "quote": "Conversation backup and restore (versioned JSON) and per-conversation Markdown export." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Conversation backup and restore (versioned JSON) and per-conversation Markdown export.", "display": "پشتیبان‌گیری و بازیابی گفت‌وگوها (JSON نسخه‌دار) و خروجی Markdown برای هر گفت‌وگو." }
+  },
+  "strict-meaning": {
+    "en": { "file": "CHANGELOG.md", "quote": "Documents-only (Strict) mode answers by meaning: paraphrased questions, whole-document questions, and partial answers no longer get refused, while facts must still come from the documents." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Documents-only (Strict) mode answers by meaning: paraphrased questions, whole-document questions, and partial answers no longer get refused, while facts must still come from the documents.", "display": "حالت «فقط اسناد» بر اساس معنا پاسخ می‌دهد: پرسش‌های بازنویسی‌شده، پرسش دربارهٔ کل سند و پاسخ‌های ناقص دیگر رد نمی‌شوند، ولی واقعیت‌ها همچنان باید از خود اسناد بیایند." }
+  },
+  "bm25-fusion": {
+    "en": { "file": "CHANGELOG.md", "quote": "Keyword (BM25) search fused with vector search" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Keyword (BM25) search fused with vector search", "display": "جست‌وجوی کلیدواژه‌ای (BM25) با جست‌وجوی برداری ترکیب می‌شود." }
+  },
+  "reranker": {
+    "en": { "file": "CHANGELOG.md", "quote": "Hybrid reranks with an Arabic-script cross-encoder that is cached on disk" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Hybrid reranks with an Arabic-script cross-encoder that is cached on disk", "display": "حالت ترکیبی با یک cross-encoder مخصوص خط عربی-فارسی رتبه‌بندی دوباره می‌کند که روی دیسک ذخیره می‌شود." }
+  },
+  "word-headings": {
+    "en": { "file": "CHANGELOG.md", "quote": "Word documents are chunked under their headings" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Word documents are chunked under their headings", "display": "سندهای Word زیر سرعنوان‌هایشان بخش‌بندی می‌شوند." }
+  },
+  "partial-index": {
+    "en": { "file": "CHANGELOG.md", "quote": "A failed upload no longer leaves a partly indexed document behind." },
+    "fa": { "file": "CHANGELOG.md", "quote": "A failed upload no longer leaves a partly indexed document behind.", "display": "بارگذاری ناموفق دیگر سندی نیمه‌ایندکس‌شده باقی نمی‌گذارد." }
+  }
+}

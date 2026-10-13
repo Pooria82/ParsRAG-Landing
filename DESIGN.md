@@ -1,95 +1,78 @@
-# ParsRAG landing — design plan
+# ParsRAG website — design
 
 ## Brief
 
 - **Subject:** ParsRAG, an offline-first workspace that answers questions about Persian and English documents and cites the exact page every claim came from.
 - **Audience:** Persian-speaking developers, researchers, students, and organizations who cannot send documents to a cloud chatbot.
-- **Primary job:** make a visitor feel, within ten seconds, *"it reads my Persian documents and shows me where every answer came from — on my own machine,"* then get them to GitHub or the quick start.
+- **Primary job:** within seconds, a visitor should *try* it — ask a document, open the citation, see the passage — and understand that it runs on their own machine. Then: run it locally, or read the full product tour.
 
 ## Concept: Hashiye (حاشیه, marginalia)
 
-Persian manuscripts carried *hashiye*: commentary written in the margins, pointing back to the passage it explains. ParsRAG does the same thing with software: every answer sentence is tied to a source page. The page is built around that idea:
+Persian manuscripts carried *hashiye*: commentary written in the margins, pointing back to the passage it explains. ParsRAG does the same with software: every answer sentence is tied to a source page.
 
 - answers are typeset like a manuscript page,
-- citations live in the margin as notes,
-- **gold citation threads** connect each note to the highlighted line it came from.
+- **gold citation threads** tie each claim to the passage it came from,
+- **the site cites itself:** every product claim carries a numbered marker that quotes the ParsRAG repository, verified at build time. The site behaves the way the product does.
 
-The citation thread is the one memorable element. Everything else stays quiet.
+The gold thread is the one memorable element; it runs through the whole page: from the hero headline to the demo, between a citation and its passage, between claim, evidence and source, and down the page margin as the reading trail.
 
 ## Tokens
 
-### Color (Persian illumination on night-green)
+### Color (Persian illumination on night green)
 
 | Name | Hex | Role |
 | --- | --- | --- |
 | Night green | `#0F2E27` | Main canvas (a colored ground, not a tinted black) |
-| Deep green | `#0A221C` | Recessed panels, shadows |
-| Paper | `#EEF2EA` | Document pages, answer page |
-| Brand green | `#146A57` | Product color, primary button on paper |
-| Spark mint | `#79C5AA` | The brand spark, focus rings, live states |
-| Illumination gold | `#D2B06A` | Citation threads, margin notes, one CTA (tazhib gold) |
-| Lapis | `#4A6FC0` | Rare: the external-API path in the trust diagram only |
+| Deep green | `#0A221C` | Alternate sections, panels |
+| Paper | `#E6EBE1` → `#DDE4D6` | Document pages; softened with a top light and grain so it isn't a flat white slab |
+| Brand green | `#146A57` | Product color on paper |
+| Spark mint | `#79C5AA` | Focus rings, live states, "stays local" |
+| Illumination gold | `#D2B06A` | Threads, citation markers, the primary action |
+| Lapis | `#4A6FC0` | Rare: the external-API path only |
+| Brick | `#A0472F` | Refusals and "not found" |
 
-Text on night green: `#E7EFEA` (body), `#9FB8AE` (secondary). Text on paper: `#173129`.
+Text on night green: `#E7EFEA` / `#A3BBB1`. Text on paper: `#173129` / `#4A6158`.
 
 ### Type
 
-- **Display:** *Markazi Text*, a Naskh-inspired serif covering Persian and Latin. It gives headlines the voice of a manuscript in both languages. Used at large sizes only.
-- **Body/UI:** *Vazirmatn*, the product's own typeface, so the site and the app read as one family.
-- **Scale:** a perfect fourth (1.333) from 17px: 17 / 23 / 30 / 40 / 53 / 71 / 95. Persian gets +8% size and a 1.9 line-height, Latin a 1.6 line-height. Measure ≤ 70ch.
-- **Persian text is never split into characters**, because that would break the joined script. Reveals animate whole words or lines.
+- **Display:** *Markazi Text*, a Naskh-derived serif for Persian and Latin, at large sizes and for answers on paper.
+- **Body/UI:** *Vazirmatn*, the product's own typeface.
+- Perfect fourth from 17px. Persian gets a larger size and 1.9 line-height. Persian text is never split into characters; reveals animate whole words.
 
-### Layout
+## Page structure
 
 ```
-HERO (100vh, night green)
-  glyph field: Persian letters drift like ink dust,
-  then gather into the ParsRAG mark (two pages + spark)
-  headline (Markazi), one-line explanation, two actions
-
-MARGINALIA DEMO (pinned while scrolling)
-  ┌──────── answer page (paper) ────────┐ ┌ margin ┐
-  │ question being typed with @file     │ │ note 1 │──gold thread──▶ source page card
-  │ stages: understanding/retrieving/…  │ │ note 2 │──gold thread──▶ source page card
-  │ answer lines ink in                 │ └────────┘
-  └─────────────────────────────────────┘
-
-A PAGE'S JOURNEY (true sequence → numbered steps beside one pinned stage)
-  one page morphs: upload → OCR beam → located passages (one bridges
-  pages 3–4) → vectors → Qdrant collection → question finds 3 sources
-
-THREE WAYS TO ANSWER (one question, three answers, segmented control)
-
-THE WORKSTATION FRAME (illuminated border; data stays inside;
-  toggle "external API" → a lapis gate opens + disclosure)
-
-SHELF OF FORMATS (book spines: PDF, DOCX, PPTX, images, text, code)
-
-TWO DIRECTIONS (drag divider between Persian RTL and English LTR screenshots)
-
-QUICK START (terminal) → closing line + actions
+HERO          letters of the page language gather into the mark; headline sharpens from ink;
+              a gold thread runs from "page" around the copy to the demo
+LIVE DEMO     4 sample document sets, @ mentions, 3 modes, streamed answer, numbered chips,
+              source viewer with the cited passage highlighted, thread chip→passage,
+              refusals with the app's real messages, compare all three modes
+EVIDENCE      claim ─thread─ evidence ─thread─ source; "remove the evidence" removes the claim
+HOW IT WORKS  pinned stage: one page morphs through 6 real steps; "under the hood" per step
+PRIVACY       illuminated workstation frame with a gate; where-each-step-happens table
+              (cards on phones) compared with a cloud chatbot
+MEASURED      only numbers the repository records, each cited, plus the honest caveat
+FORMATS       book spines
+LANGUAGES     a live workspace preview that flips RTL/LTR on request
+INSTALL       terminal for the visitor's OS (PowerShell or sh) and setup
+TOUR TEASER   the 14 chapters
+CODA          the mark drawn by a thread; "Your documents. Your machine. Your evidence."
 ```
 
-Alignment: content follows the reading direction (right-aligned in Persian, left in English). The hero is centered because it's a single composition; every other section is direction-aligned.
+The product tour is a separate page: a sticky chapter index (a horizontal strip on narrow screens) and chapters built from structured content; "Present" turns each chapter opening and section into a slide.
 
 ## Principles
 
-1. **One bold thing:** citation threads. No gradient washes, glow cards, or decorative blobs.
-2. **Motion answers the reader:** one orchestrated hero sequence on load. After that, motion only follows scroll position or a click (pinned demo, journey, toggles). No fade-up on every section.
-3. **Persian first:** the Persian page is designed RTL-native rather than mirrored; the English page mirrors it.
-4. **Real content:** real formats, modes, limits, and commands from the README. No invented stats or testimonials.
-5. **Quality floor:** responsive to 360px, visible focus, `prefers-reduced-motion` (static composition, no pinning), contrast ≥ 4.5:1, no layout shift, Lighthouse-friendly static HTML with SEO metadata (hreflang, OG, JSON-LD, sitemap).
+1. **One bold thing:** the gold thread. No gradient washes, glow cards or decorative blobs.
+2. **Motion explains cause and effect:** one orchestrated hero moment; after that, motion follows scroll position or a click (citation → passage, remove evidence → claim disappears, provider → data path changes).
+3. **Product-led:** the first interaction is asking a document, not watching an animation.
+4. **Evidence-first copy:** real formats, modes, limits, commands, labels and messages from the release. No invented stats or testimonials; measured numbers carry their source and their limits.
+5. **Each language is complete:** the English page contains no Persian text (including the glyph field, the share card and documents); the Persian page is designed right-to-left with Persian numerals and dates, and Persian summaries of English-only documents.
+6. **Quality floor:** responsive from 360px through tablets in both orientations, visible focus, keyboard-operable controls, `prefers-reduced-motion` (static compositions, no pinning), no layout shift, one bundled script, content painted before scripts run.
 
 ## Review against generic defaults
 
-- *Dark page + one bright accent* is a default. Changed: the ground is a saturated green, and the accent pair is gold + mint taken from Persian illumination and the brand, so there's no acid neon.
-- *Serif display* can read as the cream-serif default. Kept, but on night green with Naskh-derived letterforms. It's tied to the manuscript concept rather than to a "premium" look.
-- *Numbered steps* are used only for the page's journey, which is a real sequence.
-- *Bento card grid* and *fade-up sections* are deliberately absent. Features are shown through the demo, the journey, and the shelf.
-- *Eyebrow labels, middle-dot meta strings, and arrows appended to buttons* are excluded; button labels say what happens.
-
-## Changes made while building
-
-- **Journey:** a pinned stage where one page morphs through the six steps replaced the horizontal track. It keeps the reading direction simple in RTL and shows each step as a change to the same object.
-- **Modes legend:** cited text, model knowledge and declined parts are underlined differently, and the underline is inked in with the streamed words.
-- **Reduced motion:** every scroll scene renders its final composition; the global rule uses `transition-duration: 0s` so layout reads are never mid-transition.
+- *Dark page + one bright accent* → a saturated green ground with gold and mint from Persian illumination.
+- *Big-number stat row* → measured results shown as before/after with their method and caveat, not as hero stats.
+- *Numbered steps* only for the processing sequence and tour chapters, which are real sequences.
+- *Bento grids, fade-up sections, all-caps eyebrows, middle-dot meta strings, arrows on buttons* → absent. Button labels say what happens.

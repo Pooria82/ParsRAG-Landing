@@ -1,50 +1,95 @@
-# ParsRAG landing page
+# ParsRAG website
 
-The bilingual (English / Persian) landing page for [ParsRAG](https://github.com/Pooria82/ParsRAG),
-published at <https://pooria82.github.io/ParsRAG-Landing/>. The site lives in this repository so the
-ParsRAG repository holds only the application.
+The bilingual (English and Persian) website for [ParsRAG](https://github.com/Pooria82/ParsRAG),
+published at <https://pooria82.github.io/ParsRAG-Landing/>. It has two pages in each language:
 
-The design concept, tokens and principles are in [DESIGN.md](DESIGN.md).
+- **Landing page:** a live demo that searches sample documents in the browser and opens every
+  citation, the evidence contract, how a page is processed, privacy, measured results, formats,
+  languages and installation.
+- **Product tour** (`/tour/`): every feature of the current release in 14 chapters, which can also
+  be presented full screen as slides.
+
+The design concept and principles are in [DESIGN.md](DESIGN.md).
+
+## The site follows the ParsRAG release
+
+`scripts/sync-content.mjs` downloads the latest ParsRAG release and the files the site quotes
+(README, CHANGELOG, LICENSE, CITATION.cff and others) into `src/content/upstream/`. The build uses
+that snapshot for:
+
+- the version and release date shown on every page (the page also checks GitHub at runtime, so a
+  newer release appears before the next build);
+- the release notes, license, citation formats, security policy and other documents, which open
+  in dialogs with a link to the source on GitHub;
+- **self-citations:** each claim on the site carries a numbered marker that shows the exact quote
+  from the repository. Claims are listed in `src/content/claims.json`, and the build **fails** if a
+  quoted sentence is no longer in the release. When that happens after a new release, update the
+  quote (and the page copy, if the fact changed).
+
+Persian summaries of the English-only documents are in `src/content/docs-fa/`. Release notes are
+summarized per version (`changelog-<version>.md`); a newer release shows a short notice until its
+summary is added.
 
 ## Structure
 
 ```
 src/
-  page.html          one template for both languages ({{key}} and {{@partial}} placeholders)
-  i18n/en.json       English copy, metadata and direction
-  i18n/fa.json       Persian copy (RTL, Persian numerals)
-  partials/          inline SVGs (mark, icons)
-  static/            copied as-is: CSS, JS modules, fonts, vendor libraries, images
-  og/                source for assets/img/og-card.png (the share image)
+  pages/              home.html and tour.html templates
+  partials/           head, header, footer and inline SVG icons
+  i18n/en, i18n/fa    copy for common chrome, the landing page and the tour (tour chapters are
+                      structured blocks rendered by the build)
+  content/upstream/   snapshot of the ParsRAG release
+  content/claims.json quotes behind the self-citations
+  content/demo/       sample documents and questions for the in-browser demo
+  content/docs-fa/    Persian summaries of repository documents
+  styles/             CSS, concatenated and minified into assets/css/site.css
+  static/             fonts, images, vendor libraries and JS modules (bundled into one file)
+  og/card.html        source of the share cards
 scripts/
-  build.mjs          renders dist/index.html and dist/fa/index.html, sitemap, .nojekyll
+  sync-content.mjs    pull the latest release
+  build.mjs           render pages, documents and sitemap into dist/
+  og.py               render assets/img/og-card-en.png and og-card-fa.png
 .github/workflows/
-  pages.yml          builds and deploys dist/ to GitHub Pages on every push to main
+  pages.yml           sync, build and deploy on push, daily, on demand, or on a
+                      "parsrag-release" repository dispatch from ParsRAG
 ```
 
-Each section has its own module in `src/static/assets/js/`: `hero.js` (glyph field that gathers
-into the mark), `marginalia.js` (pinned cited answer with gold threads), `journey.js` (ingestion
-sequence), `modes.js`, `boundary.js` (privacy frame), `shelf.js`, `compare.js`, `terminal.js`, `coda.js`.
+Templates use `{{key}}` for dictionary strings, `{{@partial}}` for partials, `{{ref:id}}` for a
+verified citation and `{{json:path}}` to hand strings to scripts.
 
 ## Build and preview
 
-No dependencies beyond Node.js 18+.
+Node.js 20 or later.
 
 ```bash
-node scripts/build.mjs
+npm ci
 ```
 
 ```bash
-python -m http.server 8765 --directory dist
+npm run sync
 ```
+
+```bash
+npm run build
+```
+
+```bash
+npm run serve
+```
+
+`npm run sync` needs network access; set `GITHUB_TOKEN` to avoid API rate limits. The share cards
+are rendered with Playwright for Python while the site is being served (`npm run og`).
 
 ## Publish
 
-Push to `main`. The **Deploy site** workflow builds `dist/` and publishes it to GitHub Pages
-(Settings → Pages → Source: GitHub Actions).
+Push to `main`. The **Deploy site** workflow syncs, builds and publishes `dist/` to GitHub Pages
+(Settings → Pages → Source: GitHub Actions). It also runs daily, so a new ParsRAG release reaches
+the site within a day; for an immediate update, send a `parsrag-release` repository dispatch or
+run the workflow by hand.
 
 ## Third-party code and fonts
 
 - [GSAP 3.15](https://gsap.com) with ScrollTrigger (standard "no charge" GSAP license), vendored in `assets/vendor/`.
-- [Lenis 1.3](https://github.com/darkroomengineering/lenis) (MIT) for smooth scrolling; disabled when reduced motion is requested.
+- [Lenis 1.3](https://github.com/darkroomengineering/lenis) (MIT) for smooth wheel scrolling on desktop pointers; off for touch and reduced motion.
 - [Vazirmatn](https://github.com/rastikerdar/vazirmatn) and [Markazi Text](https://fonts.google.com/specimen/Markazi+Text), both under the SIL Open Font License (`assets/fonts/OFL.md`).
+- Build tools: [marked](https://marked.js.org), [yaml](https://eemeli.org/yaml/) and [esbuild](https://esbuild.github.io).

@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Share card source. Rendered at 1280x640 into assets/img/og-card-{lang}.png by scripts/og.py
+     while dist/ is served locally; ?lang=fa switches to the Persian card. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+  body { margin: 0; width: 1280px; height: 640px; overflow: hidden; background: var(--night); }
+  .og { position: relative; width: 1280px; height: 640px; display: grid; grid-template-columns: 400px 1fr; align-items: center; gap: 60px; padding: 0 92px; box-sizing: border-box; }
+  .og::before { content: ""; position: absolute; inset: 0; background: radial-gradient(40% 60% at 22% 50%, rgba(121,197,170,.14), transparent 70%); }
+  [dir="rtl"] .og::before { background: radial-gradient(40% 60% at 78% 50%, rgba(121,197,170,.14), transparent 70%); }
+  .og .mark { width: 330px; height: 330px; position: relative; }
+  .kicker { color: var(--mint); font-size: 26px; font-weight: 600; margin: 0 0 14px; }
+  h1 { font-family: var(--font-display); font-weight: 500; font-size: 92px; line-height: .98; letter-spacing: -.02em; margin: 0; color: var(--text); }
+  [dir="rtl"] h1 { font-size: 84px; line-height: 1.3; letter-spacing: 0; }
+  .meta { display: flex; gap: 14px; align-items: center; margin-top: 30px; font-size: 24px; color: var(--text-2); }
+  .meta b { color: var(--gold-2); }
+  .thread { position: absolute; left: 0; right: 0; bottom: 54px; height: 1px; background: linear-gradient(90deg, transparent, rgba(210,176,106,.6), transparent); }
+</style>
+</head>
+<body>
+<div class="og" id="og"></div>
+<script>
+  const fa = new URLSearchParams(location.search).get('lang') === 'fa';
+  const mark = `<svg class="mark" viewBox="0 0 48 48" fill="none"><path class="mark__left" d="M23.9 12.2C18.2 6.8 10.7 7.5 7.4 10.6v23.8c5.2-2.8 10.7-1.5 16.5 4.1V12.2Z"/><path class="mark__right" d="M24.1 12.2c5.7-5.4 13.2-4.7 16.5-1.6v23.8c-5.2-2.8-10.7-1.5-16.5 4.1V12.2Z"/><path class="mark__lines" d="M24 37.8V14.2M11.8 16c3-.8 5.7-.1 8 1.7m-8 5c3-.8 5.7-.1 8 1.7m8.4-6.7c2.3-1.8 5-2.5 8-1.7m-8 8.4c2.3-1.8 5-2.5 8-1.7"/><path class="mark__spark" d="M24 2.2c.35 2.2 1.7 3.55 3.9 3.9C25.7 6.45 24.35 7.8 24 10c-.35-2.2-1.7-3.55-3.9-3.9 2.2-.35 3.55-1.7 3.9-3.9Z"/><path class="mark__spark mark__spark--small" d="M39.7 6.8c.2 1.2.95 1.95 2.15 2.15-1.2.2-1.95.95-2.15 2.15-.2-1.2-.95-1.95-2.15-2.15 1.2-.2 1.95-.95 2.15-2.15Z"/></svg>`;
+  const t = fa
+    ? { kicker: 'دستیار خصوصی اسناد فارسی و انگلیسی', title: 'هر پاسخ، با نشانی صفحه‌اش.', brand: 'پارس‌رگ', meta: 'روی رایانهٔ خودتان، با ارجاع به منبع' }
+    : { kicker: 'Private document AI for Persian and English', title: 'Every answer, traced to its page.', brand: 'ParsRAG', meta: 'On your own machine, with cited sources' };
+  document.documentElement.lang = fa ? 'fa' : 'en';
+  document.documentElement.dir = fa ? 'rtl' : 'ltr';
+  document.getElementById('og').innerHTML = `${mark}<div><p class="kicker">${t.kicker}</p><h1>${t.title}</h1><p class="meta"><b>${t.brand}</b><span>${t.meta}</span></p></div><span class="thread"></span>`;
+</script>
+</body>
+</html>

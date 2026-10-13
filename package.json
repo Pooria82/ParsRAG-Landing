@@ -1,0 +1,20 @@
+{
+  "name": "parsrag-landing",
+  "private": true,
+  "type": "module",
+  "description": "Bilingual landing page and product tour for ParsRAG.",
+  "scripts": {
+    "sync": "node scripts/sync-content.mjs",
+    "build": "node scripts/build.mjs",
+    "og": "python scripts/og.py",
+    "serve": "python -m http.server 8765 --directory dist"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "marked": "^18.1.0",
+    "yaml": "^2.9.1"
+  }
+}

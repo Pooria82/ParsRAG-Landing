@@ -1,0 +1,56 @@
+<footer class="footer">
+    <div class="wrap footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="{{nav.home}}" aria-label="{{a11y.home}}">{{@mark}}<span class="brand__name">{{brand}}</span></a>
+        <p>{{footer.tagline}}</p>
+        <p class="footer__license">{{footer.sourceAvailable}} <a href="https://github.com/Pooria82/ParsRAG/blob/main/LICENSE" data-doc="license">{{footer.readLicense}}</a></p>
+      </div>
+      <nav class="footer__col" aria-labelledby="f-product">
+        <h2 id="f-product">{{footer.product}}</h2>
+        <a href="{{nav.home}}#demo">{{footer.demo}}</a>
+        <a href="{{nav.home}}#how">{{nav.how}}</a>
+        <a href="{{nav.tourHref}}">{{nav.tour}}</a>
+        <a href="{{release.url}}" data-doc="changelog">{{footer.releaseNotes}}</a>
+      </nav>
+      <nav class="footer__col" aria-labelledby="f-dev">
+        <h2 id="f-dev">{{footer.developers}}</h2>
+        <a href="https://github.com/Pooria82/ParsRAG">{{footer.repo}}</a>
+        <a href="{{nav.home}}#install">{{nav.install}}</a>
+        <a href="{{nav.tourHref}}#architecture">{{footer.architecture}}</a>
+        <a href="https://github.com/Pooria82/ParsRAG/blob/main/SECURITY.md" data-doc="security">{{footer.security}}</a>
+        <a href="https://github.com/Pooria82/ParsRAG/blob/main/CONTRIBUTING.md" data-doc="contributing">{{footer.contributing}}</a>
+      </nav>
+      <nav class="footer__col" aria-labelledby="f-project">
+        <h2 id="f-project">{{footer.project}}</h2>
+        <a href="https://github.com/Pooria82/ParsRAG/blob/main/LICENSE" data-doc="license">{{footer.license}}</a>
+        <a href="https://github.com/Pooria82/ParsRAG/blob/main/CITATION.cff" data-doc="citation">{{footer.cite}}</a>
+        <a href="https://github.com/Pooria82/ParsRAG/blob/main/CODE_OF_CONDUCT.md" data-doc="conduct">{{footer.conduct}}</a>
+        <a href="https://github.com/Pooria82/ParsRAG/blob/main/NOTICE.md" data-doc="notice">{{footer.notice}}</a>
+      </nav>
+    </div>
+    <div class="wrap footer__base">
+      <p>{{footer.copy}}</p>
+      <p><a href="{{release.url}}" data-release="link">{{release.label}} <span data-release="version">{{release.version}}</span></a></p>
+      <p><a href="{{alt.href}}" hreflang="{{alt.lang}}">{{alt.labelLong}}</a></p>
+    </div>
+  </footer>
+
+  <dialog class="docdlg" data-docdlg aria-labelledby="doc-title">
+    <div class="docdlg__panel">
+      <button class="icon-btn docdlg__close" type="button" data-docdlg-close aria-label="{{a11y.close}}">{{@close}}</button>
+      <div class="docdlg__body" data-docdlg-body tabindex="-1"><p class="docdlg__loading">{{docs.loading}}</p></div>
+    </div>
+  </dialog>
+
+  <div class="refpop" role="dialog" aria-modal="false" aria-labelledby="refpop-title" hidden data-refpop data-translated="{{refs.translated}}">
+    <p class="refpop__title" id="refpop-title">{{refs.title}}</p>
+    <blockquote class="refpop__quote" data-refpop-quote></blockquote>
+    <p class="refpop__note" data-refpop-note></p>
+    <a class="refpop__link" href="https://github.com/Pooria82/ParsRAG" data-refpop-link target="_blank" rel="noopener"><span data-refpop-file></span></a>
+  </div>
+
+  <!--refs-->
+  <script type="application/json" id="site-strings">{"copy":"{{ui.copy}}","copied":"{{ui.copied}}","docError":"{{docs.error}}","lines":"{{refs.lines}}","root":"{{root}}","lang":"{{lang}}"}</script>
+  <script src="{{root}}assets/vendor/gsap.min.js" defer></script>
+  <script src="{{root}}assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="{{root}}assets/vendor/lenis.min.js" defer></script>

@@ -1,9 +1,16 @@
 name: Deploy site
 
+# Builds from the latest ParsRAG release, so the version, release notes, citations and
+# quoted documents follow each new release. Runs on every push, every day, on demand,
+# and when the ParsRAG repository sends a "parsrag-release" dispatch.
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "23 4 * * *"
   workflow_dispatch:
+  repository_dispatch:
+    types: [parsrag-release]
 
 permissions:
   contents: read
@@ -21,14 +28,22 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - run: node scripts/build.mjs
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+          cache: npm
+      - run: npm ci
+      # Refresh the release snapshot. If GitHub is unreachable, the committed snapshot is used.
+      - name: Sync the latest ParsRAG release
+        run: npm run sync || echo "::warning::Sync failed; building from the committed snapshot"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # The build fails if a quoted claim no longer appears in the release.
+      - run: npm run build
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

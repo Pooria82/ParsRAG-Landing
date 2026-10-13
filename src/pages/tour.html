@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="{{lang}}" dir="{{dir}}" data-page="tour">
+<head>
+  {{@head}}
+</head>
+<body>
+  {{@header}}
+
+  <main id="main" class="tour" data-tour>
+    <header class="tour__hero">
+      <div class="wrap">
+        <p class="tour__release"><span>{{tour.releaseLine}}</span> <a href="{{release.url}}" data-doc="changelog"><span>{{brand}}</span> <span data-release="version">{{release.version}}</span></a><span class="tour__date">{{release.date}}</span></p>
+        <h1 class="tour__title">{{tour.title}}</h1>
+        <p class="lead">{{tour.lead}}</p>
+        <div class="hero__actions tour__actions">
+          <button class="btn btn--gold" type="button" data-present-start>{{@slides}}<span>{{tour.present}}</span></button>
+          <a class="btn btn--line" href="#overview">{{tour.toc}}</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap tour__layout">
+      <nav class="tour__toc" aria-label="{{tour.toc}}">
+        <p class="tour__toc-title">{{tour.toc}}</p>
+        <ol class="tour-index" data-toc><!--tour-index--></ol>
+      </nav>
+      <div class="tour__chapters">
+        <!--tour-body-->
+      </div>
+    </div>
+  </main>
+
+  <div class="present" data-present hidden role="dialog" aria-modal="true" aria-label="{{tour.title}}">
+    <div class="present__bar">
+      <p class="present__count" data-present-count aria-live="polite"></p>
+      <div class="present__progress" aria-hidden="true"><span data-present-progress></span></div>
+      <button class="icon-btn" type="button" data-present-exit aria-label="{{tour.exit}}">{{@close}}</button>
+    </div>
+    <div class="present__viewport" data-present-viewport></div>
+    <div class="present__nav">
+      <button class="icon-btn present__prev" type="button" data-present-prev aria-label="{{tour.prev}}">{{@arrow}}</button>
+      <p class="present__hint">{{tour.presentHint}}</p>
+      <button class="icon-btn present__next" type="button" data-present-next aria-label="{{tour.next}}">{{@arrow}}</button>
+    </div>
+    <script type="application/json" data-present-strings>{"slideOf":"{{tour.slideOf}}"}</script>
+  </div>
+
+  {{@footer}}
+  <script type="module" src="{{root}}assets/js/main.js"></script>
+</body>
+</html>
