@@ -279,7 +279,8 @@ export function initPresent(ctx, { chapters, currentChapter }) {
   const enter = (cur, dir) => {
     const parts = cur.querySelectorAll('[data-a]');
     const shift = (rtl ? -1 : 1) * dir;
-    gsap.fromTo(cur.querySelector('.stage'), { autoAlpha: 0, xPercent: 6 * shift, scale: 0.97, rotateY: -6 * shift }, { autoAlpha: 1, xPercent: 0, scale: 1, rotateY: 0, duration: 0.7, ease: 'expo.out' });
+    // The slide wrapper moves; the stage inside keeps the CSS transform that fits it to the screen.
+    gsap.fromTo(cur, { autoAlpha: 0, xPercent: 6 * shift, scale: 0.97, rotateY: -6 * shift }, { autoAlpha: 1, xPercent: 0, scale: 1, rotateY: 0, duration: 0.7, ease: 'expo.out', clearProps: 'transform' });
     gsap.fromTo(parts, { y: 26, autoAlpha: 0, filter: 'blur(6px)' }, { y: 0, autoAlpha: 1, filter: 'blur(0px)', duration: 0.7, ease: 'expo.out', stagger: 0.05, delay: 0.12, clearProps: 'filter' });
     if (cur.matches('.slide--title')) {
       gsap.fromTo(cur.querySelector('.ts__num'), { autoAlpha: 0, scale: 0.86, y: 30 }, { autoAlpha: 1, scale: 1, y: 0, duration: 1.2, ease: 'expo.out' });
@@ -300,9 +301,9 @@ export function initPresent(ctx, { chapters, currentChapter }) {
       return;
     }
     const shift = (rtl ? -1 : 1) * dir;
-    gsap.to(prev.querySelector('.stage'), {
+    gsap.to(prev, {
       autoAlpha: 0, xPercent: -5 * shift, scale: 0.95, duration: 0.4, ease: 'power2.in',
-      onComplete: () => { prev.hidden = true; gsap.set(prev.querySelector('.stage'), { clearProps: 'all' }); },
+      onComplete: () => { prev.hidden = true; gsap.set(prev, { clearProps: 'transform,opacity,visibility' }); },
     });
     enter(cur, dir);
   };
@@ -316,7 +317,8 @@ export function initPresent(ctx, { chapters, currentChapter }) {
       slides.forEach((s, k) => {
         s.hidden = false;
         s.classList.toggle('is-current', k === index);
-        gsap.set(s.querySelector('.stage'), { clearProps: 'all' });
+        gsap.killTweensOf(s);
+        gsap.set(s, { clearProps: 'transform,opacity,visibility' });
       });
       const thumb = slides[0].getBoundingClientRect().width;
       viewport.style.setProperty('--ts', (thumb / size.w).toFixed(4));
