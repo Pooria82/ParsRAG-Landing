@@ -1484,3 +1484,35 @@
   .gallery__col { gap: 18px; }
   .gallery__col:nth-child(4) { display: none; }
 }
+
+/* ---------- Two-column layouts (no empty half on wide screens) ---------- */
+
+@media (min-width: 900px) {
+  .section-head--split {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    column-gap: clamp(40px, 6vw, 96px);
+    align-items: end;
+  }
+  .section-head--split .eyebrow,
+  .section-head--split .h2 { grid-column: 1; }
+  .section-head--split .lead { grid-column: 2; grid-row: 1 / span 2; align-self: end; padding-bottom: 0.4em; }
+
+  .shelf__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(40px, 6vw, 88px); align-items: center; }
+  .shelf__grid .section-head { margin-bottom: 28px; }
+  .shelf__grid .cards { margin-top: 0; }
+  .shelf__grid .card { margin-inline: 0; text-align: start; }
+  .shelf__grid .shelf__limits { margin: 26px 0 0; text-align: start; }
+  .shelf__grid .books { height: clamp(300px, 30vw, 400px); }
+
+  .install__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(40px, 5vw, 72px); align-items: center; }
+  .install__grid .section-head { margin-bottom: 22px; }
+  .install__grid .install__then { text-align: start; margin-top: 0; }
+  .install__grid .install__links { justify-content: flex-start; }
+  .install__grid .term { max-width: none; margin: 0; }
+}
+.card {
+  padding: 26px 28px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018));
+  box-shadow: inset 0 0 0 1px var(--border);
+}

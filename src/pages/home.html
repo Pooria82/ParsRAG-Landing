@@ -75,7 +75,7 @@
 
     <!-- Live demo: real in-browser retrieval over sample documents, with citations you can open. -->
     <section class="demo" id="demo" aria-labelledby="demo-title">
-      <div class="wrap section-head">
+      <div class="wrap section-head section-head--split">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.01}}</span>{{demo.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="demo-title">{{demo.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{demo.lead}}{{ref:numbered-citations}}{{ref:mentions}}</p>
@@ -181,7 +181,7 @@
 
     <!-- How it works: one page morphs through the real ingestion and answer sequence. -->
     <section class="journey" id="how" aria-labelledby="how-title">
-      <div class="wrap section-head">
+      <div class="wrap section-head section-head--split">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.03}}</span>{{how.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="how-title">{{how.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{how.lead}}</p>
@@ -201,7 +201,7 @@
 
     <!-- Privacy: an illuminated frame around the workstation; the gate opens only for API providers. -->
     <section class="privacy" id="privacy" aria-labelledby="privacy-title">
-      <div class="wrap section-head">
+      <div class="wrap section-head section-head--split">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.04}}</span>{{privacy.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="privacy-title">{{privacy.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{privacy.lead}}{{ref:local-in-all-modes}}</p>
@@ -240,7 +240,7 @@
 
     <!-- Measured: real numbers with their sources, and the honest caveat. -->
     <section class="measured" id="measured" aria-labelledby="measured-title">
-      <div class="wrap section-head">
+      <div class="wrap section-head section-head--split">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.05}}</span>{{measured.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="measured-title">{{measured.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{measured.lead}}</p>
@@ -288,31 +288,35 @@
 
     <!-- Formats: a shelf of book spines; pulling one out shows what it covers. -->
     <section class="shelf" id="formats" aria-labelledby="shelf-title">
-      <div class="wrap section-head">
-        <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.06}}</span>{{formats.eyebrow}}</p>
-        <h2 data-reveal style="--i:1" class="h2" id="shelf-title">{{formats.title}}</h2>
-        <p class="lead" data-reveal style="--i:2">{{formats.lead}}{{ref:traceable}}</p>
-      </div>
-      <div class="wrap shelf__body" data-shelf>
-        <div class="books" role="tablist" aria-label="{{formats.label}}">
-          <span class="book book--deco" style="--h:74%;--c:#16212f" aria-hidden="true"></span>
-          <button class="book" role="tab" id="book-1" aria-controls="card-1" aria-selected="true" style="--h:96%;--c:#13685f"><span class="book__title">{{formats.b1}}</span><span class="book__count">.pdf .docx .pptx</span></button>
-          <button class="book" role="tab" id="book-2" aria-controls="card-2" aria-selected="false" tabindex="-1" style="--h:84%;--c:#2c4a9a"><span class="book__title">{{formats.b2}}</span><span class="book__count">.png .jpg .tif</span></button>
-          <span class="book book--deco book--lean" style="--h:66%;--c:#121a26" aria-hidden="true"></span>
-          <button class="book" role="tab" id="book-3" aria-controls="card-3" aria-selected="false" tabindex="-1" style="--h:100%;--c:#8a5d16"><span class="book__title">{{formats.b3}}</span><span class="book__count">.txt .md .csv</span></button>
-          <button class="book" role="tab" id="book-4" aria-controls="card-4" aria-selected="false" tabindex="-1" style="--h:88%;--c:#5b3a6b"><span class="book__title">{{formats.b4}}</span><span class="book__count">.html .yaml</span></button>
-          <button class="book" role="tab" id="book-5" aria-controls="card-5" aria-selected="false" tabindex="-1" style="--h:92%;--c:#1d5872"><span class="book__title">{{formats.b5}}</span><span class="book__count">.py .ts .sql</span></button>
-          <span class="book book--deco" style="--h:80%;--c:#1a2638" aria-hidden="true"></span>
+      <div class="wrap shelf__grid" data-shelf>
+        <div class="shelf__info">
+          <div class="section-head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.06}}</span>{{formats.eyebrow}}</p>
+          <h2 data-reveal style="--i:1" class="h2" id="shelf-title">{{formats.title}}</h2>
+          <p class="lead" data-reveal style="--i:2">{{formats.lead}}{{ref:traceable}}</p>
+          </div>
+          <div class="cards">
+            <div class="card" role="tabpanel" id="card-1" aria-labelledby="book-1"><h3>{{formats.b1}}</h3><p class="exts" dir="ltr">.pdf .docx .pptx</p><p>{{formats.b1x}}</p></div>
+            <div class="card" role="tabpanel" id="card-2" aria-labelledby="book-2" hidden><h3>{{formats.b2}}</h3><p class="exts" dir="ltr">.png .jpg .jpeg .webp .bmp .tif .tiff</p><p>{{formats.b2x}}</p></div>
+            <div class="card" role="tabpanel" id="card-3" aria-labelledby="book-3" hidden><h3>{{formats.b3}}</h3><p class="exts" dir="ltr">.txt .md .markdown .json .csv .tsv .log</p><p>{{formats.b3x}}{{ref:encodings}}</p></div>
+            <div class="card" role="tabpanel" id="card-4" aria-labelledby="book-4" hidden><h3>{{formats.b4}}</h3><p class="exts" dir="ltr">.html .htm .xml .yaml .yml .toml .ini .cfg</p><p>{{formats.b4x}}</p></div>
+            <div class="card" role="tabpanel" id="card-5" aria-labelledby="book-5" hidden><h3>{{formats.b5}}</h3><p class="exts" dir="ltr">.py .js .jsx .ts .tsx .css .sql</p><p>{{formats.b5x}}</p></div>
+          </div>
+          <p class="caption shelf__limits">{{formats.limits}}{{ref:limits}}{{ref:archives}}</p>
         </div>
-        <div class="shelf__plank" aria-hidden="true"></div>
-        <div class="cards">
-          <div class="card" role="tabpanel" id="card-1" aria-labelledby="book-1"><h3>{{formats.b1}}</h3><p class="exts" dir="ltr">.pdf .docx .pptx</p><p>{{formats.b1x}}</p></div>
-          <div class="card" role="tabpanel" id="card-2" aria-labelledby="book-2" hidden><h3>{{formats.b2}}</h3><p class="exts" dir="ltr">.png .jpg .jpeg .webp .bmp .tif .tiff</p><p>{{formats.b2x}}</p></div>
-          <div class="card" role="tabpanel" id="card-3" aria-labelledby="book-3" hidden><h3>{{formats.b3}}</h3><p class="exts" dir="ltr">.txt .md .markdown .json .csv .tsv .log</p><p>{{formats.b3x}}{{ref:encodings}}</p></div>
-          <div class="card" role="tabpanel" id="card-4" aria-labelledby="book-4" hidden><h3>{{formats.b4}}</h3><p class="exts" dir="ltr">.html .htm .xml .yaml .yml .toml .ini .cfg</p><p>{{formats.b4x}}</p></div>
-          <div class="card" role="tabpanel" id="card-5" aria-labelledby="book-5" hidden><h3>{{formats.b5}}</h3><p class="exts" dir="ltr">.py .js .jsx .ts .tsx .css .sql</p><p>{{formats.b5x}}</p></div>
+        <div class="shelf__body">
+          <div class="books" role="tablist" aria-label="{{formats.label}}">
+            <span class="book book--deco" style="--h:74%;--c:#16212f" aria-hidden="true"></span>
+            <button class="book" role="tab" id="book-1" aria-controls="card-1" aria-selected="true" style="--h:96%;--c:#13685f"><span class="book__title">{{formats.b1}}</span><span class="book__count">.pdf .docx .pptx</span></button>
+            <button class="book" role="tab" id="book-2" aria-controls="card-2" aria-selected="false" tabindex="-1" style="--h:84%;--c:#2c4a9a"><span class="book__title">{{formats.b2}}</span><span class="book__count">.png .jpg .tif</span></button>
+            <span class="book book--deco book--lean" style="--h:66%;--c:#121a26" aria-hidden="true"></span>
+            <button class="book" role="tab" id="book-3" aria-controls="card-3" aria-selected="false" tabindex="-1" style="--h:100%;--c:#8a5d16"><span class="book__title">{{formats.b3}}</span><span class="book__count">.txt .md .csv</span></button>
+            <button class="book" role="tab" id="book-4" aria-controls="card-4" aria-selected="false" tabindex="-1" style="--h:88%;--c:#5b3a6b"><span class="book__title">{{formats.b4}}</span><span class="book__count">.html .yaml</span></button>
+            <button class="book" role="tab" id="book-5" aria-controls="card-5" aria-selected="false" tabindex="-1" style="--h:92%;--c:#1d5872"><span class="book__title">{{formats.b5}}</span><span class="book__count">.py .ts .sql</span></button>
+            <span class="book book--deco" style="--h:80%;--c:#1a2638" aria-hidden="true"></span>
+          </div>
+          <div class="shelf__plank" aria-hidden="true"></div>
         </div>
-        <p class="caption shelf__limits">{{formats.limits}}{{ref:limits}}{{ref:archives}}</p>
       </div>
     </section>
 
@@ -353,12 +357,19 @@
 
     <!-- Install: commands for the visitor's system and setup. -->
     <section class="install" id="install" aria-labelledby="install-title">
-      <div class="wrap section-head">
+      <div class="wrap install__grid">
+        <div class="install__info">
+          <div class="section-head">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.08}}</span>{{install.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="install-title">{{install.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{install.lead}}{{ref:ram}}{{ref:offline}}</p>
-      </div>
-      <div class="wrap">
+          </div>
+          <p class="install__then">{{install.then}}</p>
+          <nav class="install__links" aria-label="{{install.guide}}">
+          <a href="https://github.com/Pooria82/ParsRAG#docker-quick-start">{{install.guide}}</a>
+          <a href="{{nav.tourHref}}#install">{{install.native}}</a>
+        </nav>
+        </div>
         <div class="term" data-term>
           <script type="application/json" data-term-strings>{{json:install}}</script>
           <div class="term__bar">
@@ -386,11 +397,6 @@
 <span class="l">docker compose --profile local-model up -d --build app</span></code></pre>
           </div>
         </div>
-        <p class="install__then">{{install.then}}</p>
-        <nav class="install__links" aria-label="{{install.guide}}">
-          <a href="https://github.com/Pooria82/ParsRAG#docker-quick-start">{{install.guide}}</a>
-          <a href="{{nav.tourHref}}#install">{{install.native}}</a>
-        </nav>
       </div>
     </section>
 
