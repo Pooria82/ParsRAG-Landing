@@ -55,8 +55,10 @@
   animation: rise 1s var(--ease-out) both;
   animation-delay: calc(0.06s + var(--i, 0) * 90ms);
 }
+/* No opacity in the entrance: the text is painted in the first frame (so it counts as the
+   page's largest paint) and comes into focus, like ink settling. */
 @keyframes rise {
-  from { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+  from { transform: translateY(14px); filter: blur(10px); }
 }
 
 .pill {
