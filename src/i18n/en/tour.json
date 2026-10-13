@@ -5,7 +5,7 @@
     "releaseLine": "Describes",
     "toc": "Chapters",
     "present": "Present",
-    "presentHint": "Use the arrow keys or swipe to move between slides. Press Esc to leave.",
+    "presentHint": "Arrow keys or swipe to move. O shows all slides; Esc leaves.",
     "exit": "Exit presentation",
     "prev": "Previous slide",
     "next": "Next slide",
@@ -17,22 +17,64 @@
         "title": "What ParsRAG is",
         "lede": "ParsRAG is a bilingual, offline-first workspace for asking questions about Persian and English documents. It reads PDF, Word, PowerPoint, scans, images, text and code, and every answer cites the file and location it came from.{{ref:local-pipeline}}",
         "blocks": [
-          { "cards": [
-            { "t": "Ask your documents", "d": "Upload files to a conversation, then ask in Persian or English. Mention a file with @ to search only that file." },
-            { "t": "Check every answer", "d": "Answers carry numbered citations that open the exact passage, with its page, slide, paragraph or section." },
-            { "t": "Local by design", "d": "Reading, OCR, the search index and conversation history stay on your machine. You choose where the answer is written." },
-            { "t": "Persian first", "d": "Right-to-left interface, Persian OCR, Persian spelling normalization and Persian PDF reading order are built in." }
-          ] },
-          { "h": "The release at a glance" },
-          { "kv": [
-            ["Version", "{{release.version}}, released {{release.date}}"],
-            ["License", "Source-available, not open source"],
-            ["Runs on", "Windows, macOS and Linux with Docker Compose; natively with Python 3.12 and Node.js 22"],
-            ["Backend", "Python, FastAPI, LlamaIndex, Qdrant, sentence-transformers, PyMuPDF, Tesseract OCR"],
-            ["Frontend", "React 19, TypeScript 7, Vite, KaTeX"],
-            ["Default local model", "gemma3:12b through Ollama"]
-          ] },
-          { "figure": { "src": "home-en-light", "alt": "ParsRAG welcome screen in English, light theme", "cap": "The workspace welcome screen. Screenshots come from the ParsRAG repository and use synthetic examples." } }
+          {
+            "cards": [
+              {
+                "t": "Ask your documents",
+                "d": "Upload files to a conversation, then ask in Persian or English. Mention a file with @ to search only that file."
+              },
+              {
+                "t": "Check every answer",
+                "d": "Answers carry numbered citations that open the exact passage, with its page, slide, paragraph or section."
+              },
+              {
+                "t": "Local by design",
+                "d": "Reading, OCR, the search index and conversation history stay on your machine. You choose where the answer is written."
+              },
+              {
+                "t": "Persian first",
+                "d": "Right-to-left interface, Persian OCR, Persian spelling normalization and Persian PDF reading order are built in."
+              }
+            ]
+          },
+          {
+            "h": "The release at a glance"
+          },
+          {
+            "kv": [
+              [
+                "Version",
+                "{{release.version}}, released {{release.date}}"
+              ],
+              [
+                "License",
+                "Source-available, not open source"
+              ],
+              [
+                "Runs on",
+                "Windows, macOS and Linux with Docker Compose; natively with Python 3.12 and Node.js 22"
+              ],
+              [
+                "Backend",
+                "Python, FastAPI, LlamaIndex, Qdrant, sentence-transformers, PyMuPDF, Tesseract OCR"
+              ],
+              [
+                "Frontend",
+                "React 19, TypeScript 7, Vite, KaTeX"
+              ],
+              [
+                "Default local model",
+                "gemma3:12b through Ollama"
+              ]
+            ]
+          },
+          {
+            "figure": {
+              "src": "home-en-light",
+              "alt": "ParsRAG welcome screen in English, light theme",
+              "cap": "The workspace welcome screen. Screenshots come from the ParsRAG repository and use synthetic examples."
+            }
+          }
         ]
       },
       {
@@ -40,37 +82,96 @@
         "title": "Install and first start",
         "lede": "The supported way to run ParsRAG is Docker Compose: one app container that serves the interface and API, Qdrant for vectors, and, optionally, Ollama for a local model.",
         "blocks": [
-          { "h": "What you need" },
-          { "list": [
-            "Docker Engine with Compose, and 8–16 GB of RAM depending on the model.{{ref:ram}}",
-            "Disk space for the images and model weights.",
-            "For an NVIDIA GPU: a current driver and the NVIDIA Container Toolkit. For AMD: a Linux host with ROCm."
-          ] },
-          { "h": "Choose a setup" },
-          { "table": { "head": ["Setup", "When to use it", "How"], "rows": [
-            ["Local model on CPU", "Portable default on every system", "The local-model Compose profile"],
-            ["NVIDIA GPU", "Faster embeddings and generation on Windows or Linux", "Add the compose.gpu.yaml overlay"],
-            ["Low-VRAM NVIDIA", "Cards around 6 GB that can't hold both models", "Add compose.gpu-low-vram.yaml: embeddings on CPU, Ollama context 2048"],
-            ["AMD GPU", "Supported Linux ROCm hosts", "Add compose.amd.yaml (PyTorch 2.6 with ROCm wheels)"],
-            ["API model", "No suitable local hardware", "Set LLM_PROVIDER=api and the endpoint in .env"]
-          ] } },
-          { "h": "Start it" },
-          { "code": "Copy-Item .env.example .env\ndocker compose config --quiet\ndocker compose --profile local-model up -d qdrant ollama\ndocker compose --profile local-model run --rm ollama-init\ndocker compose --profile local-model up -d --build app" },
-          { "p": "On macOS or Linux, copy the settings file with cp .env.example .env; the Compose commands are the same. Then open http://127.0.0.1:8000. The port is bound to 127.0.0.1 unless you change PARSRAG_BIND_HOST." },
-          { "h": "The first start" },
-          { "list": [
-            "The embedding model (intfloat/multilingual-e5-base) and the Hybrid reranker (about 100 MB) download into the model cache.",
-            "Ollama pulls the configured model once into its own volume.",
-            "Until everything is ready, /health/ready answers 503 with status preparing, and the interface shows that it is preparing the model and document store.",
-            "After the first downloads, a local Ollama setup can run offline.{{ref:offline}}"
-          ] },
-          { "h": "Without Docker" },
-          { "p": "Native development needs Python 3.12, Node.js 22, a running Qdrant, Ollama or an OpenAI-compatible endpoint, and Tesseract with Persian and English data for OCR." },
-          { "code": "py -3.12 -m venv .venv\n.\\.venv\\Scripts\\python.exe -m pip install -r requirements-runtime.txt -c requirements.lock\nSet-Location frontend\nnpm ci\nnpm run build\nSet-Location ..\n.\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000" },
-          { "note": "In a native install without a .env file, OCR stays off until OCR_ENABLED=1 is set; the Docker setup turns it on." },
-          { "h": "Day-to-day" },
-          { "code": "docker compose ps\ndocker compose logs -f app\ndocker compose down" },
-          { "p": "docker compose down keeps your data. docker compose down -v permanently removes vectors, saved model settings, caches and model weights." }
+          {
+            "h": "What you need"
+          },
+          {
+            "list": [
+              "Docker Engine with Compose, and 8–16 GB of RAM depending on the model.{{ref:ram}}",
+              "Disk space for the images and model weights.",
+              "For an NVIDIA GPU: a current driver and the NVIDIA Container Toolkit. For AMD: a Linux host with ROCm."
+            ]
+          },
+          {
+            "h": "Choose a setup"
+          },
+          {
+            "table": {
+              "head": [
+                "Setup",
+                "When to use it",
+                "How"
+              ],
+              "rows": [
+                [
+                  "Local model on CPU",
+                  "Portable default on every system",
+                  "The local-model Compose profile"
+                ],
+                [
+                  "NVIDIA GPU",
+                  "Faster embeddings and generation on Windows or Linux",
+                  "Add the compose.gpu.yaml overlay"
+                ],
+                [
+                  "Low-VRAM NVIDIA",
+                  "Cards around 6 GB that can't hold both models",
+                  "Add compose.gpu-low-vram.yaml: embeddings on CPU, Ollama context 2048"
+                ],
+                [
+                  "AMD GPU",
+                  "Supported Linux ROCm hosts",
+                  "Add compose.amd.yaml (PyTorch 2.6 with ROCm wheels)"
+                ],
+                [
+                  "API model",
+                  "No suitable local hardware",
+                  "Set LLM_PROVIDER=api and the endpoint in .env"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Start it"
+          },
+          {
+            "code": "Copy-Item .env.example .env\ndocker compose config --quiet\ndocker compose --profile local-model up -d qdrant ollama\ndocker compose --profile local-model run --rm ollama-init\ndocker compose --profile local-model up -d --build app"
+          },
+          {
+            "p": "On macOS or Linux, copy the settings file with cp .env.example .env; the Compose commands are the same. Then open http://127.0.0.1:8000. The port is bound to 127.0.0.1 unless you change PARSRAG_BIND_HOST."
+          },
+          {
+            "h": "The first start"
+          },
+          {
+            "list": [
+              "The embedding model (intfloat/multilingual-e5-base) and the Hybrid reranker (about 100 MB) download into the model cache.",
+              "Ollama pulls the configured model once into its own volume.",
+              "Until everything is ready, /health/ready answers 503 with status preparing, and the interface shows that it is preparing the model and document store.",
+              "After the first downloads, a local Ollama setup can run offline.{{ref:offline}}"
+            ]
+          },
+          {
+            "h": "Without Docker"
+          },
+          {
+            "p": "Native development needs Python 3.12, Node.js 22, a running Qdrant, Ollama or an OpenAI-compatible endpoint, and Tesseract with Persian and English data for OCR."
+          },
+          {
+            "code": "py -3.12 -m venv .venv\n.\\.venv\\Scripts\\python.exe -m pip install -r requirements-runtime.txt -c requirements.lock\nSet-Location frontend\nnpm ci\nnpm run build\nSet-Location ..\n.\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000"
+          },
+          {
+            "note": "In a native install without a .env file, OCR stays off until OCR_ENABLED=1 is set; the Docker setup turns it on."
+          },
+          {
+            "h": "Day-to-day"
+          },
+          {
+            "code": "docker compose ps\ndocker compose logs -f app\ndocker compose down"
+          },
+          {
+            "p": "docker compose down keeps your data. docker compose down -v permanently removes vectors, saved model settings, caches and model weights."
+          }
         ]
       },
       {
@@ -78,33 +179,83 @@
         "title": "Connect a model",
         "lede": "ParsRAG writes answers with a model you choose. The choice decides where generation happens and what leaves your machine; reading, OCR and search stay local either way.{{ref:local-in-all-modes}}",
         "blocks": [
-          { "table": { "head": ["Provider", "Where the answer is written", "What leaves ParsRAG"], "rows": [
-            ["Local Ollama", "This workstation", "Nothing through the model adapter"],
-            ["Private API", "A server you control", "Your question and the retrieved excerpts"],
-            ["External API", "A third-party service", "Your question and the retrieved excerpts"]
-          ] } },
-          { "h": "Settings: Model & connection" },
-          { "list": [
-            "Model runtime: OpenAI-compatible API or Local Ollama.",
-            "Model service URL and model name. For Ollama, Find installed models lists what is already pulled.",
-            "API key: held only in the service's memory, never in the browser or the configuration file. After a restart, enter it again or provide it as an environment variable.",
-            "API privacy boundary: before an external API can be used, you confirm that your question and relevant passages will be sent to it.",
-            "Verify connection and apply checks the connection before saving the non-secret settings."
-          ] },
-          { "h": "Safety rules for endpoints" },
-          { "list": [
-            "Public API endpoints must use HTTPS; HTTP is allowed only for loopback and private-network addresses.",
-            "Link-local, multicast and reserved addresses are refused.",
-            "Ollama must be on localhost or the Compose service, without credentials in the URL.",
-            "Private OpenAI-compatible services can run without a key."
-          ] },
-          { "kv": [
-            ["Default local model", "gemma3:12b"],
-            ["Default API endpoint", "https://openrouter.ai/api/v1"],
-            ["Answer timeout", "120 seconds by default, with one retry for APIs"],
-            ["Context window", "8,192 tokens for Ollama, 32,768 for APIs, both configurable"]
-          ] },
-          { "figure": { "src": "model-en-light", "alt": "Model and connection settings with Local Ollama selected", "cap": "Model & connection settings with Local Ollama selected.", "narrow": true } }
+          {
+            "table": {
+              "head": [
+                "Provider",
+                "Where the answer is written",
+                "What leaves ParsRAG"
+              ],
+              "rows": [
+                [
+                  "Local Ollama",
+                  "This workstation",
+                  "Nothing through the model adapter"
+                ],
+                [
+                  "Private API",
+                  "A server you control",
+                  "Your question and the retrieved excerpts"
+                ],
+                [
+                  "External API",
+                  "A third-party service",
+                  "Your question and the retrieved excerpts"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Settings: Model & connection"
+          },
+          {
+            "list": [
+              "Model runtime: OpenAI-compatible API or Local Ollama.",
+              "Model service URL and model name. For Ollama, Find installed models lists what is already pulled.",
+              "API key: held only in the service's memory, never in the browser or the configuration file. After a restart, enter it again or provide it as an environment variable.",
+              "API privacy boundary: before an external API can be used, you confirm that your question and relevant passages will be sent to it.",
+              "Verify connection and apply checks the connection before saving the non-secret settings."
+            ]
+          },
+          {
+            "h": "Safety rules for endpoints"
+          },
+          {
+            "list": [
+              "Public API endpoints must use HTTPS; HTTP is allowed only for loopback and private-network addresses.",
+              "Link-local, multicast and reserved addresses are refused.",
+              "Ollama must be on localhost or the Compose service, without credentials in the URL.",
+              "Private OpenAI-compatible services can run without a key."
+            ]
+          },
+          {
+            "kv": [
+              [
+                "Default local model",
+                "gemma3:12b"
+              ],
+              [
+                "Default API endpoint",
+                "https://openrouter.ai/api/v1"
+              ],
+              [
+                "Answer timeout",
+                "120 seconds by default, with one retry for APIs"
+              ],
+              [
+                "Context window",
+                "8,192 tokens for Ollama, 32,768 for APIs, both configurable"
+              ]
+            ]
+          },
+          {
+            "figure": {
+              "src": "model-en-light",
+              "alt": "Model and connection settings with Local Ollama selected",
+              "cap": "Model & connection settings with Local Ollama selected.",
+              "narrow": true
+            }
+          }
         ]
       },
       {
@@ -112,40 +263,105 @@
         "title": "Add documents",
         "lede": "Each conversation has its own documents. You add them in the Documents panel, choose which ones answers may use, and can bring in a file already indexed in another conversation.",
         "blocks": [
-          { "h": "Upload" },
-          { "list": [
-            "Drop files or choose them. Each file shows three steps: Transfer file, Extract and index, Ready to ask, followed by the number of passages indexed.",
-            "Default capacity: 10 files per conversation, 100 MiB per file, 500 MiB per upload. The interface reads the real limits from the service.{{ref:limits}}",
-            "A batch is all or nothing: if one file fails, nothing from that request is left half-indexed.{{ref:partial-index}}"
-          ] },
-          { "h": "Supported files" },
-          { "table": { "head": ["Family", "Extensions", "How it is read"], "rows": [
-            ["Documents", ".pdf .docx .pptx", "Structured extraction; OCR for scanned or image-heavy PDF pages and embedded images"],
-            ["Images", ".png .jpg .jpeg .webp .bmp .tif .tiff", "Validated and read with OCR"],
-            ["Text and data", ".txt .md .markdown .json .csv .tsv .log", "UTF-8, UTF-16 with BOM, Windows-1256 (Persian) or Windows-1252; JSON is validated"],
-            ["Markup and config", ".html .htm .xml .yaml .yml .toml .ini .cfg", "Visible text from markup; plain text from config"],
-            ["Source code", ".py .js .jsx .ts .tsx .css .sql", "Text with section metadata"]
-          ] } },
-          { "h": "Checks before reading" },
-          { "list": [
-            "File names must be plain names up to 255 characters, without paths.",
-            "A PDF must really be a PDF, and a Word or PowerPoint file a real Office archive. Password-protected files are named as such.",
-            "Office archives are limited to 10,000 entries, 200 MiB expanded and a compression ratio of 200 per entry.{{ref:archives}}",
-            "A file with the same content as one already in the conversation is recognized and not added twice.{{ref:duplicates}}"
-          ] },
-          { "h": "When a file is only partly read" },
-          { "table": { "head": ["Notice", "Meaning"], "rows": [
-            ["OCR limit", "Only the first scanned pages were read (30 by default)."],
-            ["OCR image limit", "Some images inside a Word or PowerPoint file were skipped (30 by default)."],
-            ["OCR partial", "OCR couldn't read some pages or images."],
-            ["OCR unavailable", "Tesseract isn't installed; text pages were still indexed."]
-          ] } },
-          { "h": "Managing documents" },
-          { "list": [
-            "Use in answers: tick or clear each document; you can clear every selection.",
-            "From earlier conversations: add an indexed file without uploading it again. The copy becomes independent once it finishes.{{ref:reuse}}",
-            "Delete a document with a two-step confirmation; its passages are removed from the index."
-          ] }
+          {
+            "h": "Upload"
+          },
+          {
+            "list": [
+              "Drop files or choose them. Each file shows three steps: Transfer file, Extract and index, Ready to ask, followed by the number of passages indexed.",
+              "Default capacity: 10 files per conversation, 100 MiB per file, 500 MiB per upload. The interface reads the real limits from the service.{{ref:limits}}",
+              "A batch is all or nothing: if one file fails, nothing from that request is left half-indexed.{{ref:partial-index}}"
+            ]
+          },
+          {
+            "h": "Supported files"
+          },
+          {
+            "table": {
+              "head": [
+                "Family",
+                "Extensions",
+                "How it is read"
+              ],
+              "rows": [
+                [
+                  "Documents",
+                  ".pdf .docx .pptx",
+                  "Structured extraction; OCR for scanned or image-heavy PDF pages and embedded images"
+                ],
+                [
+                  "Images",
+                  ".png .jpg .jpeg .webp .bmp .tif .tiff",
+                  "Validated and read with OCR"
+                ],
+                [
+                  "Text and data",
+                  ".txt .md .markdown .json .csv .tsv .log",
+                  "UTF-8, UTF-16 with BOM, Windows-1256 (Persian) or Windows-1252; JSON is validated"
+                ],
+                [
+                  "Markup and config",
+                  ".html .htm .xml .yaml .yml .toml .ini .cfg",
+                  "Visible text from markup; plain text from config"
+                ],
+                [
+                  "Source code",
+                  ".py .js .jsx .ts .tsx .css .sql",
+                  "Text with section metadata"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Checks before reading"
+          },
+          {
+            "list": [
+              "File names must be plain names up to 255 characters, without paths.",
+              "A PDF must really be a PDF, and a Word or PowerPoint file a real Office archive. Password-protected files are named as such.",
+              "Office archives are limited to 10,000 entries, 200 MiB expanded and a compression ratio of 200 per entry.{{ref:archives}}",
+              "A file with the same content as one already in the conversation is recognized and not added twice.{{ref:duplicates}}"
+            ]
+          },
+          {
+            "h": "When a file is only partly read"
+          },
+          {
+            "table": {
+              "head": [
+                "Notice",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "OCR limit",
+                  "Only the first scanned pages were read (30 by default)."
+                ],
+                [
+                  "OCR image limit",
+                  "Some images inside a Word or PowerPoint file were skipped (30 by default)."
+                ],
+                [
+                  "OCR partial",
+                  "OCR couldn't read some pages or images."
+                ],
+                [
+                  "OCR unavailable",
+                  "Tesseract isn't installed; text pages were still indexed."
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Managing documents"
+          },
+          {
+            "list": [
+              "Use in answers: tick or clear each document; you can clear every selection.",
+              "From earlier conversations: add an indexed file without uploading it again. The copy becomes independent once it finishes.{{ref:reuse}}",
+              "Delete a document with a two-step confirmation; its passages are removed from the index."
+            ]
+          }
         ]
       },
       {
@@ -153,31 +369,47 @@
         "title": "How documents are read",
         "lede": "Before anything can be cited, ParsRAG turns each file into located passages: text with the file name and the page, slide, paragraph or section it came from.{{ref:traceable}}",
         "blocks": [
-          { "h": "PDF" },
-          { "list": [
-            "Each page becomes its own section, so citations can name the page.",
-            "Persian pages are rebuilt in reading order from glyph positions: right-to-left lines, embedded Latin and digits, mirrored brackets and the ezafe mark on its letter.{{ref:persian-pdf}}",
-            "A page goes to OCR when it has no text, when its text layer is garbled, or when it has under 40 characters and contains images."
-          ] },
-          { "h": "OCR" },
-          { "list": [
-            "Tesseract with Persian and English data, on grayscale pages rendered at 200 dpi, without contrast stretching.",
-            "A second, single-block pass runs when the first reading is weak (mean confidence below 75), and the more confident reading wins.",
-            "Pages turned 90, 180 or 270 degrees, and pages skewed by 2 degrees or more, are detected and read again.{{ref:ocr-rotated}}",
-            "Limits: 30 scanned pages and 30 images per file, 45 seconds per page and 40 million pixels per image by default."
-          ] },
-          { "h": "Word, PowerPoint and other files" },
-          { "list": [
-            "Word: paragraphs are grouped under their headings, up to 180 words, and each passage carries its heading path. Tables become Markdown tables with row records.{{ref:word-headings}}",
-            "PowerPoint: one section per slide, including tables and text from pictures.",
-            "HTML and XML keep only visible text; JSON is validated and re-written readably."
-          ] },
-          { "h": "Passages" },
-          { "list": [
-            "Text is split into passages of about 512 tokens with a 50-token overlap.",
-            "For consecutive PDF pages, an extra passage joins the last 90 words of one page with the first 90 of the next, so a fact split by a page turn is cited as a page range.",
-            "Persian spelling is normalized in passages and questions: Arabic Yeh and Kaf, presentation forms, diacritics and digits. The ezafe hamza is kept.{{ref:persian-normalization}}"
-          ] }
+          {
+            "h": "PDF"
+          },
+          {
+            "list": [
+              "Each page becomes its own section, so citations can name the page.",
+              "Persian pages are rebuilt in reading order from glyph positions: right-to-left lines, embedded Latin and digits, mirrored brackets and the ezafe mark on its letter.{{ref:persian-pdf}}",
+              "A page goes to OCR when it has no text, when its text layer is garbled, or when it has under 40 characters and contains images."
+            ]
+          },
+          {
+            "h": "OCR"
+          },
+          {
+            "list": [
+              "Tesseract with Persian and English data, on grayscale pages rendered at 200 dpi, without contrast stretching.",
+              "A second, single-block pass runs when the first reading is weak (mean confidence below 75), and the more confident reading wins.",
+              "Pages turned 90, 180 or 270 degrees, and pages skewed by 2 degrees or more, are detected and read again.{{ref:ocr-rotated}}",
+              "Limits: 30 scanned pages and 30 images per file, 45 seconds per page and 40 million pixels per image by default."
+            ]
+          },
+          {
+            "h": "Word, PowerPoint and other files"
+          },
+          {
+            "list": [
+              "Word: paragraphs are grouped under their headings, up to 180 words, and each passage carries its heading path. Tables become Markdown tables with row records.{{ref:word-headings}}",
+              "PowerPoint: one section per slide, including tables and text from pictures.",
+              "HTML and XML keep only visible text; JSON is validated and re-written readably."
+            ]
+          },
+          {
+            "h": "Passages"
+          },
+          {
+            "list": [
+              "Text is split into passages of about 512 tokens with a 50-token overlap.",
+              "For consecutive PDF pages, an extra passage joins the last 90 words of one page with the first 90 of the next, so a fact split by a page turn is cited as a page range.",
+              "Persian spelling is normalized in passages and questions: Arabic Yeh and Kaf, presentation forms, diacritics and digits. The ezafe hamza is kept.{{ref:persian-normalization}}"
+            ]
+          }
         ]
       },
       {
@@ -185,28 +417,69 @@
         "title": "Finding evidence",
         "lede": "When you ask, ParsRAG searches only this conversation's documents, by meaning and by keyword, and picks the passages most likely to answer.",
         "blocks": [
-          { "h": "Two kinds of search" },
-          { "list": [
-            "Meaning: each passage has a 768-dimension vector from intfloat/multilingual-e5-base, stored in Qdrant with cosine distance.",
-            "Keywords: a BM25 index (k1 1.2, b 0.75) over the same passages catches exact names, numbers and codes.",
-            "The two rankings are merged with reciprocal rank fusion (k = 60).{{ref:bm25-fusion}}",
-            "Every search is filtered to the conversation, and to the mentioned file when you use @."
-          ] },
-          { "h": "How many passages" },
-          { "list": [
-            "Depth adapts to the question, between 8 and 30 passages: more for summaries, comparisons and lists, fewer for short factual questions.",
-            "With several files, each one gets its own share, at least 3 passages in Documents only and 5 in Hybrid.",
-            "You can fix the number yourself in Settings, from 1 to 50 (15 by default when automatic depth is off)."
-          ] },
-          { "h": "Per mode" },
-          { "table": { "head": ["Mode", "Retrieval", "Model knowledge", "Extra step"], "rows": [
-            ["Documents only (Strict)", "Required", "Excluded", "Evidence gate before answering"],
-            ["Hybrid", "Required and reranked", "May supplement, marked as such", "Arabic-script cross-encoder reranker"],
-            ["Open conversation", "Skipped", "Used directly", "None"]
-          ] } },
-          { "h": "The evidence gate" },
-          { "p": "Documents only refuses only when three things are true: the best passage scores below 0.75, the question isn't about the whole document, and the passages don't contain enough of the question's distinctive words. With @ mentions, every mentioned file must have its own evidence.{{ref:strict-refuses}}" },
-          { "note": "The gate is an application safeguard, not a guarantee. Check important answers against their sources." }
+          {
+            "h": "Two kinds of search"
+          },
+          {
+            "list": [
+              "Meaning: each passage has a 768-dimension vector from intfloat/multilingual-e5-base, stored in Qdrant with cosine distance.",
+              "Keywords: a BM25 index (k1 1.2, b 0.75) over the same passages catches exact names, numbers and codes.",
+              "The two rankings are merged with reciprocal rank fusion (k = 60).{{ref:bm25-fusion}}",
+              "Every search is filtered to the conversation, and to the mentioned file when you use @."
+            ]
+          },
+          {
+            "h": "How many passages"
+          },
+          {
+            "list": [
+              "Depth adapts to the question, between 8 and 30 passages: more for summaries, comparisons and lists, fewer for short factual questions.",
+              "With several files, each one gets its own share, at least 3 passages in Documents only and 5 in Hybrid.",
+              "You can fix the number yourself in Settings, from 1 to 50 (15 by default when automatic depth is off)."
+            ]
+          },
+          {
+            "h": "Per mode"
+          },
+          {
+            "table": {
+              "head": [
+                "Mode",
+                "Retrieval",
+                "Model knowledge",
+                "Extra step"
+              ],
+              "rows": [
+                [
+                  "Documents only (Strict)",
+                  "Required",
+                  "Excluded",
+                  "Evidence gate before answering"
+                ],
+                [
+                  "Hybrid",
+                  "Required and reranked",
+                  "May supplement, marked as such",
+                  "Arabic-script cross-encoder reranker"
+                ],
+                [
+                  "Open conversation",
+                  "Skipped",
+                  "Used directly",
+                  "None"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "The evidence gate"
+          },
+          {
+            "p": "Documents only refuses only when three things are true: the best passage scores below 0.75, the question isn't about the whole document, and the passages don't contain enough of the question's distinctive words. With @ mentions, every mentioned file must have its own evidence.{{ref:strict-refuses}}"
+          },
+          {
+            "note": "The gate is an application safeguard, not a guarantee. Check important answers against their sources."
+          }
         ]
       },
       {
@@ -214,33 +487,82 @@
         "title": "Asking questions",
         "lede": "The composer is where a question becomes a search: choose a mode, point at files, or start from a question your documents can answer.",
         "blocks": [
-          { "h": "The composer" },
-          { "list": [
-            "Enter sends; Shift+Enter adds a line. Up to 30,000 characters.",
-            "Type @ to mention an indexed document. The question is split into clauses, and each clause is searched in its file.{{ref:mentions}}",
-            "Type / at the start of a line for quick commands.",
-            "While an answer streams, the send button becomes Stop; what was already written is kept."
-          ] },
-          { "h": "Quick commands" },
-          { "table": { "head": ["Command", "What it does"], "rows": [
-            ["/summary", "Source-backed summary of the selected documents"],
-            ["/compare", "Compare the selected documents, citing similarities and differences"],
-            ["/translate", "Translate text into the interface language"],
-            ["/outline", "Outline the key points with sources"],
-            ["/strict", "Switch to Documents only"],
-            ["/hybrid", "Switch to Documents and model"],
-            ["/free", "Switch to Open conversation"],
-            ["/documents", "Open the Documents panel"],
-            ["/help", "Show the app tour"]
-          ] } },
-          { "h": "Starting points" },
-          { "list": [
-            "An empty conversation with documents suggests three questions written from those documents.{{ref:suggestions}}",
-            "Three starter cards: Find the essentials, Look a little closer, Unpack an idea.",
-            "Hybrid is the default mode; you can change the default for new conversations in Settings."
-          ] },
-          { "h": "While it works" },
-          { "p": "The real processing stages appear in order: Understanding the question and conversation, Finding relevant evidence in documents, and Writing the final answer. Then the answer streams in word by word.{{ref:streaming}}" }
+          {
+            "h": "The composer"
+          },
+          {
+            "list": [
+              "Enter sends; Shift+Enter adds a line. Up to 30,000 characters.",
+              "Type @ to mention an indexed document. The question is split into clauses, and each clause is searched in its file.{{ref:mentions}}",
+              "Type / at the start of a line for quick commands.",
+              "While an answer streams, the send button becomes Stop; what was already written is kept."
+            ]
+          },
+          {
+            "h": "Quick commands"
+          },
+          {
+            "table": {
+              "head": [
+                "Command",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "/summary",
+                  "Source-backed summary of the selected documents"
+                ],
+                [
+                  "/compare",
+                  "Compare the selected documents, citing similarities and differences"
+                ],
+                [
+                  "/translate",
+                  "Translate text into the interface language"
+                ],
+                [
+                  "/outline",
+                  "Outline the key points with sources"
+                ],
+                [
+                  "/strict",
+                  "Switch to Documents only"
+                ],
+                [
+                  "/hybrid",
+                  "Switch to Documents and model"
+                ],
+                [
+                  "/free",
+                  "Switch to Open conversation"
+                ],
+                [
+                  "/documents",
+                  "Open the Documents panel"
+                ],
+                [
+                  "/help",
+                  "Show the app tour"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Starting points"
+          },
+          {
+            "list": [
+              "An empty conversation with documents suggests three questions written from those documents.{{ref:suggestions}}",
+              "Three starter cards: Find the essentials, Look a little closer, Unpack an idea.",
+              "Hybrid is the default mode; you can change the default for new conversations in Settings."
+            ]
+          },
+          {
+            "h": "While it works"
+          },
+          {
+            "p": "The real processing stages appear in order: Understanding the question and conversation, Finding relevant evidence in documents, and Writing the final answer. Then the answer streams in word by word.{{ref:streaming}}"
+          }
         ]
       },
       {
@@ -248,33 +570,88 @@
         "title": "Reading an answer",
         "lede": "Every answer says where its content came from and lets you open each source.{{ref:provenance}}",
         "blocks": [
-          { "h": "Citations and sources" },
-          { "list": [
-            "The model cites passages as [n]; the interface turns them into numbered chips that open the passage.{{ref:numbered-citations}}",
-            "The Sources list shows each cited passage with a short preview, file name and location. Expanded, it shows up to 1,600 characters with the question's words highlighted.",
-            "Passages that were consulted but not cited fold under “more passages consulted”."
-          ] },
-          { "h": "Where the answer came from" },
-          { "table": { "head": ["Badge", "Shown when"], "rows": [
-            ["Documents only", "A Documents only answer"],
-            ["Documents + model knowledge", "A Hybrid answer"],
-            ["Model knowledge", "An Open conversation answer"],
-            ["Not found in documents", "The documents didn't contain an answer"]
-          ] } },
-          { "h": "When there's no answer" },
-          { "table": { "head": ["Outcome", "Message"], "rows": [
-            ["No documents matched", "No relevant passage was found in this conversation's documents. Add a document or ask more specifically."],
-            ["No evidence", "The provided documents do not answer this question. Switch to Hybrid mode to let the model add general knowledge."],
-            ["Partial evidence", "Not every document you mentioned has enough evidence. Ask about each document separately or check the document names."]
-          ] } },
-          { "h": "Working with answers" },
-          { "list": [
-            "Copy, Try again, Copy prompt and Edit prompt. Retrying or editing adds a new version you can page through; editing a prompt starts a branch that keeps its own continuation.",
-            "Math is rendered with KaTeX. Persian words are never typeset as math, and unclosed delimiters are removed.",
-            "External images in answers are not loaded.",
-            "Errors are explained by their code, for example a password-protected PDF, a rejected API key or a model that isn't installed."
-          ] },
-          { "figure": { "src": "sources-en-light", "alt": "An answer with its sources listed below it", "cap": "An answer grounded in two sample files, with their locations." } }
+          {
+            "h": "Citations and sources"
+          },
+          {
+            "list": [
+              "The model cites passages as [n]; the interface turns them into numbered chips that open the passage.{{ref:numbered-citations}}",
+              "The Sources list shows each cited passage with a short preview, file name and location. Expanded, it shows up to 1,600 characters with the question's words highlighted.",
+              "Passages that were consulted but not cited fold under “more passages consulted”."
+            ]
+          },
+          {
+            "h": "Where the answer came from"
+          },
+          {
+            "table": {
+              "head": [
+                "Badge",
+                "Shown when"
+              ],
+              "rows": [
+                [
+                  "Documents only",
+                  "A Documents only answer"
+                ],
+                [
+                  "Documents + model knowledge",
+                  "A Hybrid answer"
+                ],
+                [
+                  "Model knowledge",
+                  "An Open conversation answer"
+                ],
+                [
+                  "Not found in documents",
+                  "The documents didn't contain an answer"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "When there's no answer"
+          },
+          {
+            "table": {
+              "head": [
+                "Outcome",
+                "Message"
+              ],
+              "rows": [
+                [
+                  "No documents matched",
+                  "No relevant passage was found in this conversation's documents. Add a document or ask more specifically."
+                ],
+                [
+                  "No evidence",
+                  "The provided documents do not answer this question. Switch to Hybrid mode to let the model add general knowledge."
+                ],
+                [
+                  "Partial evidence",
+                  "Not every document you mentioned has enough evidence. Ask about each document separately or check the document names."
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Working with answers"
+          },
+          {
+            "list": [
+              "Copy, Try again, Copy prompt and Edit prompt. Retrying or editing adds a new version you can page through; editing a prompt starts a branch that keeps its own continuation.",
+              "Math is rendered with KaTeX. Persian words are never typeset as math, and unclosed delimiters are removed.",
+              "External images in answers are not loaded.",
+              "Errors are explained by their code, for example a password-protected PDF, a rejected API key or a model that isn't installed."
+            ]
+          },
+          {
+            "figure": {
+              "src": "sources-en-light",
+              "alt": "An answer with its sources listed below it",
+              "cap": "An answer grounded in two sample files, with their locations."
+            }
+          }
         ]
       },
       {
@@ -282,26 +659,40 @@
         "title": "Privacy and security",
         "lede": "ParsRAG is designed for one person on one workstation. It keeps documents, the index and conversations local, and treats anything that could leave as an explicit choice.",
         "blocks": [
-          { "h": "What is never stored by the service" },
-          { "list": [
-            "Uploaded files: they exist in memory and a RAM-backed temporary folder only while they are processed.",
-            "Prompts and retrieved excerpts: they are not logged.",
-            "Conversations: they live in your browser's IndexedDB, not on the server.",
-            "API keys: process memory or environment variables only.{{ref:local-in-all-modes}}"
-          ] },
-          { "h": "Network protections" },
-          { "list": [
-            "Only requests addressed to localhost, 127.0.0.1 or ::1 are accepted, which blocks DNS rebinding. PARSRAG_ALLOWED_HOSTS adds names for LAN use.{{ref:dns-rebinding}}",
-            "Requests that change data must come from the app's own address or an allowed origin.",
-            "The app listens on 127.0.0.1 by default, and Qdrant sits on an internal network with no outside access."
-          ] },
-          { "h": "Container hardening" },
-          { "list": [
-            "Read-only file system, a RAM-backed /tmp, no new privileges and every Linux capability dropped.",
-            "Runs as a non-root user, and pip is removed from the runtime image.",
-            "Memory ceilings: 6 GB for the app, 2 GB for Qdrant and 12 GB for Ollama by default."
-          ] },
-          { "note": "Putting ParsRAG on a shared or untrusted network needs an authenticated reverse proxy. Vulnerabilities are reported privately through GitHub's security tab." }
+          {
+            "h": "What is never stored by the service"
+          },
+          {
+            "list": [
+              "Uploaded files: they exist in memory and a RAM-backed temporary folder only while they are processed.",
+              "Prompts and retrieved excerpts: they are not logged.",
+              "Conversations: they live in your browser's IndexedDB, not on the server.",
+              "API keys: process memory or environment variables only.{{ref:local-in-all-modes}}"
+            ]
+          },
+          {
+            "h": "Network protections"
+          },
+          {
+            "list": [
+              "Only requests addressed to localhost, 127.0.0.1 or ::1 are accepted, which blocks DNS rebinding. PARSRAG_ALLOWED_HOSTS adds names for LAN use.{{ref:dns-rebinding}}",
+              "Requests that change data must come from the app's own address or an allowed origin.",
+              "The app listens on 127.0.0.1 by default, and Qdrant sits on an internal network with no outside access."
+            ]
+          },
+          {
+            "h": "Container hardening"
+          },
+          {
+            "list": [
+              "Read-only file system, a RAM-backed /tmp, no new privileges and every Linux capability dropped.",
+              "Runs as a non-root user, and pip is removed from the runtime image.",
+              "Memory ceilings: 6 GB for the app, 2 GB for Qdrant and 12 GB for Ollama by default."
+            ]
+          },
+          {
+            "note": "Putting ParsRAG on a shared or untrusted network needs an authenticated reverse proxy. Vulnerabilities are reported privately through GitHub's security tab."
+          }
         ]
       },
       {
@@ -309,37 +700,94 @@
         "title": "Your workspace",
         "lede": "The interface is a full workspace: conversations, settings, themes and two languages, installable as an app.",
         "blocks": [
-          { "h": "Conversations" },
-          { "list": [
-            "History is grouped into Today, Yesterday and Earlier, and search looks through titles and message text.",
-            "Each conversation can be renamed, downloaded as Markdown or deleted.",
-            "Back up every conversation and preference to a JSON file and restore it on another machine; documents are uploaded again there.{{ref:backup}}",
-            "Clear all local data removes every conversation and indexed document, and keeps browser data if the service can't confirm the deletion."
-          ] },
-          { "h": "Appearance and language" },
-          { "list": [
-            "Light and dark themes, switched with a circular reveal from where you click.",
-            "Four color palettes: ParsRAG green, Ocean blue, Quiet indigo and Warm sienna.",
-            "Persian is the default language. Switching flips the whole layout between right-to-left and left-to-right, and each answer follows its own language.",
-            "On narrow screens the conversation list becomes a panel you open."
-          ] },
-          { "h": "Keyboard shortcuts" },
-          { "table": { "head": ["Action", "Windows / Linux", "macOS"], "rows": [
-            ["New conversation", "Ctrl+Shift+O", "⌘⇧O"],
-            ["Search conversations", "Ctrl+Shift+K", "⌘⇧K"],
-            ["Open documents", "Ctrl+Shift+D", "⌘⇧D"],
-            ["Open settings", "Ctrl+,", "⌘,"],
-            ["Focus the message box", "/", "/"],
-            ["Show the tour", "Ctrl+Shift+H", "⌘⇧H"],
-            ["Switch light and dark", "Ctrl+Shift+Y", "⌘⇧Y"]
-          ] } },
-          { "h": "Guided tour and app install" },
-          { "list": [
-            "A 33-step tour opens on first visit, walks through every control in place, and never changes your settings or data. Replay it any time.",
-            "Install ParsRAG as an app. The interface opens offline, but answers still need the service; model requests and document data are never cached.{{ref:pwa}}",
-            "If something fails while drawing the page, a recovery screen replaces the blank page and your data stays saved."
-          ] },
-          { "figure": { "src": "workspace-en-dark", "alt": "ParsRAG workspace in the dark theme", "cap": "A conversation in the dark theme." } }
+          {
+            "h": "Conversations"
+          },
+          {
+            "list": [
+              "History is grouped into Today, Yesterday and Earlier, and search looks through titles and message text.",
+              "Each conversation can be renamed, downloaded as Markdown or deleted.",
+              "Back up every conversation and preference to a JSON file and restore it on another machine; documents are uploaded again there.{{ref:backup}}",
+              "Clear all local data removes every conversation and indexed document, and keeps browser data if the service can't confirm the deletion."
+            ]
+          },
+          {
+            "h": "Appearance and language"
+          },
+          {
+            "list": [
+              "Light and dark themes, switched with a circular reveal from where you click.",
+              "Four color palettes: ParsRAG green, Ocean blue, Quiet indigo and Warm sienna.",
+              "Persian is the default language. Switching flips the whole layout between right-to-left and left-to-right, and each answer follows its own language.",
+              "On narrow screens the conversation list becomes a panel you open."
+            ]
+          },
+          {
+            "h": "Keyboard shortcuts"
+          },
+          {
+            "table": {
+              "head": [
+                "Action",
+                "Windows / Linux",
+                "macOS"
+              ],
+              "rows": [
+                [
+                  "New conversation",
+                  "Ctrl+Shift+O",
+                  "⌘⇧O"
+                ],
+                [
+                  "Search conversations",
+                  "Ctrl+Shift+K",
+                  "⌘⇧K"
+                ],
+                [
+                  "Open documents",
+                  "Ctrl+Shift+D",
+                  "⌘⇧D"
+                ],
+                [
+                  "Open settings",
+                  "Ctrl+,",
+                  "⌘,"
+                ],
+                [
+                  "Focus the message box",
+                  "/",
+                  "/"
+                ],
+                [
+                  "Show the tour",
+                  "Ctrl+Shift+H",
+                  "⌘⇧H"
+                ],
+                [
+                  "Switch light and dark",
+                  "Ctrl+Shift+Y",
+                  "⌘⇧Y"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Guided tour and app install"
+          },
+          {
+            "list": [
+              "A 33-step tour opens on first visit, walks through every control in place, and never changes your settings or data. Replay it any time.",
+              "Install ParsRAG as an app. The interface opens offline, but answers still need the service; model requests and document data are never cached.{{ref:pwa}}",
+              "If something fails while drawing the page, a recovery screen replaces the blank page and your data stays saved."
+            ]
+          },
+          {
+            "figure": {
+              "src": "workspace-en-dark",
+              "alt": "ParsRAG workspace in the dark theme",
+              "cap": "A conversation in the dark theme."
+            }
+          }
         ]
       },
       {
@@ -347,30 +795,102 @@
         "title": "Architecture",
         "lede": "The backend is organized as ports and adapters: the core knows only interfaces, and one composition root connects them to Qdrant, the parsers, OCR and the model clients.",
         "blocks": [
-          { "table": { "head": ["Layer", "What lives there"], "rows": [
-            ["Domain", "Documents, sections, query modes, upload policy, errors"],
-            ["DTOs", "Validated requests and typed responses"],
-            ["Ports", "Repository, parser, chunker, condenser, model gateway, progress, reranker"],
-            ["Use cases", "14 operations, one class each: ingest, answer, suggest questions, reuse, delete, configure model…"],
-            ["Strategies", "Strict, Hybrid and Open conversation pipelines; citations; context budget; Persian normalization"],
-            ["Adapters", "Qdrant and BM25, LlamaIndex model clients, FlashRank reranker, PDF/Office/OCR parsers"],
-            ["API", "FastAPI routes, middleware, error mapping and server-sent events"]
-          ] } },
-          { "h": "HTTP API" },
-          { "table": { "head": ["Endpoint", "Purpose"], "rows": [
-            ["GET /health/live, /health/ready", "Liveness, and readiness once models and Qdrant are available"],
-            ["GET /capabilities", "Upload limits and supported file types"],
-            ["GET, PUT /models/configuration", "Read or verify and apply the model connection"],
-            ["POST /ingest", "Upload and index files"],
-            ["POST /query, /query/stream", "Answer a question, at once or streamed"],
-            ["POST /sessions/{id}/suggestions", "Three questions the documents can answer"],
-            ["POST /sessions/{id}/files/reuse", "Copy an indexed document from another conversation"],
-            ["GET, DELETE /sessions/{id}/files", "List or delete a conversation's documents"],
-            ["DELETE /sessions/{id}", "Delete a conversation's index"]
-          ] } },
-          { "h": "A streamed answer" },
-          { "p": "POST /query/stream sends server-sent events in order: stage (understanding, retrieving, generating), sources, token for each piece of text, then done with the full answer, its outcome and the cited passage numbers. Errors arrive as an error event with a stable code." },
-          { "note": "Every error response has a stable code next to its message, so the interface can explain it in your language." }
+          {
+            "table": {
+              "head": [
+                "Layer",
+                "What lives there"
+              ],
+              "rows": [
+                [
+                  "Domain",
+                  "Documents, sections, query modes, upload policy, errors"
+                ],
+                [
+                  "DTOs",
+                  "Validated requests and typed responses"
+                ],
+                [
+                  "Ports",
+                  "Repository, parser, chunker, condenser, model gateway, progress, reranker"
+                ],
+                [
+                  "Use cases",
+                  "14 operations, one class each: ingest, answer, suggest questions, reuse, delete, configure model…"
+                ],
+                [
+                  "Strategies",
+                  "Strict, Hybrid and Open conversation pipelines; citations; context budget; Persian normalization"
+                ],
+                [
+                  "Adapters",
+                  "Qdrant and BM25, LlamaIndex model clients, FlashRank reranker, PDF/Office/OCR parsers"
+                ],
+                [
+                  "API",
+                  "FastAPI routes, middleware, error mapping and server-sent events"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "HTTP API"
+          },
+          {
+            "table": {
+              "head": [
+                "Endpoint",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "GET /health/live, /health/ready",
+                  "Liveness, and readiness once models and Qdrant are available"
+                ],
+                [
+                  "GET /capabilities",
+                  "Upload limits and supported file types"
+                ],
+                [
+                  "GET, PUT /models/configuration",
+                  "Read or verify and apply the model connection"
+                ],
+                [
+                  "POST /ingest",
+                  "Upload and index files"
+                ],
+                [
+                  "POST /query, /query/stream",
+                  "Answer a question, at once or streamed"
+                ],
+                [
+                  "POST /sessions/{id}/suggestions",
+                  "Three questions the documents can answer"
+                ],
+                [
+                  "POST /sessions/{id}/files/reuse",
+                  "Copy an indexed document from another conversation"
+                ],
+                [
+                  "GET, DELETE /sessions/{id}/files",
+                  "List or delete a conversation's documents"
+                ],
+                [
+                  "DELETE /sessions/{id}",
+                  "Delete a conversation's index"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "A streamed answer"
+          },
+          {
+            "p": "POST /query/stream sends server-sent events in order: stage (understanding, retrieving, generating), sources, token for each piece of text, then done with the full answer, its outcome and the cited passage numbers. Errors arrive as an error event with a stable code."
+          },
+          {
+            "note": "Every error response has a stable code next to its message, so the interface can explain it in your language."
+          }
         ]
       },
       {
@@ -378,27 +898,41 @@
         "title": "Quality and releases",
         "lede": "Every change runs the same checks in the open, and each release is verified before it is published.",
         "blocks": [
-          { "h": "On every change" },
-          { "list": [
-            "Backend: formatting and lint with Ruff, strict type checking with mypy, and pytest with branch coverage of at least 85 percent.{{ref:coverage}}",
-            "Frontend: dependency audit, unit tests, type-checked build, and Playwright browser and app-install tests.",
-            "Both run on Linux, Windows and macOS.{{ref:ci-matrix}}",
-            "End to end: real parsing, embeddings, Qdrant, reranking and streaming, with a stand-in model. At least 7 of 8 paraphrased Persian questions must cite their own section first.{{ref:e2e-gate}}",
-            "Packaging: the Docker image is built and the app imported inside it."
-          ] },
-          { "h": "Supply chain" },
-          { "list": [
-            "Dependency review on pull requests and a Python vulnerability audit.",
-            "A software bill of materials is generated, and the image is scanned; fixable high or critical findings block the build.",
-            "Dependabot proposes weekly dependency updates."
-          ] },
-          { "h": "Measured improvements in 1.0" },
-          { "list": [
-            "Keyword plus vector search: mean reciprocal rank 0.748 → 0.823 on 127 keyword-style queries.{{ref:bm25}}",
-            "OCR on Persian pages turned 90 degrees: character error 0.85 → 0.09.{{ref:ocr-rotation}}",
-            "OCR overall: mean character error 0.225 → 0.133.{{ref:ocr-mean}}"
-          ] },
-          { "note": "These measurements were made on document sets that aren't published, so they can't be reproduced from the public repository." }
+          {
+            "h": "On every change"
+          },
+          {
+            "list": [
+              "Backend: formatting and lint with Ruff, strict type checking with mypy, and pytest with branch coverage of at least 85 percent.{{ref:coverage}}",
+              "Frontend: dependency audit, unit tests, type-checked build, and Playwright browser and app-install tests.",
+              "Both run on Linux, Windows and macOS.{{ref:ci-matrix}}",
+              "End to end: real parsing, embeddings, Qdrant, reranking and streaming, with a stand-in model. At least 7 of 8 paraphrased Persian questions must cite their own section first.{{ref:e2e-gate}}",
+              "Packaging: the Docker image is built and the app imported inside it."
+            ]
+          },
+          {
+            "h": "Supply chain"
+          },
+          {
+            "list": [
+              "Dependency review on pull requests and a Python vulnerability audit.",
+              "A software bill of materials is generated, and the image is scanned; fixable high or critical findings block the build.",
+              "Dependabot proposes weekly dependency updates."
+            ]
+          },
+          {
+            "h": "Measured improvements in 1.0"
+          },
+          {
+            "list": [
+              "Keyword plus vector search: mean reciprocal rank 0.748 → 0.823 on 127 keyword-style queries.{{ref:bm25}}",
+              "OCR on Persian pages turned 90 degrees: character error 0.85 → 0.09.{{ref:ocr-rotation}}",
+              "OCR overall: mean character error 0.225 → 0.133.{{ref:ocr-mean}}"
+            ]
+          },
+          {
+            "note": "These measurements were made on document sets that aren't published, so they can't be reproduced from the public repository."
+          }
         ]
       },
       {
@@ -406,44 +940,192 @@
         "title": "Configuration reference",
         "lede": "Everything is set through environment variables in .env. These are the ones you are most likely to change; defaults are the Docker values.",
         "blocks": [
-          { "h": "Model" },
-          { "table": { "head": ["Variable", "Default", "Purpose"], "rows": [
-            ["LLM_PROVIDER", "ollama", "ollama or api"],
-            ["LLM_MODEL_NAME", "gemma3:12b", "Model that writes answers"],
-            ["MODEL_API_BASE_URL", "https://openrouter.ai/api/v1", "OpenAI-compatible endpoint"],
-            ["MODEL_API_KEY", "empty", "Runtime secret, never written to disk"],
-            ["MODEL_API_DISCLOSURE_ACKNOWLEDGED", "0", "Consent for an external API"],
-            ["OLLAMA_CONTEXT_LENGTH", "8192", "Context requested from Ollama"],
-            ["LLM_REQUEST_TIMEOUT_SECONDS", "120", "Per-answer timeout"]
-          ] } },
-          { "h": "Search" },
-          { "table": { "head": ["Variable", "Default", "Purpose"], "rows": [
-            ["EMBED_MODEL_NAME", "intfloat/multilingual-e5-base", "Embedding model"],
-            ["EMBED_DEVICE", "auto", "auto, cpu, cuda or mps"],
-            ["KEYWORD_SEARCH", "1", "BM25 fused with vector search"],
-            ["RERANK_MODEL", "miniReranker_arabic_v1", "Hybrid reranker; none disables it"],
-            ["STRICT_RAG_THRESHOLD", "0.75", "Documents only evidence gate"],
-            ["HYBRID_RETRIEVE_TOP_K", "25", "Hybrid candidate pool"]
-          ] } },
-          { "h": "Documents and OCR" },
-          { "table": { "head": ["Variable", "Default", "Purpose"], "rows": [
-            ["PARSRAG_MAX_FILES_PER_SESSION", "10", "Files per conversation"],
-            ["PARSRAG_MAX_FILE_BYTES", "104857600", "100 MiB per file"],
-            ["PARSRAG_MAX_BATCH_BYTES", "524288000", "500 MiB per upload"],
-            ["OCR_ENABLED", "1", "Turn OCR on or off"],
-            ["OCR_LANGUAGES", "fas+eng", "Tesseract languages"],
-            ["OCR_DPI", "200", "Rendering resolution for scanned pages"],
-            ["OCR_MAX_PAGES", "30", "Scanned pages read per file"]
-          ] } },
-          { "h": "Service and memory" },
-          { "table": { "head": ["Variable", "Default", "Purpose"], "rows": [
-            ["PARSRAG_PORT", "8000", "Port on your machine"],
-            ["PARSRAG_BIND_HOST", "127.0.0.1", "Address the port is bound to"],
-            ["PARSRAG_ALLOWED_HOSTS", "localhost, 127.0.0.1, ::1", "Accepted host names"],
-            ["PARSRAG_APP_MEMORY_LIMIT", "6g", "App container ceiling"],
-            ["QDRANT_MEMORY_LIMIT", "2g", "Qdrant ceiling"],
-            ["OLLAMA_MEMORY_LIMIT", "12g", "Ollama ceiling"]
-          ] } }
+          {
+            "h": "Model"
+          },
+          {
+            "table": {
+              "head": [
+                "Variable",
+                "Default",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "LLM_PROVIDER",
+                  "ollama",
+                  "ollama or api"
+                ],
+                [
+                  "LLM_MODEL_NAME",
+                  "gemma3:12b",
+                  "Model that writes answers"
+                ],
+                [
+                  "MODEL_API_BASE_URL",
+                  "https://openrouter.ai/api/v1",
+                  "OpenAI-compatible endpoint"
+                ],
+                [
+                  "MODEL_API_KEY",
+                  "empty",
+                  "Runtime secret, never written to disk"
+                ],
+                [
+                  "MODEL_API_DISCLOSURE_ACKNOWLEDGED",
+                  "0",
+                  "Consent for an external API"
+                ],
+                [
+                  "OLLAMA_CONTEXT_LENGTH",
+                  "8192",
+                  "Context requested from Ollama"
+                ],
+                [
+                  "LLM_REQUEST_TIMEOUT_SECONDS",
+                  "120",
+                  "Per-answer timeout"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Search"
+          },
+          {
+            "table": {
+              "head": [
+                "Variable",
+                "Default",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "EMBED_MODEL_NAME",
+                  "intfloat/multilingual-e5-base",
+                  "Embedding model"
+                ],
+                [
+                  "EMBED_DEVICE",
+                  "auto",
+                  "auto, cpu, cuda or mps"
+                ],
+                [
+                  "KEYWORD_SEARCH",
+                  "1",
+                  "BM25 fused with vector search"
+                ],
+                [
+                  "RERANK_MODEL",
+                  "miniReranker_arabic_v1",
+                  "Hybrid reranker; none disables it"
+                ],
+                [
+                  "STRICT_RAG_THRESHOLD",
+                  "0.75",
+                  "Documents only evidence gate"
+                ],
+                [
+                  "HYBRID_RETRIEVE_TOP_K",
+                  "25",
+                  "Hybrid candidate pool"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Documents and OCR"
+          },
+          {
+            "table": {
+              "head": [
+                "Variable",
+                "Default",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "PARSRAG_MAX_FILES_PER_SESSION",
+                  "10",
+                  "Files per conversation"
+                ],
+                [
+                  "PARSRAG_MAX_FILE_BYTES",
+                  "104857600",
+                  "100 MiB per file"
+                ],
+                [
+                  "PARSRAG_MAX_BATCH_BYTES",
+                  "524288000",
+                  "500 MiB per upload"
+                ],
+                [
+                  "OCR_ENABLED",
+                  "1",
+                  "Turn OCR on or off"
+                ],
+                [
+                  "OCR_LANGUAGES",
+                  "fas+eng",
+                  "Tesseract languages"
+                ],
+                [
+                  "OCR_DPI",
+                  "200",
+                  "Rendering resolution for scanned pages"
+                ],
+                [
+                  "OCR_MAX_PAGES",
+                  "30",
+                  "Scanned pages read per file"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Service and memory"
+          },
+          {
+            "table": {
+              "head": [
+                "Variable",
+                "Default",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "PARSRAG_PORT",
+                  "8000",
+                  "Port on your machine"
+                ],
+                [
+                  "PARSRAG_BIND_HOST",
+                  "127.0.0.1",
+                  "Address the port is bound to"
+                ],
+                [
+                  "PARSRAG_ALLOWED_HOSTS",
+                  "localhost, 127.0.0.1, ::1",
+                  "Accepted host names"
+                ],
+                [
+                  "PARSRAG_APP_MEMORY_LIMIT",
+                  "6g",
+                  "App container ceiling"
+                ],
+                [
+                  "QDRANT_MEMORY_LIMIT",
+                  "2g",
+                  "Qdrant ceiling"
+                ],
+                [
+                  "OLLAMA_MEMORY_LIMIT",
+                  "12g",
+                  "Ollama ceiling"
+                ]
+              ]
+            }
+          }
         ]
       },
       {
@@ -451,24 +1133,46 @@
         "title": "License and citation",
         "lede": "ParsRAG is source-available, not open source. You can read the code and run official releases; changing or redistributing it needs permission.{{ref:source-available}}",
         "blocks": [
-          { "h": "You may" },
-          { "list": [
-            "Download and copy an unmodified official release.",
-            "Install and run it for personal, academic, research, educational or internal organizational use.",
-            "Read and study the source code.",
-            "Prepare a change only to contribute it back to the official repository."
-          ] },
-          { "h": "You may not, without written permission" },
-          { "list": [
-            "Modify it or make derivative works, other than to prepare a contribution.",
-            "Publish, redistribute, sell or rent it, or offer it to others as a hosted or managed service.",
-            "Rebrand it or use the ParsRAG name and mark except to identify an official copy."
-          ] },
-          { "h": "Cite it" },
-          { "p": "Publications that use ParsRAG must cite it. The citation in APA and BibTeX is generated from the repository's CITATION.cff." },
-          { "docs": ["citation", "license", "contributing", "security"] }
+          {
+            "h": "You may"
+          },
+          {
+            "list": [
+              "Download and copy an unmodified official release.",
+              "Install and run it for personal, academic, research, educational or internal organizational use.",
+              "Read and study the source code.",
+              "Prepare a change only to contribute it back to the official repository."
+            ]
+          },
+          {
+            "h": "You may not, without written permission"
+          },
+          {
+            "list": [
+              "Modify it or make derivative works, other than to prepare a contribution.",
+              "Publish, redistribute, sell or rent it, or offer it to others as a hosted or managed service.",
+              "Rebrand it or use the ParsRAG name and mark except to identify an official copy."
+            ]
+          },
+          {
+            "h": "Cite it"
+          },
+          {
+            "p": "Publications that use ParsRAG must cite it. The citation in APA and BibTeX is generated from the repository's CITATION.cff."
+          },
+          {
+            "docs": [
+              "citation",
+              "license",
+              "contributing",
+              "security"
+            ]
+          }
         ]
       }
-    ]
+    ],
+    "chapterOf": "Chapter {n} of {total}",
+    "cont": "continued",
+    "overview": "All slides"
   }
 }

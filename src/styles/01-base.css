@@ -71,12 +71,12 @@
 
   /* Vazirmatn's ascent (1.03em) is much taller than its descent (0.54em), so digits and
      capitals sit above the middle of a line box. Number badges move them down by this much. */
-  --digit-shift: 0.115em;
+  --digit-shift: 0.15em;
 
   --shadow-lg: 0 40px 100px -40px rgba(0, 0, 0, 0.9), 0 18px 40px -24px rgba(0, 0, 0, 0.7);
   --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-:root:lang(fa) { --digit-shift: 0.075em; }
+:root:lang(fa) { --digit-shift: 0.11em; }
 
 *,
 *::before,
@@ -371,13 +371,14 @@ code { font-family: var(--mono); font-size: 0.88em; }
   min-width: 1.6em;
   height: 1.6em;
   margin-inline-start: 0.25em;
-  padding: calc(var(--digit-shift) * 2) 0.42em 0;
+  padding: 0 0.45em;
   border-radius: 999px;
   background: var(--saffron-dim);
   box-shadow: inset 0 0 0 1px rgba(246, 185, 77, 0.42);
   color: var(--saffron-2);
   font-family: var(--font);
-  font-size: 0.6em;
+  /* Never so small that a one-pixel rounding moves the digits off centre. */
+  font-size: max(0.6em, 11px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -385,7 +386,7 @@ code { font-family: var(--mono); font-size: 0.88em; }
   vertical-align: 0.62em;
   transition: background-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast), transform var(--t-med) var(--ease-spring);
 }
-.ref span { display: block; }
+.ref span { display: block; line-height: 1; transform: translateY(var(--digit-shift)); }
 .ref:hover,
 .ref[aria-expanded="true"] { background: var(--saffron); color: #1c1203; box-shadow: 0 0 16px rgba(246, 185, 77, 0.5); transform: translateY(-1px); }
 .paper .ref,
