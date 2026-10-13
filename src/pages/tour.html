@@ -8,14 +8,17 @@
 
   <main id="main" class="tour" data-tour>
     <header class="tour__hero">
-      <div class="wrap">
+      <div class="wrap tour__hero-grid">
+        <div class="tour__intro">
         <p class="tour__release"><span>{{tour.releaseLine}}</span> <a href="{{release.url}}" data-doc="changelog"><span>{{brand}}</span> <span data-release="version">{{release.version}}</span></a><span class="tour__date">{{release.date}}</span></p>
         <h1 class="tour__title">{{tour.title}}</h1>
         <p class="lead">{{tour.lead}}</p>
-        <div class="hero__actions tour__actions">
-          <button class="btn btn--gold" type="button" data-present-start>{{@slides}}<span>{{tour.present}}</span></button>
+        <div class="tour__actions">
+          <button class="btn btn--primary" type="button" data-present-start>{{@slides}}<span>{{tour.present}}</span></button>
           <a class="btn btn--line" href="#overview">{{tour.toc}}</a>
         </div>
+        </div>
+        <button class="tour__deck" type="button" data-present-start data-deck aria-label="{{tour.present}}"></button>
       </div>
     </header>
 
