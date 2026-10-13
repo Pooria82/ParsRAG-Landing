@@ -268,6 +268,47 @@ export function initHero({ gsap, ST, reduce }) {
 
   // The one orchestrated moment: ink gathers, then the words arrive.
   const words = title ? splitWords(title) : [];
+
+  // A gold thread from the headline's last word ("page") down to the live demo below.
+  const NS = 'http://www.w3.org/2000/svg';
+  const threadSvg = document.createElementNS(NS, 'svg');
+  threadSvg.setAttribute('class', 'hero__thread');
+  threadSvg.setAttribute('aria-hidden', 'true');
+  const threadPath = document.createElementNS(NS, 'path');
+  threadPath.setAttribute('class', 'thread');
+  threadPath.setAttribute('pathLength', '1');
+  threadSvg.append(threadPath);
+  hero.append(threadSvg);
+  const cue = hero.querySelector('.hero__cue');
+  const content = hero.querySelector('.hero__content');
+  const rtl = document.documentElement.dir === 'rtl';
+  // The thread leaves the end of the headline, runs down the outside of the text and the
+  // buttons, and comes back in to the scroll cue, so it never crosses the copy.
+  const routeThread = () => {
+    const last = words[words.length - 1];
+    if (!last || !cue || !content) return;
+    const box = hero.getBoundingClientRect();
+    const w = last.getBoundingClientRect();
+    const c = cue.getBoundingClientRect();
+    const k = content.getBoundingClientRect();
+    const side = rtl ? -1 : 1;
+    const sx = (rtl ? w.left - 6 : w.right + 6) - box.left;
+    const sy = w.top + w.height * 0.62 - box.top;
+    const edge = Math.min(box.width - 12, Math.max(12, (rtl ? k.left - 36 : k.right + 36) - box.left));
+    const ex = c.left + c.width / 2 - box.left;
+    const ey = c.top - box.top;
+    const bend = Math.min(90, (ey - sy) / 4);
+    threadSvg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    threadPath.setAttribute('d', [
+      `M${sx},${sy}`,
+      `C${edge},${sy} ${edge},${sy} ${edge},${sy + bend}`,
+      `L${edge},${ey - bend * 2}`,
+      `C${edge},${ey - bend * 0.6} ${ex + side * bend},${ey - bend * 0.9} ${ex},${ey}`,
+    ].join(' '));
+  };
+  routeThread();
+  new ResizeObserver(routeThread).observe(hero);
+  document.fonts?.ready.then(routeThread);
   const intro = gsap.timeline({ delay: 0.1 });
   intro
     .to(state, { intro: 1, duration: 1.1, ease: 'power1.out' }, 0)
@@ -279,6 +320,7 @@ export function initHero({ gsap, ST, reduce }) {
     .fromTo('[data-hero="lead"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.7)
     .fromTo('[data-hero="actions"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 1.9)
     .fromTo('[data-hero="meta"]', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 2.2)
+    .fromTo(threadPath, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', onStart: routeThread }, 2.3)
     .fromTo('[data-hero="cue"]', { opacity: 0 }, { opacity: 1, duration: 1 }, 2.6)
     .add(() => words.forEach((w) => { w.style.willChange = 'auto'; w.style.filter = ''; }));
 

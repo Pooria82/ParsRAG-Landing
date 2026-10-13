@@ -97,6 +97,58 @@
   .topbar__gh { display: none; }
 }
 
+/* ---------- Evidence trail (wide screens) ---------- */
+
+.trail {
+  position: fixed;
+  inset-inline-start: clamp(10px, 1.4vw, 22px);
+  top: 50%;
+  z-index: 40;
+  width: 22px;
+  height: min(58vh, 520px);
+  translate: 0 -50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.trail.is-visible { opacity: 1; pointer-events: auto; }
+.trail__line { position: absolute; inset-block: 0; inset-inline-start: 10px; width: 1px; background: rgba(210, 176, 106, 0.22); }
+.trail__fill { position: absolute; inset: 0; background: var(--gold); box-shadow: 0 0 8px rgba(210, 176, 106, 0.7); transform-origin: top; transform: scaleY(0); }
+.trail__knot {
+  position: absolute;
+  inset-inline-start: 4px;
+  top: calc(var(--at, 0) * 100%);
+  width: 13px;
+  height: 13px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--night);
+  box-shadow: inset 0 0 0 1.5px rgba(210, 176, 106, 0.6);
+  transition: background-color 0.3s, transform 0.3s var(--ease-out);
+}
+.trail__knot::before { content: ""; position: absolute; inset: -14px -10px; }
+.trail__knot.is-passed { background: var(--gold); box-shadow: none; }
+.trail__knot[aria-current="true"] { transform: scale(1.35); }
+.trail__label {
+  position: absolute;
+  inset-inline-start: 24px;
+  top: 50%;
+  translate: 0 -50%;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(10, 34, 28, 0.94);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--text);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.trail__knot:hover .trail__label,
+.trail__knot:focus-visible .trail__label { opacity: 1; }
+@media (max-width: 1279.98px) { .trail { display: none; } }
+
 /* ---------- Drawer (phones and tablets) ---------- */
 
 .drawer {

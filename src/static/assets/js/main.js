@@ -12,6 +12,7 @@ import { initMorph } from './morph.js';
 import { initTerminal } from './terminal.js';
 import { initCoda } from './coda.js';
 import { initTour } from './tour.js';
+import { initTrail } from './trail.js';
 
 const html = document.documentElement;
 
@@ -86,6 +87,7 @@ function boot() {
   run(initBoundary, ctx);
   run(initShelf, ctx);
   run(initCoda, ctx);
+  if (matchMedia('(min-width: 1280px)').matches) run(initTrail, ctx);
   whenNear('[data-playground]', initPlayground, ctx, '900px');
   whenNear('[data-measured]', initMeasured, ctx, '200px');
   whenNear('[data-morph]', initMorph, ctx);
