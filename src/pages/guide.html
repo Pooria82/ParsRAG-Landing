@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="{{lang}}" dir="{{dir}}" data-page="guide">
+<head>
+  {{@head}}
+</head>
+<body>
+  {{@header}}
+
+  <main id="main" class="tour guide">
+    <div class="wrap tour__layout">
+      <nav class="tour__toc" aria-label="{{guide.all}}">
+        <p class="tour__toc-title">{{guide.all}}</p>
+        <ol class="tour-index"><!--guide-index--></ol>
+      </nav>
+      <div class="tour__chapters">
+        <nav class="guide__crumbs" aria-label="Breadcrumb">
+          <ol><li><a href="{{nav.home}}">{{guide.crumbHome}}</a></li><li><a href="{{nav.tourHref}}">{{guide.crumbTour}}</a></li><li aria-current="page"><!--guide-crumb--></li></ol>
+        </nav>
+        <!--guide-body-->
+        <nav class="guide__pager" aria-label="{{guide.all}}"><!--guide-pager--></nav>
+        <div class="guide__more">
+          <a class="btn btn--primary" href="<!--guide-tour-->">{{@slides}}<span>{{guide.full}}</span></a>
+          <a class="btn btn--line" href="https://github.com/Pooria82/ParsRAG">{{@github}}<span>{{guide.repo}}</span></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {{@footer}}
+  <script type="module" src="{{root}}assets/js/main.js"></script>
+</body>
+</html>

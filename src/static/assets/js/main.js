@@ -74,8 +74,8 @@ function boot() {
 
   run(initChrome, ctx);
 
-  if (html.dataset.page === 'tour') {
-    run(initTour, ctx);
+  if (html.dataset.page === 'tour' || html.dataset.page === 'guide') {
+    if (html.dataset.page === 'tour') run(initTour, ctx);
     markReady(ctx.reduce);
     return;
   }

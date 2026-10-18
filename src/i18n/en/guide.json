@@ -1,0 +1,30 @@
+{
+  "guide": {
+    "crumbHome": "Home",
+    "crumbTour": "Product tour",
+    "label": "Guide",
+    "all": "All guides",
+    "prev": "Previous",
+    "next": "Next",
+    "full": "Read the full tour",
+    "present": "Watch as slides",
+    "openPage": "Open as a page",
+    "repo": "View the code on GitHub",
+    "seo": {
+      "overview": "What is ParsRAG? Offline document AI for Persian and English",
+      "install": "Install ParsRAG with Docker Compose: step-by-step guide",
+      "model": "Connect Ollama or an OpenAI-compatible model to ParsRAG",
+      "documents": "Add PDF, Word and PowerPoint documents to ParsRAG",
+      "reading": "How ParsRAG reads documents: text extraction and Persian OCR",
+      "search": "How ParsRAG finds evidence: semantic and keyword search",
+      "asking": "Asking questions in ParsRAG: modes, file mentions and suggestions",
+      "answers": "Cited answers in ParsRAG: the file and page behind every answer",
+      "privacy": "ParsRAG privacy and security: what stays on your machine",
+      "workspace": "The ParsRAG workspace: conversations, settings, themes and two languages",
+      "architecture": "ParsRAG architecture: FastAPI, Qdrant, LlamaIndex, ports and adapters",
+      "quality": "ParsRAG quality checks and release verification",
+      "config": "ParsRAG configuration reference: environment variables in .env",
+      "license": "ParsRAG license and how to cite it"
+    }
+  }
+}

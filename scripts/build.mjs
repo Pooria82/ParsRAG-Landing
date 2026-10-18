@@ -207,10 +207,78 @@ function renderTour(dict, lang) {
           <span class="chapter__badge" aria-hidden="true"><span class="chapter__icon">${chapterIcon(c.id)}</span><span class="chapter__n">${digits(String(i + 1).padStart(2, '0'), lang)}</span></span>
           <h2 class="chapter__title" id="ch-${c.id}">${c.title}</h2>
           <p class="chapter__lede">${c.lede}</p>
+          <a class="chapter__page" href="{{nav.guideHref}}${c.id}/">${escapeHtml(dict.guide.openPage)}${partials.chev}</a>
         </header>
         <div class="chapter__body"><div class="tour__part">${c.blocks.map((b) => renderBlock(b, dict, lang)).join('')}</div></div>
       </section>`).join('\n');
   return { index, body };
+}
+
+// ---------- Guide pages ----------
+
+// Each tour chapter is also published as its own page (guide/<id>/), so a search for one
+// topic (installing, OCR, privacy) lands on a page about exactly that topic.
+const plainText = (html) => html.replace(/{{ref:[w-]+}}/g, '').replace(/<[^>]+>/g, '').replace(/s+/g, ' ').trim();
+
+function renderGuide(template, dict, lang, chapter) {
+  const chapters = dict.tour.chapters;
+  const i = chapters.indexOf(chapter);
+  const href = (c) => `{{nav.guideHref}}${c.id}/`;
+  const index = chapters
+    .map((c, k) => `<li><a href="${href(c)}"${k === i ? ' aria-current="page"' : ''}><span class="tour-index__icon">${chapterIcon(c.id)}</span><span class="tour-index__n">${digits(k + 1, lang)}</span><span>${c.title}</span></a></li>`)
+    .join('');
+  const body = `
+        <article class="chapter guide__chapter" id="${chapter.id}" aria-labelledby="ch-${chapter.id}">
+          <header class="chapter__head">
+            <span class="chapter__badge" aria-hidden="true"><span class="chapter__icon">${chapterIcon(chapter.id)}</span><span class="chapter__n">${digits(String(i + 1).padStart(2, '0'), lang)}</span></span>
+            <p class="guide__label">${escapeHtml(dict.guide.label)}</p>
+            <h1 class="chapter__title" id="ch-${chapter.id}">${chapter.title}</h1>
+            <p class="chapter__lede">${chapter.lede}</p>
+          </header>
+          <div class="chapter__body"><div class="tour__part">${chapter.blocks.map((b) => renderBlock(b, dict, lang)).join('')}</div></div>
+        </article>`;
+  const prev = chapters[i - 1];
+  const next = chapters[i + 1];
+  const pager = [
+    prev ? `<a class="guide__step guide__step--prev" href="${href(prev)}" rel="prev"><span>${partials.chev}${escapeHtml(dict.guide.prev)}</span><b>${prev.title}</b></a>` : '<span></span>',
+    next ? `<a class="guide__step guide__step--next" href="${href(next)}" rel="next"><span>${escapeHtml(dict.guide.next)}${partials.chev}</span><b>${next.title}</b></a>` : '<span></span>',
+  ].join('');
+  return template
+    .replace('<!--guide-index-->', index)
+    .replace('<!--guide-crumb-->', chapter.title)
+    .replace('<!--guide-body-->', body)
+    .replace('<!--guide-pager-->', pager)
+    .replace('<!--guide-tour-->', `{{nav.tourHref}}#${chapter.id}`);
+}
+
+function guideLd(dict, lang, chapter, url) {
+  const home = `${SITE}${LANGS[lang].prefix}`;
+  return `
+  <script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        headline: plainText(chapter.title),
+        name: dict.guide.seo[chapter.id],
+        description: plainText(chapter.lede),
+        inLanguage: lang,
+        url,
+        datePublished: release.published.slice(0, 10),
+        author: { '@type': 'Person', name: 'Pooria Madani' },
+        image: `${SITE}assets/img/og-card-${lang}.png`,
+        about: { '@type': 'SoftwareApplication', name: 'ParsRAG', url: SITE },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: dict.guide.crumbHome, item: home },
+          { '@type': 'ListItem', position: 2, name: dict.guide.crumbTour, item: `${home}tour/` },
+          { '@type': 'ListItem', position: 3, name: plainText(chapter.title), item: url },
+        ],
+      },
+    ],
+  }).replace(/</g, '\u003c')}</script>`;
 }
 
 // ---------- Templates ----------
@@ -302,6 +370,7 @@ await bundle({
 await mkdir(join(dist, 'assets', 'demo'), { recursive: true });
 for (const lang of Object.keys(LANGS)) await cp(join(src, 'content', 'demo', `${lang}.json`), join(dist, 'assets', 'demo', `${lang}.json`));
 
+const guidePaths = [];
 for (const [lang, L] of Object.entries(LANGS)) {
   const dict = await loadDict(lang);
   await buildDocs(lang, dict);
@@ -323,17 +392,38 @@ for (const [lang, L] of Object.entries(LANGS)) {
         hrefFa: `${SITE}fa/${page.path}`,
       },
       mock: dict.mock ? { ...dict.mock, cur: dict.mock[lang] } : undefined,
-      nav: { ...dict.nav, home: `${up}${L.prefix}` || './', tourHref: `${up}${L.prefix}tour/` },
+      nav: { ...dict.nav, home: `${up}${L.prefix}` || './', tourHref: `${up}${L.prefix}tour/`, guideHref: `${up}${L.prefix}guide/` },
     };
     const out = join(dist, rel, 'index.html');
     await mkdir(dirname(out), { recursive: true });
-    await writeFile(out, render(template, pageDict, lang));
+    await writeFile(out, render(template, pageDict, lang).replace('<!--ld-->', ''));
   }
+  const guideTemplate = await read(src, 'pages', 'guide.html');
+  for (const chapter of dict.tour.chapters) {
+    const path = `guide/${chapter.id}/`;
+    const rel = `${L.prefix}${path}`;
+    const up = '../'.repeat(rel.split('/').filter(Boolean).length);
+    const otherLang = lang === 'en' ? 'fa' : 'en';
+    const url = `${SITE}${rel}`;
+    const pageDict = {
+      ...dict,
+      lang,
+      dir: L.dir,
+      root: up,
+      page: { id: 'guide', url, title: dict.guide.seo[chapter.id], description: plainText(chapter.lede) },
+      alt: { ...dict.alt, href: `${up}${LANGS[otherLang].prefix}${path}`, hrefEn: `${SITE}${path}`, hrefFa: `${SITE}fa/${path}` },
+      nav: { ...dict.nav, home: `${up}${L.prefix}`, tourHref: `${up}${L.prefix}tour/`, guideHref: `${up}${L.prefix}guide/` },
+    };
+    const out = join(dist, rel, 'index.html');
+    await mkdir(dirname(out), { recursive: true });
+    await writeFile(out, render(renderGuide(guideTemplate, dict, lang, chapter), pageDict, lang).replace('<!--ld-->', guideLd(dict, lang, chapter, url)));
+  }
+  guidePaths.push(...dict.tour.chapters.map((c) => `guide/${c.id}/`).filter((p) => !guidePaths.includes(p)));
 }
 
 // ---------- Sitemap ----------
 
-const urls = PAGES.flatMap((p) => ['', 'fa/'].map((prefix) => {
+const urls = [...PAGES, ...guidePaths.map((path) => ({ path }))].flatMap((p) => ['', 'fa/'].map((prefix) => {
   const alternates = [['en', ''], ['fa', 'fa/'], ['x-default', '']]
     .map(([hl, pre]) => `    <xhtml:link rel="alternate" hreflang="${hl}" href="${SITE}${pre}${p.path}"/>`).join('\n');
   return `  <url>\n    <loc>${SITE}${prefix}${p.path}</loc>\n    <lastmod>${release.published.slice(0, 10)}</lastmod>\n${alternates}\n  </url>`;
@@ -345,4 +435,4 @@ await writeFile(
 await writeFile(join(dist, '.nojekyll'), '');
 await writeFile(join(dist, 'release.json'), `${JSON.stringify(release)}\n`);
 
-console.log(`Built dist/ for ${release.tag}: ${PAGES.length} pages x ${Object.keys(LANGS).length} languages, ${Object.keys(claims).length} verified claims`);
+console.log(`Built dist/ for ${release.tag}: ${PAGES.length + guidePaths.length} pages x ${Object.keys(LANGS).length} languages, ${Object.keys(claims).length} verified claims`);
