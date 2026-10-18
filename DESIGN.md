@@ -91,6 +91,8 @@ FOOTER        columns, release, documents (open in a sheet), a large faded wordm
 
 The product tour is a separate page: a hero with a stack of chapter cards that starts the presentation, a sticky chapter index (a glass card, or a pill strip on narrow screens), and chapters built from structured content. "Present" opens as a circle of light growing from the button and turns each chapter opening and section into a slide. Moving between the home page and the tour cross-fades with view transitions.
 
+Each tour chapter is also published on its own page, at guide/<id>/ (and fa/guide/<id>/). These pages are built from the same content as the tour. Each has a search-oriented title, breadcrumbs, the chapter index with the current page marked, links to the previous and next chapters, and TechArticle and BreadcrumbList structured data. They are listed in the sitemap, and each tour chapter links to its page.
+
 ## Principles
 
 1. **One bold thing:** the line of light between a citation and its page.
