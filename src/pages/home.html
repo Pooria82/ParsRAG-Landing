@@ -384,7 +384,7 @@
           <div class="section-head">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.08}}</span>{{install.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="install-title">{{install.title}}</h2>
-        <p class="lead" data-reveal style="--i:2">{{install.lead}}{{ref:ram}}{{ref:offline}}</p>
+        <p class="lead" data-reveal style="--i:2">{{install.lead}}{{ref:host-ollama}}{{ref:ram}}{{ref:offline}}</p>
           </div>
           <p class="install__then">{{install.then}}</p>
           <nav class="install__links" aria-label="{{install.guide}}">
@@ -401,22 +401,23 @@
               <button type="button" role="radio" aria-checked="true" data-os="linux">{{install.os.linux}}</button>
             </div>
             <div class="term__group term__group--setup" role="radiogroup" aria-label="{{install.setupLabel}}" data-term-setup>
-              <button type="button" role="radio" aria-checked="true" data-setup="cpu">{{install.setup.cpu}}</button>
-              <button type="button" role="radio" aria-checked="false" data-setup="gpu">{{install.setup.gpu}}</button>
+              <button type="button" role="radio" aria-checked="true" data-setup="host">{{install.setup.host}}</button>
+              <button type="button" role="radio" aria-checked="false" data-setup="cpu">{{install.setup.cpu}}</button>
               <button type="button" role="radio" aria-checked="false" data-setup="api">{{install.setup.api}}</button>
             </div>
             <button class="term__copy" type="button" data-copy-btn>{{@copy}}<span data-copy-label>{{install.copy}}</span></button>
           </div>
           <div class="term__body" dir="ltr">
-<pre data-term-out aria-live="polite"><code><span class="c"># {{install.cmt.clone}}</span>
+<pre data-term-out aria-live="polite"><code><span class="c"># {{install.cmt.pull}}</span>
+<span class="l">ollama pull qwen2.5:7b</span>
+<span class="c"># {{install.cmt.clone}}</span>
 <span class="l">git clone https://github.com/Pooria82/ParsRAG.git</span>
 <span class="l">cd ParsRAG</span>
 <span class="c"># {{install.cmt.env}}</span>
 <span class="l">cp .env.example .env</span>
-<span class="c"># {{install.cmt.start}}</span>
-<span class="l">docker compose --profile local-model up -d qdrant ollama</span>
-<span class="l">docker compose --profile local-model run --rm ollama-init</span>
-<span class="l">docker compose --profile local-model up -d --build app</span></code></pre>
+<span class="c"># {{install.cmt.model}}</span>
+<span class="c"># {{install.cmt.run}}</span>
+<span class="l">docker compose up -d --build</span></code></pre>
           </div>
         </div>
       </div>

@@ -331,7 +331,7 @@
   },
   "install": {
     "title": "Run it on your machine.",
-    "lead": "You need Docker Engine with Compose and 8–16 GB of RAM, depending on the model. After the first download, a local model works offline.",
+    "lead": "You need Docker, Ollama and 8–16 GB of RAM. The recommended setup uses the Ollama already on your computer, with its models and GPU; after the first download it works offline.",
     "osLabel": "Your system",
     "setupLabel": "Setup",
     "os": {
@@ -340,20 +340,23 @@
       "linux": "Linux"
     },
     "setup": {
-      "cpu": "Local model on CPU",
-      "gpu": "NVIDIA GPU",
+      "host": "Ollama on this computer",
+      "cpu": "Ollama in Docker",
       "api": "API model"
     },
     "copy": "Copy commands",
     "copied": "Copied",
-    "macGpu": "Docker Desktop doesn't give containers access to a Mac's GPU. Use the CPU setup, run Ollama natively, or connect an API model.",
     "cmt": {
       "clone": "Get the code",
       "env": "Create your settings file",
       "check": "Check the configuration",
       "start": "Start Qdrant and Ollama, download the model, then start ParsRAG",
       "apiEnv": "In .env set LLM_PROVIDER=api, LLM_MODEL_NAME, MODEL_API_BASE_URL, MODEL_API_KEY and MODEL_API_DISCLOSURE_ACKNOWLEDGED=1",
-      "apiStart": "Build and start ParsRAG"
+      "apiStart": "Build and start ParsRAG",
+      "pull": "Install Ollama from ollama.com, then pull a model",
+      "model": "Set LLM_MODEL_NAME in .env to the model you pulled",
+      "linuxHost": "Linux only: let containers reach Ollama by setting OLLAMA_HOST=172.17.0.1:11434 in its service",
+      "run": "Build and start ParsRAG"
     },
     "then": "Then open <code dir=\"ltr\">http://127.0.0.1:8000</code>. The first start downloads the embedding model and the reranker (about 100 MB) into the model cache.",
     "guide": "Full installation guide",
@@ -378,8 +381,6 @@
     "title": "The real app, in both languages.",
     "lead": "Screens from the ParsRAG repository: the workspace, cited sources and model settings, in light and dark.",
     "cta": "See every screen in the tour"
-  }
-}
   },
   "star": {
     "eyebrow": "Support the project",
@@ -389,3 +390,5 @@
     "watch": "Follow releases",
     "issue": "Report an issue",
     "count": "{n} stars"
+  }
+}

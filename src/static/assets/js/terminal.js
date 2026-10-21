@@ -1,7 +1,6 @@
 // Install terminal: commands for the visitor's system (PowerShell or a POSIX shell)
 // and setup, taken from the ParsRAG README. Copy puts only the commands on the clipboard.
 const REPO = 'https://github.com/Pooria82/ParsRAG.git';
-const GPU = '-f compose.yaml -f compose.gpu.yaml';
 
 function detectOS() {
   const p = `${navigator.userAgentData?.platform || ''} ${navigator.platform || ''} ${navigator.userAgent}`;
@@ -11,22 +10,22 @@ function detectOS() {
 }
 
 function script(os, setup, t) {
-  const lines = [
+  const lines = [];
+  if (setup === 'host') lines.push({ c: t.cmt.pull }, { l: 'ollama pull qwen2.5:7b' });
+  lines.push(
     { c: t.cmt.clone }, { l: `git clone ${REPO}` }, { l: 'cd ParsRAG' },
     { c: t.cmt.env }, { l: os === 'windows' ? 'Copy-Item .env.example .env' : 'cp .env.example .env' },
-    { c: t.cmt.check }, { l: 'docker compose config --quiet' },
-  ];
-  if (setup === 'cpu') {
+  );
+  if (setup === 'host') {
+    // The README's complete setup: the app reaches the computer's own Ollama.
+    lines.push({ c: t.cmt.model });
+    if (os === 'linux') lines.push({ c: t.cmt.linuxHost }, { l: 'sudo systemctl edit ollama.service' });
+    lines.push({ c: t.cmt.run }, { l: 'docker compose up -d --build' });
+  } else if (setup === 'cpu') {
     lines.push({ c: t.cmt.start },
       { l: 'docker compose --profile local-model up -d qdrant ollama' },
       { l: 'docker compose --profile local-model run --rm ollama-init' },
       { l: 'docker compose --profile local-model up -d --build app' });
-  } else if (setup === 'gpu') {
-    if (os === 'macos') return [...lines.slice(0, 5), { note: t.macGpu }];
-    lines.push({ c: t.cmt.start },
-      { l: `docker compose ${GPU} --profile local-model up -d qdrant ollama` },
-      { l: `docker compose ${GPU} --profile local-model run --rm ollama-init` },
-      { l: `docker compose ${GPU} --profile local-model up -d --build app` });
   } else {
     lines.push({ c: t.cmt.apiEnv }, { c: t.cmt.apiStart }, { l: 'docker compose up -d --build' });
   }
@@ -45,7 +44,7 @@ export function initTerminal({ gsap, ST, reduce }) {
   const copyBtn = root.querySelector('[data-copy-btn]');
   const copyLabel = root.querySelector('[data-copy-label]');
   let os = detectOS();
-  let setup = 'cpu';
+  let setup = 'host';
   let current = [];
 
   const render = (animate) => {
