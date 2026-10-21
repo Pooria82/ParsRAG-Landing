@@ -4,8 +4,8 @@
     "fa": { "file": "README.fa.md", "quote": "استخراج متن، OCR با Tesseract، embedding چندزبانه، بازیابی با LlamaIndex و جست‌وجوی برداری با Qdrant روی سیستم میزبان انجام می‌شوند." }
   },
   "traceable": {
-    "en": { "file": "README.md", "quote": "Traceable sources: unique filenames plus page ranges, slides, paragraphs, or section locations when the parser can determine them." },
-    "fa": { "file": "README.fa.md", "quote": "منابع قابل‌ردیابی: نام یکتای فایل همراه با بازهٔ صفحه، اسلاید، پاراگراف یا بخش، هرجا که ساختار فایل اجازه دهد." }
+    "en": { "file": "README.md", "quote": "Traceable sources: unique filenames plus page ranges, slides, paragraphs, tables, or image numbers." },
+    "fa": { "file": "README.fa.md", "quote": "منابع قابل‌ردیابی: نام یکتای فایل همراه با بازهٔ صفحه، اسلاید، پاراگراف، شمارهٔ جدول یا شمارهٔ تصویر." }
   },
   "numbered-citations": {
     "en": { "file": "CHANGELOG.md", "quote": "Numbered citations: the model cites excerpts as [n], the response lists which ones it used (cited), and the interface turns them into chips that open the cited passage." },
@@ -60,16 +60,16 @@
     "fa": { "file": "README.fa.md", "quote": "استفادهٔ دوباره از سند ایندکس‌شده در گفت‌وگوی دیگر بدون آپلود مجدد" }
   },
   "gpu": {
-    "en": { "file": "README.md", "quote": "Adaptive compute: CPU is the portable default; optional Compose overlays accelerate both embeddings and Ollama on NVIDIA or supported AMD hosts." },
-    "fa": { "file": "README.fa.md", "quote": "استفاده تطبیقی از سخت‌افزار: CPU حالت قابل‌حمل پیش‌فرض است و پروفایل‌های جداگانه Docker، embedding و Ollama را روی NVIDIA یا AMD سازگار اجرا می‌کنند." }
+    "en": { "file": "README.md", "quote": "Adaptive compute: use the Ollama installed on the computer, with its models and GPU, or Ollama inside Docker on CPU, NVIDIA, or supported AMD hosts; images are read in parallel while indexing." },
+    "fa": { "file": "README.fa.md", "quote": "استفاده تطبیقی از سخت‌افزار: از Ollamaی نصب‌شده روی رایانه با مدل‌ها و GPU آن استفاده کنید، یا Ollama را داخل Docker روی CPU، NVIDIA یا AMD سازگار اجرا کنید؛ تصویرها هنگام ایندکس به‌صورت موازی خوانده می‌شوند." }
   },
   "pwa": {
     "en": { "file": "README.md", "quote": "model requests and document data are never service-worker cached." },
     "fa": { "file": "README.fa.md", "quote": "درخواست‌های مدل و داده‌های اسناد در کش Service Worker قرار نمی‌گیرند." }
   },
   "ram": {
-    "en": { "file": "README.md", "quote": "8–16 GB RAM depending on the selected model." },
-    "fa": { "file": "README.fa.md", "quote": "مدل انتخابی حدود ۸ تا ۱۶ گیگابایت RAM." }
+    "en": { "file": "README.md", "quote": "and 8–16 GB RAM." },
+    "fa": { "file": "README.fa.md", "quote": "و ۸ تا ۱۶ گیگابایت RAM." }
   },
   "source-available": {
     "en": { "file": "README.md", "quote": "ParsRAG is source-available, not open source." },
