@@ -11,6 +11,7 @@ import { initShelf } from './shelf.js';
 import { initMorph } from './morph.js';
 import { initTerminal } from './terminal.js';
 import { initCoda } from './coda.js';
+import { initStar } from './star.js';
 import { initTour } from './tour.js';
 import { initTrail } from './trail.js';
 import { initGallery } from './gallery.js';
@@ -88,6 +89,7 @@ function boot() {
   run(initJourney, ctx);
   run(initBoundary, ctx);
   run(initShelf, ctx);
+  run(initStar, ctx);
   run(initCoda, ctx);
   if (matchMedia('(min-width: 1280px)').matches) run(initTrail, ctx);
   whenNear('[data-playground]', initPlayground, ctx, '900px');

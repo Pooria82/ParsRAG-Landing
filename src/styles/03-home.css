@@ -1890,3 +1890,64 @@
   .journey .step__more { font-size: 0.8125rem; }
   .journey .jstage { height: calc(100svh - var(--topbar) - 40px); }
 }
+
+/* ---------- Star on GitHub ---------- */
+
+.star { padding-block: clamp(56px, 8vw, 110px); }
+.star__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 56px);
+  padding: clamp(28px, 4.5vw, 64px);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(60% 90% at 18% 50%, rgba(246, 185, 77, 0.16), transparent 70%),
+    radial-gradient(50% 80% at 90% 10%, rgba(62, 224, 207, 0.12), transparent 70%),
+    linear-gradient(180deg, #0d131b, #080b10);
+  box-shadow: inset 0 0 0 1px var(--border-2), 0 60px 120px -60px rgba(0, 0, 0, 0.9);
+}
+/* A fixed field of small stars (one painted layer, no animation cost). */
+.star__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, #fff8, transparent), radial-gradient(1px 1px at 28% 70%, #fff6, transparent),
+    radial-gradient(1.5px 1.5px at 44% 18%, #fff7, transparent), radial-gradient(1px 1px at 63% 84%, #fff5, transparent),
+    radial-gradient(1.5px 1.5px at 77% 30%, #fff8, transparent), radial-gradient(1px 1px at 88% 62%, #fff6, transparent),
+    radial-gradient(1px 1px at 6% 86%, #fff5, transparent), radial-gradient(1.5px 1.5px at 52% 52%, #fff4, transparent),
+    radial-gradient(1px 1px at 36% 40%, #fff5, transparent), radial-gradient(1px 1px at 94% 90%, #fff6, transparent);
+}
+.star__sky { position: relative; display: grid; place-items: center; aspect-ratio: 1; max-width: 340px; width: 100%; justify-self: center; }
+.star__big { width: 46%; filter: drop-shadow(0 0 30px rgba(246, 185, 77, 0.55)); }
+.star__orbit { position: absolute; inset: 6%; border-radius: 50%; border: 1px dashed rgba(246, 185, 77, 0.3); }
+.star__orbit--b { inset: 20%; border-color: rgba(62, 224, 207, 0.3); }
+.star__orbit i { position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--saffron); box-shadow: 0 0 14px var(--saffron); }
+.star__orbit--b i { top: auto; bottom: -4px; width: 8px; height: 8px; background: var(--turq); box-shadow: 0 0 12px var(--turq); }
+@media (prefers-reduced-motion: no-preference) {
+  .star.is-live .star__orbit--a { animation: vault-sweep 14s linear infinite; }
+  .star.is-live .star__orbit--b { animation: vault-sweep 9s linear infinite reverse; }
+  .star.is-live .star__big { animation: star-float 5s ease-in-out infinite; }
+}
+@keyframes star-float { 50% { transform: translateY(-6px) rotate(4deg); } }
+.star__body { display: grid; gap: 14px; justify-items: start; }
+.star__body .h2 { max-width: 16ch; }
+.star__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.star__btn .icon { width: 18px; height: 18px; }
+.star__count {
+  margin-inline-start: 4px;
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: rgba(5, 7, 11, 0.16);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+@media (max-width: 759.98px) {
+  .star__card { grid-template-columns: minmax(0, 1fr); text-align: start; }
+  .star__sky { max-width: 170px; }
+}

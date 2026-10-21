@@ -380,3 +380,12 @@
     "cta": "See every screen in the tour"
   }
 }
+  },
+  "star": {
+    "eyebrow": "Support the project",
+    "title": "Like it? Give it a star.",
+    "lead": "ParsRAG is an independent project. A star on GitHub helps people who work with Persian documents find it, and shows which direction is worth building on.",
+    "cta": "Star on GitHub",
+    "watch": "Follow releases",
+    "issue": "Report an issue",
+    "count": "{n} stars"

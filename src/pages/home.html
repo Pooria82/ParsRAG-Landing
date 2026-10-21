@@ -424,6 +424,29 @@
 
     <!-- Tour teaser: the full presentation of the current release. -->
     <section class="teaser" aria-labelledby="teaser-title">
+    <!-- Stars on GitHub: the live count, and three ways to follow the project. -->
+    <section class="star" id="star" aria-labelledby="star-title">
+      <div class="wrap">
+        <div class="star__card" data-star>
+          <div class="star__sky" aria-hidden="true">
+            <span class="star__orbit star__orbit--a"><i></i></span>
+            <span class="star__orbit star__orbit--b"><i></i></span>
+            <svg class="star__big" viewBox="0 0 120 120"><defs><linearGradient id="star-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe3a3"/><stop offset=".5" stop-color="#f6b94d"/><stop offset="1" stop-color="#3ee0cf"/></linearGradient></defs><path d="M60 10l14.6 31 33.9 4.2-25 23.3 6.5 33.5L60 85.4 30 102l6.5-33.5-25-23.3 33.9-4.2Z" fill="url(#star-g)" stroke="#fff4d6" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="star__body">
+            <p class="eyebrow" data-reveal>{{star.eyebrow}}</p>
+            <h2 class="h2" id="star-title" data-reveal style="--i:1">{{star.title}}</h2>
+            <p class="lead" data-reveal style="--i:2">{{star.lead}}</p>
+            <div class="star__actions" data-reveal style="--i:3">
+              <a class="btn btn--primary star__btn" href="https://github.com/Pooria82/ParsRAG">{{icon:star}}<span>{{star.cta}}</span><span class="star__count" data-star-count hidden></span></a>
+              <a class="btn btn--line" href="https://github.com/Pooria82/ParsRAG/releases">{{star.watch}}</a>
+              <a class="btn btn--line" href="https://github.com/Pooria82/ParsRAG/issues">{{star.issue}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
       <div class="wrap teaser__inner">
         <div>
           <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.09}}</span>{{teaser.eyebrow}}</p>
