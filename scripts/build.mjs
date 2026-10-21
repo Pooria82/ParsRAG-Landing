@@ -349,11 +349,26 @@ async function loadDict(lang) {
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(join(src, 'static'), dist, { recursive: true });
-// One stylesheet, concatenated from src/styles in name order.
+// One stylesheet, concatenated from src/styles in name order (site.css, used by the OG card).
 const styleFiles = (await readdir(join(src, 'styles'))).filter((f) => f.endsWith('.css')).sort();
 await mkdir(join(dist, 'assets', 'css'), { recursive: true });
-const css = (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n');
-await writeFile(join(dist, 'assets', 'css', 'site.css'), (await transform(css, { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] })).code);
+const minifyCss = async (files) => (await transform(
+  (await Promise.all(files.map((f) => read(src, 'styles', f)))).join('\n'),
+  { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] },
+)).code.trim();
+await writeFile(join(dist, 'assets', 'css', 'site.css'), await minifyCss(styleFiles));
+// Pages carry their styles inline, so the first paint never waits for a second request. Each
+// page gets only what it uses: the home page has no slides, and the tour and guides no home
+// sections. Font URLs are rewritten relative to each page.
+const PAGE_CSS = {
+  home: await minifyCss(styleFiles.filter((f) => !f.startsWith('05-'))),
+  tour: await minifyCss(styleFiles.filter((f) => !f.startsWith('03-'))),
+};
+PAGE_CSS.guide = await minifyCss(styleFiles.filter((f) => !f.startsWith('03-') && !f.startsWith('05-')));
+// Each language preloads the font subsets its pages show (Persian pages also show Latin).
+const FONT_SUBSETS = { en: ['Latin'], fa: ['Arabic', 'Latin'] };
+const fontPreload = (up, lang) => FONT_SUBSETS[lang].map((n) => `<link rel="preload" href="${up}assets/fonts/Vazirmatn-${n}.woff2" as="font" type="font/woff2" crossorigin>`).join('\n  ');
+const inlineCss = (up, page) => `<style>${PAGE_CSS[page].replaceAll('url(../fonts/', `url(${up}assets/fonts/`)}</style>`;
 // The page modules are bundled and minified into main.js. The 3D scenes (three.js) are
 // split into a chunk that loads only when a scene comes near the viewport.
 const jsDir = join(dist, 'assets', 'js');
@@ -401,7 +416,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
     };
     const out = join(dist, rel, 'index.html');
     await mkdir(dirname(out), { recursive: true });
-    await writeFile(out, render(template, pageDict, lang).replace('<!--ld-->', ''));
+    await writeFile(out, render(template, pageDict, lang).replace('<!--ld-->', '').replace('<!--site-css-->', inlineCss(up, page.id)).replace('<!--font-preload-->', fontPreload(up, lang)));
   }
   const guideTemplate = await read(src, 'pages', 'guide.html');
   for (const chapter of dict.tour.chapters) {
@@ -421,7 +436,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
     };
     const out = join(dist, rel, 'index.html');
     await mkdir(dirname(out), { recursive: true });
-    await writeFile(out, render(renderGuide(guideTemplate, dict, lang, chapter), pageDict, lang).replace('<!--ld-->', guideLd(dict, lang, chapter, url)));
+    await writeFile(out, render(renderGuide(guideTemplate, dict, lang, chapter), pageDict, lang).replace('<!--ld-->', guideLd(dict, lang, chapter, url)).replace('<!--site-css-->', inlineCss(up, 'guide')).replace('<!--font-preload-->', fontPreload(up, lang)));
   }
   guidePaths.push(...dict.tour.chapters.map((c) => `guide/${c.id}/`).filter((p) => !guidePaths.includes(p)));
 }
