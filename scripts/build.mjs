@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { build as bundle, transform } from 'esbuild';
 import { Marked } from 'marked';
 import YAML from 'yaml';
-import { chapterIcon } from '../src/static/assets/js/chapter-icons.js';
+import { chapterIcon, uiIcon } from '../src/static/assets/js/chapter-icons.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
@@ -169,7 +169,11 @@ async function buildDocs(lang, dict) {
 // ---------- Product tour ----------
 
 // Intrinsic sizes of the screenshots in assets/img/shots (all others are 1440x900).
-const SHOT_SIZES = { 'model-en-light': [580, 1010], 'model-fa-light': [580, 968] };
+const SHOT_SIZES = {
+  'model-en-light': [580, 852], 'model-fa-light': [580, 852],
+  'settings-en-light': [580, 852], 'settings-fa-light': [580, 852],
+  'sources-en-light': [1440, 1300], 'sources-fa-light': [1440, 1300],
+};
 
 // Chapters are structured content in src/i18n/<lang>/tour.json. Text may contain {{keys}}
 // and {{ref:id}} citations; they are resolved with the rest of the page.
@@ -297,6 +301,7 @@ function render(template, dict, lang) {
       return partials[name];
     });
   }
+  html = html.replace(/\{\{icon:([\w-]+)\}\}/g, (_, name) => uiIcon(name));
   const refs = [];
   html = html.replace(/\{\{ref:([\w-]+)\}\}/g, (_, id) => {
     const c = claims[id]?.[lang];

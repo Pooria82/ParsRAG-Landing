@@ -19,3 +19,22 @@ export const CHAPTER_ICONS = {
 
 export const chapterIcon = (id, cls = 'icon') =>
   `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="${CHAPTER_ICONS[id] || CHAPTER_ICONS.overview}"/></svg>`;
+
+// Interface icons (same grid and stroke), used in templates as {{icon:name}}.
+export const UI_ICONS = {
+  server: 'M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 9V6A1.5 1.5 0 0 1 5 4.5Zm0 9h14a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 18v-3A1.5 1.5 0 0 1 5 13.5ZM7 7.5h.01M7 16.5h.01M10 7.5h.01M10 16.5h.01',
+  cloud: 'M7.4 18.5h9.9a3.7 3.7 0 0 0 .5-7.4 5.6 5.6 0 0 0-10.9-.9 4.2 4.2 0 0 0 .5 8.3Z',
+  lock: 'M7.5 10.5V8a4.5 4.5 0 0 1 9 0v2.5m-10 0h11a1.5 1.5 0 0 1 1.5 1.5v6.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 18.5V12a1.5 1.5 0 0 1 1.5-1.5Zm5.5 4v2',
+  history: 'M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v3.2h3.2M12 8v4.2l2.8 1.8',
+  plug: 'M9 3.5v4m6-4v4M7 7.5h10v3a5 5 0 0 1-10 0v-3Zm5 8v5',
+  vectors: 'M6 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm12 4a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM8 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm-.1-15.3 8.2 2.6M16.7 10.6l-7.4 7M6.3 7l1.3 10',
+  star: 'M12 3.8l2.5 5.1 5.6.8-4 3.9.9 5.6-5-2.6-5 2.6.9-5.6-4-3.9 5.6-.8L12 3.8Z',
+  alert: 'M12 4.5 3.5 19h17L12 4.5Zm0 5.5v4m0 2.5h.01',
+  fork: 'M7 6.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 0v3a2.5 2.5 0 0 0 2.5 2.5h5A2.5 2.5 0 0 0 17 9.5v-3m0 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM12 12v5.5m0 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z',
+};
+
+export const uiIcon = (name, cls = 'icon') => {
+  const d = UI_ICONS[name] || CHAPTER_ICONS[name];
+  if (!d) throw new Error(`unknown icon "${name}"`);
+  return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="${d}"/></svg>`;
+};
