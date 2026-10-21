@@ -1955,3 +1955,35 @@ html.is-awake .hero__glow, html.is-awake .app__local i { animation-play-state: r
   .star__card { grid-template-columns: minmax(0, 1fr); text-align: start; }
   .star__sky { max-width: 170px; }
 }
+
+/* ---------- Rendering budget ----------
+   Sections below the first screen are laid out only when they come near it. The sizes are
+   their measured heights, so the scrollbar, anchors and the pinned journey's start stay
+   accurate before they render (and once rendered, the browser remembers the real size). */
+.demo, .gallery, .evidence, .privacy, .measured, .shelf, .langs, .install, .star, .teaser, .coda, .footer { content-visibility: auto; }
+.demo { contain-intrinsic-size: auto 1320px; }
+.gallery { contain-intrinsic-size: auto 912px; }
+.evidence { contain-intrinsic-size: auto 990px; }
+.privacy { contain-intrinsic-size: auto 1450px; }
+.measured { contain-intrinsic-size: auto 2200px; }
+.shelf { contain-intrinsic-size: auto 1080px; }
+.langs { contain-intrinsic-size: auto 850px; }
+.install { contain-intrinsic-size: auto 905px; }
+.star { contain-intrinsic-size: auto 830px; }
+.teaser { contain-intrinsic-size: auto 1230px; }
+.coda { contain-intrinsic-size: auto 650px; }
+.footer { contain-intrinsic-size: auto 940px; }
+@media (min-width: 900px) {
+  .demo { contain-intrinsic-size: auto 1215px; }
+  .gallery { contain-intrinsic-size: auto 972px; }
+  .evidence { contain-intrinsic-size: auto 665px; }
+  .privacy { contain-intrinsic-size: auto 1180px; }
+  .measured { contain-intrinsic-size: auto 1340px; }
+  .shelf { contain-intrinsic-size: auto 860px; }
+  .langs { contain-intrinsic-size: auto 612px; }
+  .install { contain-intrinsic-size: auto 710px; }
+  .star { contain-intrinsic-size: auto 705px; }
+  .teaser { contain-intrinsic-size: auto 687px; }
+  .coda { contain-intrinsic-size: auto 870px; }
+  .footer { contain-intrinsic-size: auto 636px; }
+}
