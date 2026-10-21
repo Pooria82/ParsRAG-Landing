@@ -446,6 +446,8 @@
 
 .pg { position: relative; }
 .pg__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+/* The compare button keeps its place while hidden, so showing it never changes the height. */
+.pg__compare-btn[hidden] { display: inline-flex; visibility: hidden; }
 .pg__cases {
   display: flex;
   gap: 4px;
@@ -495,7 +497,8 @@
 .pg__chat {
   display: flex;
   flex-direction: column;
-  min-height: 600px;
+  /* Fixed size: answers stream and sources open inside it, so the page below never moves. */
+  height: 640px;
   padding: clamp(18px, 2.4vw, 28px);
   border-radius: var(--r-lg);
   background: linear-gradient(180deg, rgba(19, 26, 38, 0.9), rgba(9, 13, 19, 0.94));
@@ -515,11 +518,11 @@
 }
 :lang(fa) .pg__doc { padding: 5px 5px 5px 10px; }
 .pg__feed {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  height: clamp(320px, 48vh, 460px);
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-block: 18px;
@@ -750,10 +753,13 @@
 .pg__viewer {
   position: sticky;
   top: calc(var(--topbar) + 20px);
-  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  height: 640px;
   padding: 0;
   overflow: hidden;
 }
+.pg__viewer.is-open .pg__viewer-body { flex: 1 1 0; min-height: 0; max-height: none; }
 .pg__viewer-top { display: flex; align-items: center; gap: 10px; padding: 12px 12px 12px 18px; border-bottom: 1px solid var(--line-ink); }
 :lang(fa) .pg__viewer-top { padding: 12px 18px 12px 12px; }
 .pg__viewer-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; flex: 1; min-width: 0; font-size: 0.875rem; }
@@ -769,7 +775,7 @@
   place-items: center;
   align-content: center;
   gap: 14px;
-  min-height: 420px;
+  flex: 1;
   padding: 40px;
   color: var(--ink-2);
   text-align: center;
@@ -818,10 +824,14 @@
 
 @media (max-width: 999.98px) {
   .pg__stage { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .pg__viewer { position: relative; top: auto; min-height: 0; }
+  /* On one column the source opens over the chat instead of below it, so opening it never
+     changes the page height. */
+  .pg__viewer { position: absolute; z-index: 5; inset: auto 0 0; top: auto; height: min(72%, 460px); box-shadow: 0 -30px 60px -20px rgba(0, 0, 0, 0.8); transform: translateY(16px); opacity: 0; visibility: hidden; transition: opacity 0.3s, transform 0.45s var(--ease-out), visibility 0s 0.3s; }
+  .pg__viewer.is-open { transform: none; opacity: 1; visibility: visible; transition: opacity 0.3s, transform 0.45s var(--ease-out), visibility 0s; }
   .pg__viewer-empty { min-height: 0; padding: 20px; grid-template-columns: auto 1fr; text-align: start; }
   .pg__viewer-empty .icon { width: 28px; height: 28px; }
-  .pg__chat { min-height: 0; }
+  .pg__chat { height: auto; }
+  .pg__feed { flex: none; height: clamp(320px, 48vh, 460px); }
   .pg__compare { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
