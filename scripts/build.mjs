@@ -177,8 +177,10 @@ const SHOT_SIZES = {
 
 // Chapters are structured content in src/i18n/<lang>/tour.json. Text may contain {{keys}}
 // and {{ref:id}} citations; they are resolved with the rest of the page.
-function renderBlock(b, dict, lang) {
-  if (b.h) return `</div><div class="tour__part"><h3 class="tour__h">${b.h}</h3>`;
+// `level` is the heading level of a section inside a chapter: 3 in the tour (under the chapter's
+// h2), 2 on a guide page (under its h1).
+function renderBlock(b, dict, lang, level = 3) {
+  if (b.h) return `</div><div class="tour__part"><h${level} class="tour__h">${b.h}</h${level}>`;
   if (b.p) return `<p>${b.p}</p>`;
   if (b.note) return `<p class="tour__note">${b.note}</p>`;
   if (b.list) return `<ul class="tour__list">${b.list.map((li) => `<li>${li}</li>`).join('')}</ul>`;
@@ -239,7 +241,7 @@ function renderGuide(template, dict, lang, chapter) {
             <h1 class="chapter__title" id="ch-${chapter.id}">${chapter.title}</h1>
             <p class="chapter__lede">${chapter.lede}</p>
           </header>
-          <div class="chapter__body"><div class="tour__part">${chapter.blocks.map((b) => renderBlock(b, dict, lang)).join('')}</div></div>
+          <div class="chapter__body"><div class="tour__part">${chapter.blocks.map((b) => renderBlock(b, dict, lang, 2)).join('')}</div></div>
         </article>`;
   const prev = chapters[i - 1];
   const next = chapters[i + 1];
