@@ -132,9 +132,9 @@
       <div class="gallery__wall" aria-hidden="true" data-gallery>
         <div class="gallery__plane">
           <div class="gallery__col"><img src="{{root}}assets/img/shots/wall/home-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/sources-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/home-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></div>
-          <div class="gallery__col"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/model-{{lang}}-light.webp" alt="" width="340" height="567" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/home-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></div>
+          <div class="gallery__col"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/model-{{lang}}-light.webp" alt="" width="340" height="499" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/home-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></div>
           <div class="gallery__col"><img src="{{root}}assets/img/shots/wall/sources-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/home-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/sources-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></div>
-          <div class="gallery__col"><img src="{{root}}assets/img/shots/wall/model-{{lang}}-light.webp" alt="" width="340" height="567" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/sources-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/model-{{lang}}-light.webp" alt="" width="340" height="567" loading="lazy" decoding="async"></div>
+          <div class="gallery__col"><img src="{{root}}assets/img/shots/wall/model-{{lang}}-light.webp" alt="" width="340" height="499" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/workspace-{{lang}}-dark.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/sources-{{lang}}-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"><img src="{{root}}assets/img/shots/wall/settings-{{lang}}-light.webp" alt="" width="340" height="499" loading="lazy" decoding="async"></div>
         </div>
       </div>
       <div class="wrap gallery__head">
@@ -186,16 +186,23 @@
         <h2 data-reveal style="--i:1" class="h2" id="how-title">{{how.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{how.lead}}</p>
       </div>
-      <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}" data-hint="{{how.hint}}" data-close="{{a11y.close}}">
+      <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-other="{{how.other}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}" data-checks="{{how.checks}}" data-vec="{{how.vec}}" data-kw="{{how.kw}}" data-question="{{hero.demo.q}}" data-answer-text="{{hero.demo.a1}}" data-src="{{root}}assets/demo/{{lang}}.json" data-step-of="{{how.stepOf}}">
         <ol class="steps">
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.1}}</span><div><h3>{{how.s1t}}</h3><div class="step__body"><p>{{how.s1d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s1x}}{{ref:archives}}{{ref:duplicates}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.2}}</span><div><h3>{{how.s2t}}</h3><div class="step__body"><p>{{how.s2d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s2x}}{{ref:persian-pdf}}{{ref:ocr-rotated}}</p></div></div></li>
-          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.3}}</span><div><h3>{{how.s3t}}</h3><div class="step__body"><p>{{how.s3d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s3x}}{{ref:persian-normalization}}{{ref:word-headings}}</p></div></div></li>
+          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.3}}</span><div><h3>{{how.s3t}}</h3><div class="step__body"><p>{{how.s3d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s3x}}{{ref:persian-normalization}}{{ref:word-headings}}{{ref:image-citations}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.4}}</span><div><h3>{{how.s4t}}</h3><div class="step__body"><p>{{how.s4d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s4x}}{{ref:bm25-fusion}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.5}}</span><div><h3>{{how.s5t}}</h3><div class="step__body"><p>{{how.s5d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s5x}}{{ref:reuse}}</p></div></div></li>
-          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.6}}</span><div><h3>{{how.s6t}}</h3><div class="step__body"><p>{{how.s6d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s6x}}{{ref:reranker}}{{ref:streaming}}</p></div></div></li>
+          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.6}}</span><div><h3>{{how.s6t}}</h3><div class="step__body"><p>{{how.s6d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s6x}}{{ref:multi-part}}{{ref:reranker}}{{ref:streaming}}</p></div></div></li>
         </ol>
-        <div class="jstage" aria-hidden="true"><div class="jstage__box" data-jstage></div></div>
+        <div class="jstage"><div class="jstage__box" data-jstage aria-hidden="true"></div>
+          <div class="jnav">
+            <button class="icon-btn jnav__btn jnav__prev" type="button" data-jprev aria-label="{{how.prev}}">{{@chev}}</button>
+            <p class="jnav__count" data-jcount aria-live="polite"></p>
+            <button class="icon-btn jnav__btn jnav__next" type="button" data-jnext aria-label="{{how.next}}">{{@chev}}</button>
+          </div>
+          <p class="jnav__cue" data-jcue data-start="{{how.scroll}}" data-end="{{how.more}}" aria-hidden="true"><span>{{how.scroll}}</span><i></i></p>
+        </div>
       </div>
     </section>
 
@@ -206,34 +213,49 @@
         <h2 data-reveal style="--i:1" class="h2" id="privacy-title">{{privacy.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{privacy.lead}}{{ref:local-in-all-modes}}</p>
       </div>
-      <div class="wrap boundary" data-boundary
-        data-frame="{{privacy.frame}}" data-docs="{{privacy.nDocs}}" data-parse="{{privacy.nParse}}" data-embed="{{privacy.nEmbed}}"
-        data-qdrant="{{privacy.nQdrant}}" data-adapter="{{privacy.nAdapter}}" data-ollama="{{privacy.nOllama}}"
-        data-private="{{privacy.nPrivate}}" data-external="{{privacy.nExternal}}" data-packet="{{privacy.packet}}">
-        <div class="seg seg--provider" role="radiogroup" aria-label="{{privacy.group}}">
-          <span class="seg__thumb" aria-hidden="true"></span>
-          <button class="seg__btn" role="radio" aria-checked="true" data-provider="local">{{privacy.local}}</button>
-          <button class="seg__btn" role="radio" aria-checked="false" data-provider="private" tabindex="-1">{{privacy.private}}</button>
-          <button class="seg__btn" role="radio" aria-checked="false" data-provider="external" tabindex="-1">{{privacy.external}}</button>
-        </div>
-        <div class="boundary__art"><svg class="boundary__svg" role="img" aria-label="{{privacy.lead}}"></svg></div>
-        <p class="boundary__note" aria-live="polite" data-note-local="{{privacy.localNote}}" data-note-private="{{privacy.privateNote}}" data-note-external="{{privacy.externalNote}}">{{privacy.localNote}}</p>
-        <div class="where">
-          <h3 class="where__title">{{privacy.tableTitle}}</h3>
-          <div class="where__scroll" tabindex="0" role="region" aria-label="{{privacy.tableTitle}}">
-            <table class="where__table">
-              <caption>{{privacy.tableCaption}}</caption>
-              <thead><tr><th scope="col">{{privacy.colStep}}</th><th scope="col">{{privacy.colCloud}}</th><th scope="col">{{privacy.colLocal}}</th><th scope="col">{{privacy.colApi}}</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">{{privacy.rows.read}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.here}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.index}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.here}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.history}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.browser}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.browser}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.excerpts}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-out" data-label="{{privacy.colApi}}">{{privacy.third}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.answer}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-out" data-label="{{privacy.colApi}}">{{privacy.third}}</td></tr>
-              </tbody>
-            </table>
+      <div class="wrap vault-wrap" data-vault>
+        <div class="vault-ctl">
+          <div class="modes" role="radiogroup" aria-label="{{privacy.group}}">
+            <button class="mode" type="button" role="radio" aria-checked="true" data-mode="local"><span class="mode__icon">{{icon:model}}</span><span class="mode__text"><b>{{privacy.local}}</b><span>{{privacy.leaveLocal}}</span></span></button>
+            <button class="mode" type="button" role="radio" aria-checked="false" data-mode="private" tabindex="-1"><span class="mode__icon">{{icon:server}}</span><span class="mode__text"><b>{{privacy.private}}</b><span>{{privacy.leavePrivate}}</span></span></button>
+            <button class="mode" type="button" role="radio" aria-checked="false" data-mode="external" tabindex="-1"><span class="mode__icon">{{icon:cloud}}</span><span class="mode__text"><b>{{privacy.external}}</b><span>{{privacy.leaveExternal}}</span></span></button>
           </div>
-          <p class="caption">{{privacy.always}}{{ref:local-in-all-modes}}{{ref:dns-rebinding}}</p>
+          <p class="vault__note" aria-live="polite" data-note-local="{{privacy.localNote}}" data-note-private="{{privacy.privateNote}}" data-note-external="{{privacy.externalNote}}">{{privacy.localNote}}</p>
+          <div class="ledger">
+            <h3 class="ledger__title">{{privacy.tableTitle}}</h3>
+            <ul class="ledger__list">
+              <li><span>{{privacy.rows.read}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.here}}" data-external="{{privacy.here}}">{{privacy.here}}</b></li>
+              <li><span>{{privacy.rows.index}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.here}}" data-external="{{privacy.here}}">{{privacy.here}}</b></li>
+              <li><span>{{privacy.rows.history}}</span><b data-local="{{privacy.browser}}" data-private="{{privacy.browser}}" data-external="{{privacy.browser}}">{{privacy.browser}}</b></li>
+              <li><span>{{privacy.rows.excerpts}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.nPrivate}}" data-external="{{privacy.third}}" data-out="private external">{{privacy.here}}</b></li>
+              <li><span>{{privacy.rows.answer}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.nPrivate}}" data-external="{{privacy.third}}" data-out="private external">{{privacy.here}}</b></li>
+            </ul>
+            <p class="caption">{{privacy.cloudLine}} {{privacy.always}}{{ref:local-in-all-modes}}{{ref:dns-rebinding}}</p>
+          </div>
+        </div>
+        <div class="vault" data-mode="local" aria-hidden="true">
+          <div class="vault__shield">
+            <span class="vault__halo"></span>
+            <span class="vault__ring"></span>
+            <span class="vault__orbit"></span>
+            <span class="vault__name">{{icon:privacy}}{{privacy.frame}}</span>
+            <span class="vault__spoke" style="--a:180deg"></span><span class="vault__spoke" style="--a:240deg"></span><span class="vault__spoke" style="--a:300deg"></span><span class="vault__spoke" style="--a:120deg"></span><span class="vault__spoke vault__spoke--out" style="--a:0deg"></span><span class="vault__spoke vault__spoke--model" style="--a:60deg"></span>
+            <span class="vault__core">{{@mark}}</span>
+            <span class="vnode" style="--a:180deg"><i>{{icon:documents}}</i><span>{{privacy.nDocs}}</span></span>
+            <span class="vnode" style="--a:240deg"><i>{{icon:reading}}</i><span>{{privacy.nParse}}</span></span>
+            <span class="vnode" style="--a:300deg"><i>{{icon:vectors}}</i><span>{{privacy.nEmbed}}</span></span>
+            <span class="vnode" style="--a:120deg"><i>{{icon:history}}</i><span>{{privacy.rows.history}}</span></span>
+            <span class="vnode vnode--adapter" style="--a:0deg"><i>{{icon:plug}}</i><span>{{privacy.nAdapter}}</span></span>
+            <span class="vnode vnode--model" style="--a:60deg"><i>{{icon:model}}</i><span>{{privacy.nOllama}}</span></span>
+            <span class="vault__gate"><i>{{icon:lock}}</i></span>
+          </div>
+          <div class="vault__beam"><span class="vault__packet">{{privacy.packet}}</span><i></i><i></i><i></i></div>
+          <div class="vault__out">
+            <span class="vault__packet vault__packet--out">{{privacy.packet}}</span>
+            <span class="vout vout--local">{{icon:lock}}<b>{{privacy.leaveLocal}}</b></span>
+            <span class="vout vout--private">{{icon:server}}<b>{{privacy.nPrivate}}</b></span>
+            <span class="vout vout--external">{{icon:cloud}}<b>{{privacy.nExternal}}</b><small>{{icon:alert}}{{privacy.consent}}</small></span>
+          </div>
         </div>
       </div>
     </section>
@@ -362,7 +384,7 @@
           <div class="section-head">
         <p class="eyebrow" data-reveal><span class="eyebrow__n">{{n.08}}</span>{{install.eyebrow}}</p>
         <h2 data-reveal style="--i:1" class="h2" id="install-title">{{install.title}}</h2>
-        <p class="lead" data-reveal style="--i:2">{{install.lead}}{{ref:ram}}{{ref:offline}}</p>
+        <p class="lead" data-reveal style="--i:2">{{install.lead}}{{ref:host-ollama}}{{ref:ram}}{{ref:offline}}</p>
           </div>
           <p class="install__then">{{install.then}}</p>
           <nav class="install__links" aria-label="{{install.guide}}">
@@ -379,28 +401,52 @@
               <button type="button" role="radio" aria-checked="true" data-os="linux">{{install.os.linux}}</button>
             </div>
             <div class="term__group term__group--setup" role="radiogroup" aria-label="{{install.setupLabel}}" data-term-setup>
-              <button type="button" role="radio" aria-checked="true" data-setup="cpu">{{install.setup.cpu}}</button>
-              <button type="button" role="radio" aria-checked="false" data-setup="gpu">{{install.setup.gpu}}</button>
+              <button type="button" role="radio" aria-checked="true" data-setup="host">{{install.setup.host}}</button>
+              <button type="button" role="radio" aria-checked="false" data-setup="cpu">{{install.setup.cpu}}</button>
               <button type="button" role="radio" aria-checked="false" data-setup="api">{{install.setup.api}}</button>
             </div>
             <button class="term__copy" type="button" data-copy-btn>{{@copy}}<span data-copy-label>{{install.copy}}</span></button>
           </div>
           <div class="term__body" dir="ltr">
-<pre data-term-out aria-live="polite"><code><span class="c"># {{install.cmt.clone}}</span>
+<pre data-term-out aria-live="polite"><code><span class="c"># {{install.cmt.pull}}</span>
+<span class="l">ollama pull qwen2.5:7b</span>
+<span class="c"># {{install.cmt.clone}}</span>
 <span class="l">git clone https://github.com/Pooria82/ParsRAG.git</span>
 <span class="l">cd ParsRAG</span>
 <span class="c"># {{install.cmt.env}}</span>
 <span class="l">cp .env.example .env</span>
-<span class="c"># {{install.cmt.start}}</span>
-<span class="l">docker compose --profile local-model up -d qdrant ollama</span>
-<span class="l">docker compose --profile local-model run --rm ollama-init</span>
-<span class="l">docker compose --profile local-model up -d --build app</span></code></pre>
+<span class="c"># {{install.cmt.model}}</span>
+<span class="c"># {{install.cmt.run}}</span>
+<span class="l">docker compose up -d --build</span></code></pre>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Tour teaser: the full presentation of the current release. -->
+    <!-- Stars on GitHub: the live count, and three ways to follow the project. -->
+    <section class="star" id="star" aria-labelledby="star-title">
+      <div class="wrap">
+        <div class="star__card" data-star>
+          <div class="star__sky" aria-hidden="true">
+            <span class="star__orbit star__orbit--a"><i></i></span>
+            <span class="star__orbit star__orbit--b"><i></i></span>
+            <svg class="star__big" viewBox="0 0 120 120"><defs><linearGradient id="star-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe3a3"/><stop offset=".5" stop-color="#f6b94d"/><stop offset="1" stop-color="#3ee0cf"/></linearGradient></defs><path d="M60 10l14.6 31 33.9 4.2-25 23.3 6.5 33.5L60 85.4 30 102l6.5-33.5-25-23.3 33.9-4.2Z" fill="url(#star-g)" stroke="#fff4d6" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="star__body">
+            <p class="eyebrow" data-reveal>{{star.eyebrow}}</p>
+            <h2 class="h2" id="star-title" data-reveal style="--i:1">{{star.title}}</h2>
+            <p class="lead" data-reveal style="--i:2">{{star.lead}}</p>
+            <div class="star__actions" data-reveal style="--i:3">
+              <a class="btn btn--primary star__btn" href="https://github.com/Pooria82/ParsRAG">{{icon:star}}<span>{{star.cta}}</span><span class="star__count" data-star-count hidden></span></a>
+              <a class="btn btn--line" href="https://github.com/Pooria82/ParsRAG/releases">{{star.watch}}</a>
+              <a class="btn btn--line" href="https://github.com/Pooria82/ParsRAG/issues">{{star.issue}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="teaser" aria-labelledby="teaser-title">
       <div class="wrap teaser__inner">
         <div>

@@ -11,6 +11,7 @@ import { initShelf } from './shelf.js';
 import { initMorph } from './morph.js';
 import { initTerminal } from './terminal.js';
 import { initCoda } from './coda.js';
+import { initStar } from './star.js';
 import { initTour } from './tour.js';
 import { initTrail } from './trail.js';
 import { initGallery } from './gallery.js';
@@ -46,6 +47,14 @@ function whenNear(selector, fn, ctx, margin = '600px') {
   io.observe(el);
 }
 
+// The first move, scroll or key press wakes the page's ambient motion.
+const wake = ['pointermove', 'scroll', 'touchstart', 'keydown', 'wheel'];
+const onWake = () => {
+  wake.forEach((e) => removeEventListener(e, onWake));
+  html.classList.add('is-awake');
+};
+wake.forEach((e) => addEventListener(e, onWake, { passive: true }));
+
 function boot() {
   const { gsap, ScrollTrigger, Lenis } = window;
   const ctx = {
@@ -62,6 +71,9 @@ function boot() {
     return;
   }
   gsap.registerPlugin(ScrollTrigger);
+  // Sections set themselves up after load (below), each measuring itself as it is created, so
+  // the full re-measure ScrollTrigger runs on the load event is not needed.
+  ScrollTrigger.config({ autoRefreshEvents: 'visibilitychange,DOMContentLoaded,resize' });
 
   // Smooth wheel scrolling on desktop pointers only; touch and trackpad-free devices keep native scrolling.
   if (!ctx.reduce && Lenis && matchMedia('(pointer: fine) and (hover: hover)').matches) {
@@ -83,17 +95,26 @@ function boot() {
   // Order matters for pinned sections: create them top to bottom.
   run(initHero, ctx);
   markReady(ctx.reduce);
-  run(initGallery, ctx);
-  run(initContract, ctx);
-  run(initJourney, ctx);
-  run(initBoundary, ctx);
-  run(initShelf, ctx);
-  run(initCoda, ctx);
-  if (matchMedia('(min-width: 1280px)').matches) run(initTrail, ctx);
-  whenNear('[data-playground]', initPlayground, ctx, '900px');
-  whenNear('[data-measured]', initMeasured, ctx, '200px');
-  whenNear('[data-morph]', initMorph, ctx);
-  whenNear('[data-term]', initTerminal, ctx);
+  // Everything below the first screen starts in idle moments, one section per task, so the
+  // first view is never held up by one long block of setup work.
+  const later = [initGallery, initContract, initJourney, initBoundary, initShelf, initStar, initCoda];
+  if (matchMedia('(min-width: 1280px)').matches) later.push(initTrail);
+  const idle = () => new Promise((resolve) => {
+    if ('requestIdleCallback' in window) requestIdleCallback(() => resolve(), { timeout: 300 });
+    else setTimeout(resolve, 16);
+  });
+  (async () => {
+    for (const fn of later) {
+      await idle();
+      run(fn, ctx);
+    }
+    // The pinned journey's own spacing is not a content change: don't re-measure for it.
+    lastHeight = document.body.scrollHeight;
+    whenNear('[data-playground]', initPlayground, ctx, '900px');
+    whenNear('[data-measured]', initMeasured, ctx, '200px');
+    whenNear('[data-morph]', initMorph, ctx);
+    whenNear('[data-term]', initTerminal, ctx);
+  })();
   // Pinned sections measure layout: recalculate once fonts settle, and whenever content
   // above them changes height (an answer streaming into the demo, a dialog-free resize).
   document.fonts?.ready.then(() => ScrollTrigger.refresh());

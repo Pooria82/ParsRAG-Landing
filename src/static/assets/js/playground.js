@@ -336,7 +336,9 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
     root.classList.add('has-viewer');
     root.querySelectorAll('.pg__chip, .pg__src').forEach((c) => c.classList.toggle('is-active', c === from));
     const target = viewerBody.querySelector('.is-cited');
-    target.scrollIntoView({ block: 'nearest' });
+    // Scroll only the source panel: scrollIntoView would also move the page, even when the
+    // visitor has already scrolled past the demo.
+    viewerBody.scrollTop = Math.max(0, target.offsetTop - viewerBody.offsetTop - 12);
     const mark = target.querySelector('mark');
     if (!reduce) gsap.fromTo(mark, { '--hl': 0 }, { '--hl': 1, duration: 0.6, ease: 'power2.out', delay: 0.15 });
     else mark.style.setProperty('--hl', 1);
@@ -346,7 +348,6 @@ export async function initPlayground({ gsap, ST, reduce, rtl, lang }) {
     if (card) card.classList.add('is-active');
     activeThread = { from: card && card.offsetParent ? card : from, to: mark };
     drawThread(true);
-    if (!window.matchMedia('(min-width: 1000px)').matches) viewer.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
   }
   function closeViewer(silent) {
     viewer.classList.remove('is-open');

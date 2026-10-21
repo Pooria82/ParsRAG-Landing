@@ -388,5 +388,13 @@ export function initChrome(ctx) {
   initSpotlight();
   // The release check waits until the page is idle so it never competes with first paint.
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 2000));
-  idle(() => initRelease(), { timeout: 4000 });
+  // The page is rebuilt daily with the latest release; this check only covers the hours in
+  // between. It waits for the visitor's first move, so loading the page makes no request to
+  // a third party (whose rate limit would otherwise show as an error).
+  const wake = ['pointermove', 'touchstart', 'keydown', 'wheel'];
+  const onWake = () => {
+    wake.forEach((e) => removeEventListener(e, onWake));
+    idle(() => initRelease(), { timeout: 4000 });
+  };
+  wake.forEach((e) => addEventListener(e, onWake, { passive: true }));
 }

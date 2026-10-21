@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { build as bundle, transform } from 'esbuild';
 import { Marked } from 'marked';
 import YAML from 'yaml';
-import { chapterIcon } from '../src/static/assets/js/chapter-icons.js';
+import { chapterIcon, uiIcon } from '../src/static/assets/js/chapter-icons.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
@@ -169,12 +169,18 @@ async function buildDocs(lang, dict) {
 // ---------- Product tour ----------
 
 // Intrinsic sizes of the screenshots in assets/img/shots (all others are 1440x900).
-const SHOT_SIZES = { 'model-en-light': [580, 1010], 'model-fa-light': [580, 968] };
+const SHOT_SIZES = {
+  'model-en-light': [580, 852], 'model-fa-light': [580, 852],
+  'settings-en-light': [580, 852], 'settings-fa-light': [580, 852],
+  'sources-en-light': [1440, 1300], 'sources-fa-light': [1440, 1300],
+};
 
 // Chapters are structured content in src/i18n/<lang>/tour.json. Text may contain {{keys}}
 // and {{ref:id}} citations; they are resolved with the rest of the page.
-function renderBlock(b, dict, lang) {
-  if (b.h) return `</div><div class="tour__part"><h3 class="tour__h">${b.h}</h3>`;
+// `level` is the heading level of a section inside a chapter: 3 in the tour (under the chapter's
+// h2), 2 on a guide page (under its h1).
+function renderBlock(b, dict, lang, level = 3) {
+  if (b.h) return `</div><div class="tour__part"><h${level} class="tour__h">${b.h}</h${level}>`;
   if (b.p) return `<p>${b.p}</p>`;
   if (b.note) return `<p class="tour__note">${b.note}</p>`;
   if (b.list) return `<ul class="tour__list">${b.list.map((li) => `<li>${li}</li>`).join('')}</ul>`;
@@ -235,7 +241,7 @@ function renderGuide(template, dict, lang, chapter) {
             <h1 class="chapter__title" id="ch-${chapter.id}">${chapter.title}</h1>
             <p class="chapter__lede">${chapter.lede}</p>
           </header>
-          <div class="chapter__body"><div class="tour__part">${chapter.blocks.map((b) => renderBlock(b, dict, lang)).join('')}</div></div>
+          <div class="chapter__body"><div class="tour__part">${chapter.blocks.map((b) => renderBlock(b, dict, lang, 2)).join('')}</div></div>
         </article>`;
   const prev = chapters[i - 1];
   const next = chapters[i + 1];
@@ -297,6 +303,7 @@ function render(template, dict, lang) {
       return partials[name];
     });
   }
+  html = html.replace(/\{\{icon:([\w-]+)\}\}/g, (_, name) => uiIcon(name));
   const refs = [];
   html = html.replace(/\{\{ref:([\w-]+)\}\}/g, (_, id) => {
     const c = claims[id]?.[lang];
@@ -344,11 +351,26 @@ async function loadDict(lang) {
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(join(src, 'static'), dist, { recursive: true });
-// One stylesheet, concatenated from src/styles in name order.
+// One stylesheet, concatenated from src/styles in name order (site.css, used by the OG card).
 const styleFiles = (await readdir(join(src, 'styles'))).filter((f) => f.endsWith('.css')).sort();
 await mkdir(join(dist, 'assets', 'css'), { recursive: true });
-const css = (await Promise.all(styleFiles.map((f) => read(src, 'styles', f)))).join('\n');
-await writeFile(join(dist, 'assets', 'css', 'site.css'), (await transform(css, { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] })).code);
+const minifyCss = async (files) => (await transform(
+  (await Promise.all(files.map((f) => read(src, 'styles', f)))).join('\n'),
+  { loader: 'css', minify: true, target: ['chrome100', 'firefox100', 'safari15'] },
+)).code.trim();
+await writeFile(join(dist, 'assets', 'css', 'site.css'), await minifyCss(styleFiles));
+// Pages carry their styles inline, so the first paint never waits for a second request. Each
+// page gets only what it uses: the home page has no slides, and the tour and guides no home
+// sections. Font URLs are rewritten relative to each page.
+const PAGE_CSS = {
+  home: await minifyCss(styleFiles.filter((f) => !f.startsWith('05-'))),
+  tour: await minifyCss(styleFiles.filter((f) => !f.startsWith('03-'))),
+};
+PAGE_CSS.guide = await minifyCss(styleFiles.filter((f) => !f.startsWith('03-') && !f.startsWith('05-')));
+// Each language preloads the font subsets its pages show (Persian pages also show Latin).
+const FONT_SUBSETS = { en: ['Latin'], fa: ['Arabic', 'Latin'] };
+const fontPreload = (up, lang) => FONT_SUBSETS[lang].map((n) => `<link rel="preload" href="${up}assets/fonts/Vazirmatn-${n}.woff2" as="font" type="font/woff2" crossorigin>`).join('\n  ');
+const inlineCss = (up, page) => `<style>${PAGE_CSS[page].replaceAll('url(../fonts/', `url(${up}assets/fonts/`)}</style>`;
 // The page modules are bundled and minified into main.js. The 3D scenes (three.js) are
 // split into a chunk that loads only when a scene comes near the viewport.
 const jsDir = join(dist, 'assets', 'js');
@@ -396,7 +418,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
     };
     const out = join(dist, rel, 'index.html');
     await mkdir(dirname(out), { recursive: true });
-    await writeFile(out, render(template, pageDict, lang).replace('<!--ld-->', ''));
+    await writeFile(out, render(template, pageDict, lang).replace('<!--ld-->', '').replace('<!--site-css-->', inlineCss(up, page.id)).replace('<!--font-preload-->', fontPreload(up, lang)));
   }
   const guideTemplate = await read(src, 'pages', 'guide.html');
   for (const chapter of dict.tour.chapters) {
@@ -416,7 +438,7 @@ for (const [lang, L] of Object.entries(LANGS)) {
     };
     const out = join(dist, rel, 'index.html');
     await mkdir(dirname(out), { recursive: true });
-    await writeFile(out, render(renderGuide(guideTemplate, dict, lang, chapter), pageDict, lang).replace('<!--ld-->', guideLd(dict, lang, chapter, url)));
+    await writeFile(out, render(renderGuide(guideTemplate, dict, lang, chapter), pageDict, lang).replace('<!--ld-->', guideLd(dict, lang, chapter, url)).replace('<!--site-css-->', inlineCss(up, 'guide')).replace('<!--font-preload-->', fontPreload(up, lang)));
   }
   guidePaths.push(...dict.tour.chapters.map((c) => `guide/${c.id}/`).filter((p) => !guidePaths.includes(p)));
 }

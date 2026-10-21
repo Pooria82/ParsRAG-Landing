@@ -3,11 +3,22 @@
    saffron for evidence and citations. Glass surfaces, hairline borders, one bundled script.
    Built from src/styles/*.css in name order into assets/css/site.css. See DESIGN.md. */
 
+/* Vazirmatn in two subsets (scripts/subset-font.py): a page downloads only the scripts it shows.
+   Each page preloads the subsets it needs; "optional" means a very slow first visit keeps the
+   system font instead of re-flowing the page when Vazirmatn arrives late. */
 @font-face {
   font-family: "Vazirmatn";
-  src: url("../fonts/Vazirmatn-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-display: swap;
+  src: url("../fonts/Vazirmatn-Latin.woff2") format("woff2");
+  font-weight: 400 850;
+  font-display: optional;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+200C-200F, U+2010-205E, U+20AC, U+2122, U+2190-2199, U+2212, U+2605, U+2713;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("../fonts/Vazirmatn-Arabic.woff2") format("woff2");
+  font-weight: 400 850;
+  font-display: optional;
+  unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
 }
 
 :root {

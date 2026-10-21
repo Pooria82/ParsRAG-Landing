@@ -165,7 +165,7 @@
     "s2d": "Text layers are extracted directly. Scans and images are read with Persian and English OCR.",
     "s2x": "Persian PDF text is rebuilt in reading order from glyph positions, and OCR re-reads pages that are rotated, upside down or skewed.",
     "s3t": "Passages",
-    "s3d": "Text is split into passages that remember their file and page, slide, paragraph or section.",
+    "s3d": "Text is split into passages that remember their file and page, slide, paragraph, table or image.",
     "s3x": "Persian spelling is normalized, Word files are chunked under their headings, and a short bridge joins consecutive PDF pages.",
     "s4t": "Vectors and keywords",
     "s4d": "Each passage gets a multilingual-e5 vector and joins a keyword index, both on your machine.",
@@ -174,15 +174,24 @@
     "s5d": "Passages live in Qdrant, filtered by the conversation they belong to. Delete it and they go too.",
     "s5x": "An indexed document can be reused in another conversation without uploading it again.",
     "s6t": "Retrieve and cite",
-    "s6d": "The closest passages go to the model with your question. The answer streams back with numbered citations.",
+    "s6d": "The closest passages go to the model with your question. A question that asks several things is searched part by part, and the answer streams back with numbered citations.",
     "s6x": "Hybrid reranks candidates with a cross-encoder trained for Arabic script; Strict applies an evidence gate.",
-    "file": "report.pdf",
+    "file": "budget.pdf",
     "lang": "fas+eng",
     "collection": "This conversation",
     "answer": "Answer with 3 sources",
-    "cite": "report.pdf, pages 3–4",
+    "cite": "budget.pdf, pages 2–3",
     "eyebrow": "Under the hood",
-    "hint": "Drag to turn it. Select a part to read about it."
+    "hint": "Drag to look around. Select a station to go to its step.",
+    "checks": "Type,Size,Structure",
+    "other": "Another conversation",
+    "vec": "Vectors",
+    "kw": "Keywords",
+    "prev": "Previous step",
+    "next": "Next step",
+    "scroll": "Scroll to follow the page",
+    "more": "The page continues below",
+    "stepOf": "Step {n} of {total}"
   },
   "privacy": {
     "title": "You decide what leaves your machine.",
@@ -222,7 +231,12 @@
     "browser": "Your browser",
     "third": "The API provider",
     "always": "API keys stay in memory or environment variables, never in browser storage, logs or API responses.",
-    "eyebrow": "Privacy"
+    "eyebrow": "Privacy",
+    "leaveLocal": "Nothing leaves this machine",
+    "leavePrivate": "Question and excerpts go to your server",
+    "leaveExternal": "Question and excerpts go to the provider",
+    "consent": "Only after you agree",
+    "cloudLine": "A typical cloud chatbot does all five on the provider's servers."
   },
   "measured": {
     "title": "Measured, then shipped.",
@@ -317,7 +331,7 @@
   },
   "install": {
     "title": "Run it on your machine.",
-    "lead": "You need Docker Engine with Compose and 8–16 GB of RAM, depending on the model. After the first download, a local model works offline.",
+    "lead": "You need Docker, Ollama and 8–16 GB of RAM. The recommended setup uses the Ollama already on your computer, with its models and GPU; after the first download it works offline.",
     "osLabel": "Your system",
     "setupLabel": "Setup",
     "os": {
@@ -326,20 +340,23 @@
       "linux": "Linux"
     },
     "setup": {
-      "cpu": "Local model on CPU",
-      "gpu": "NVIDIA GPU",
+      "host": "Ollama on this computer",
+      "cpu": "Ollama in Docker",
       "api": "API model"
     },
     "copy": "Copy commands",
     "copied": "Copied",
-    "macGpu": "Docker Desktop doesn't give containers access to a Mac's GPU. Use the CPU setup, run Ollama natively, or connect an API model.",
     "cmt": {
       "clone": "Get the code",
       "env": "Create your settings file",
       "check": "Check the configuration",
       "start": "Start Qdrant and Ollama, download the model, then start ParsRAG",
       "apiEnv": "In .env set LLM_PROVIDER=api, LLM_MODEL_NAME, MODEL_API_BASE_URL, MODEL_API_KEY and MODEL_API_DISCLOSURE_ACKNOWLEDGED=1",
-      "apiStart": "Build and start ParsRAG"
+      "apiStart": "Build and start ParsRAG",
+      "pull": "Install Ollama from ollama.com, then pull a model",
+      "model": "Set LLM_MODEL_NAME in .env to the model you pulled",
+      "linuxHost": "Linux only: let containers reach Ollama by setting OLLAMA_HOST=172.17.0.1:11434 in its service",
+      "run": "Build and start ParsRAG"
     },
     "then": "Then open <code dir=\"ltr\">http://127.0.0.1:8000</code>. The first start downloads the embedding model and the reranker (about 100 MB) into the model cache.",
     "guide": "Full installation guide",
@@ -364,5 +381,14 @@
     "title": "The real app, in both languages.",
     "lead": "Screens from the ParsRAG repository: the workspace, cited sources and model settings, in light and dark.",
     "cta": "See every screen in the tour"
+  },
+  "star": {
+    "eyebrow": "Support the project",
+    "title": "Like it? Give it a star.",
+    "lead": "ParsRAG is an independent project. A star on GitHub helps people who work with Persian documents find it, and shows which direction is worth building on.",
+    "cta": "Star on GitHub",
+    "watch": "Follow releases",
+    "issue": "Report an issue",
+    "count": "{n} stars"
   }
 }
