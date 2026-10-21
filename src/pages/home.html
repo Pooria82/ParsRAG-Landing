@@ -206,34 +206,49 @@
         <h2 data-reveal style="--i:1" class="h2" id="privacy-title">{{privacy.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{privacy.lead}}{{ref:local-in-all-modes}}</p>
       </div>
-      <div class="wrap boundary" data-boundary
-        data-frame="{{privacy.frame}}" data-docs="{{privacy.nDocs}}" data-parse="{{privacy.nParse}}" data-embed="{{privacy.nEmbed}}"
-        data-qdrant="{{privacy.nQdrant}}" data-adapter="{{privacy.nAdapter}}" data-ollama="{{privacy.nOllama}}"
-        data-private="{{privacy.nPrivate}}" data-external="{{privacy.nExternal}}" data-packet="{{privacy.packet}}">
-        <div class="seg seg--provider" role="radiogroup" aria-label="{{privacy.group}}">
-          <span class="seg__thumb" aria-hidden="true"></span>
-          <button class="seg__btn" role="radio" aria-checked="true" data-provider="local">{{privacy.local}}</button>
-          <button class="seg__btn" role="radio" aria-checked="false" data-provider="private" tabindex="-1">{{privacy.private}}</button>
-          <button class="seg__btn" role="radio" aria-checked="false" data-provider="external" tabindex="-1">{{privacy.external}}</button>
-        </div>
-        <div class="boundary__art"><svg class="boundary__svg" role="img" aria-label="{{privacy.lead}}"></svg></div>
-        <p class="boundary__note" aria-live="polite" data-note-local="{{privacy.localNote}}" data-note-private="{{privacy.privateNote}}" data-note-external="{{privacy.externalNote}}">{{privacy.localNote}}</p>
-        <div class="where">
-          <h3 class="where__title">{{privacy.tableTitle}}</h3>
-          <div class="where__scroll" tabindex="0" role="region" aria-label="{{privacy.tableTitle}}">
-            <table class="where__table">
-              <caption>{{privacy.tableCaption}}</caption>
-              <thead><tr><th scope="col">{{privacy.colStep}}</th><th scope="col">{{privacy.colCloud}}</th><th scope="col">{{privacy.colLocal}}</th><th scope="col">{{privacy.colApi}}</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">{{privacy.rows.read}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.here}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.index}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.here}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.history}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.browser}}</td><td class="is-in" data-label="{{privacy.colApi}}">{{privacy.browser}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.excerpts}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-out" data-label="{{privacy.colApi}}">{{privacy.third}}</td></tr>
-                <tr><th scope="row">{{privacy.rows.answer}}</th><td class="is-out" data-label="{{privacy.colCloud}}">{{privacy.cloud}}</td><td class="is-in" data-label="{{privacy.colLocal}}">{{privacy.here}}</td><td class="is-out" data-label="{{privacy.colApi}}">{{privacy.third}}</td></tr>
-              </tbody>
-            </table>
+      <div class="wrap vault-wrap" data-vault>
+        <div class="vault-ctl">
+          <div class="modes" role="radiogroup" aria-label="{{privacy.group}}">
+            <button class="mode" type="button" role="radio" aria-checked="true" data-mode="local"><span class="mode__icon">{{icon:model}}</span><span class="mode__text"><b>{{privacy.local}}</b><span>{{privacy.leaveLocal}}</span></span></button>
+            <button class="mode" type="button" role="radio" aria-checked="false" data-mode="private" tabindex="-1"><span class="mode__icon">{{icon:server}}</span><span class="mode__text"><b>{{privacy.private}}</b><span>{{privacy.leavePrivate}}</span></span></button>
+            <button class="mode" type="button" role="radio" aria-checked="false" data-mode="external" tabindex="-1"><span class="mode__icon">{{icon:cloud}}</span><span class="mode__text"><b>{{privacy.external}}</b><span>{{privacy.leaveExternal}}</span></span></button>
           </div>
-          <p class="caption">{{privacy.always}}{{ref:local-in-all-modes}}{{ref:dns-rebinding}}</p>
+          <p class="vault__note" aria-live="polite" data-note-local="{{privacy.localNote}}" data-note-private="{{privacy.privateNote}}" data-note-external="{{privacy.externalNote}}">{{privacy.localNote}}</p>
+          <div class="ledger">
+            <h3 class="ledger__title">{{privacy.tableTitle}}</h3>
+            <ul class="ledger__list">
+              <li><span>{{privacy.rows.read}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.here}}" data-external="{{privacy.here}}">{{privacy.here}}</b></li>
+              <li><span>{{privacy.rows.index}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.here}}" data-external="{{privacy.here}}">{{privacy.here}}</b></li>
+              <li><span>{{privacy.rows.history}}</span><b data-local="{{privacy.browser}}" data-private="{{privacy.browser}}" data-external="{{privacy.browser}}">{{privacy.browser}}</b></li>
+              <li><span>{{privacy.rows.excerpts}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.nPrivate}}" data-external="{{privacy.third}}" data-out="private external">{{privacy.here}}</b></li>
+              <li><span>{{privacy.rows.answer}}</span><b data-local="{{privacy.here}}" data-private="{{privacy.nPrivate}}" data-external="{{privacy.third}}" data-out="private external">{{privacy.here}}</b></li>
+            </ul>
+            <p class="caption">{{privacy.cloudLine}} {{privacy.always}}{{ref:local-in-all-modes}}{{ref:dns-rebinding}}</p>
+          </div>
+        </div>
+        <div class="vault" data-mode="local" aria-hidden="true">
+          <div class="vault__shield">
+            <span class="vault__halo"></span>
+            <span class="vault__ring"></span>
+            <span class="vault__orbit"></span>
+            <span class="vault__name">{{icon:privacy}}{{privacy.frame}}</span>
+            <span class="vault__spoke" style="--a:180deg"></span><span class="vault__spoke" style="--a:240deg"></span><span class="vault__spoke" style="--a:300deg"></span><span class="vault__spoke" style="--a:120deg"></span><span class="vault__spoke vault__spoke--out" style="--a:0deg"></span><span class="vault__spoke vault__spoke--model" style="--a:60deg"></span>
+            <span class="vault__core">{{@mark}}</span>
+            <span class="vnode" style="--a:180deg"><i>{{icon:documents}}</i><span>{{privacy.nDocs}}</span></span>
+            <span class="vnode" style="--a:240deg"><i>{{icon:reading}}</i><span>{{privacy.nParse}}</span></span>
+            <span class="vnode" style="--a:300deg"><i>{{icon:vectors}}</i><span>{{privacy.nEmbed}}</span></span>
+            <span class="vnode" style="--a:120deg"><i>{{icon:history}}</i><span>{{privacy.rows.history}}</span></span>
+            <span class="vnode vnode--adapter" style="--a:0deg"><i>{{icon:plug}}</i><span>{{privacy.nAdapter}}</span></span>
+            <span class="vnode vnode--model" style="--a:60deg"><i>{{icon:model}}</i><span>{{privacy.nOllama}}</span></span>
+            <span class="vault__gate"><i>{{icon:lock}}</i></span>
+          </div>
+          <div class="vault__beam"><span class="vault__packet">{{privacy.packet}}</span><i></i><i></i><i></i></div>
+          <div class="vault__out">
+            <span class="vault__packet vault__packet--out">{{privacy.packet}}</span>
+            <span class="vout vout--local">{{icon:lock}}<b>{{privacy.leaveLocal}}</b></span>
+            <span class="vout vout--private">{{icon:server}}<b>{{privacy.nPrivate}}</b></span>
+            <span class="vout vout--external">{{icon:cloud}}<b>{{privacy.nExternal}}</b><small>{{icon:alert}}{{privacy.consent}}</small></span>
+          </div>
         </div>
       </div>
     </section>

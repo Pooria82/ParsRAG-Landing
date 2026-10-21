@@ -222,7 +222,12 @@
     "browser": "Your browser",
     "third": "The API provider",
     "always": "API keys stay in memory or environment variables, never in browser storage, logs or API responses.",
-    "eyebrow": "Privacy"
+    "eyebrow": "Privacy",
+    "leaveLocal": "Nothing leaves this machine",
+    "leavePrivate": "Question and excerpts go to your server",
+    "leaveExternal": "Question and excerpts go to the provider",
+    "consent": "Only after you agree",
+    "cloudLine": "A typical cloud chatbot does all five on the provider's servers."
   },
   "measured": {
     "title": "Measured, then shipped.",
