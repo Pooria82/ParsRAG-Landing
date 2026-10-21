@@ -258,14 +258,17 @@ export function initJourney(ctx) {
   }
 
   // Step labels follow the drawing itself, so they never run ahead of the scrubbed animation.
-  tl.eventCallback('onUpdate', () => {
+  const sync = () => {
     // One clock for the list, the controls and the scene: 0 to 6, one unit per step.
     const T = (tl.time() / D()) * 6;
     drawing?.progress(tl.progress());
     setActive(Math.min(5, Math.floor(T + 0.02)), Math.min(1, T / 5.6));
     scene3d?.setTime(T);
     updateNav(T);
-  });
+  };
+  tl.eventCallback('onUpdate', sync);
+  // A re-measure rewinds the timeline and restores it silently: show the restored state.
+  ST.addEventListener('refresh', sync);
   // Previous and next: each moves the scroll to the middle of a step, so the steps stay tied
   // to the scroll. The cue says to scroll at the start, and that the page goes on at the end.
   const count = root.querySelector('[data-jcount]');
