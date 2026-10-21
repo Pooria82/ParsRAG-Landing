@@ -423,14 +423,14 @@ for (const [lang, L] of Object.entries(LANGS)) {
 
 // ---------- Sitemap ----------
 
-const urls = [...PAGES, ...guidePaths.map((path) => ({ path }))].flatMap((p) => ['', 'fa/'].map((prefix) => {
-  const alternates = [['en', ''], ['fa', 'fa/'], ['x-default', '']]
-    .map(([hl, pre]) => `    <xhtml:link rel="alternate" hreflang="${hl}" href="${SITE}${pre}${p.path}"/>`).join('\n');
-  return `  <url>\n    <loc>${SITE}${prefix}${p.path}</loc>\n    <lastmod>${release.published.slice(0, 10)}</lastmod>\n${alternates}\n  </url>`;
-}));
+// A plain sitemap: the language alternates are already declared with hreflang in every
+// page's head. Alternates in the sitemap need the XHTML namespace, which makes browsers
+// show the file as run-together text instead of an XML tree.
+const urls = [...PAGES, ...guidePaths.map((path) => ({ path }))].flatMap((p) => ['', 'fa/'].map((prefix) =>
+  `  <url>\n    <loc>${SITE}${prefix}${p.path}</loc>\n    <lastmod>${release.published.slice(0, 10)}</lastmod>\n  </url>`));
 await writeFile(
   join(dist, 'sitemap.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
 );
 await writeFile(join(dist, '.nojekyll'), '');
 await writeFile(join(dist, 'release.json'), `${JSON.stringify(release)}\n`);
