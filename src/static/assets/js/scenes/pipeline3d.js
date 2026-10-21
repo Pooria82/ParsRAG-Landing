@@ -1037,7 +1037,8 @@ export function createPipeline(container, opts) {
 
   // ---------- Build over several frames ----------
   async function build() {
-    await (document.fonts?.load(`600 40px ${FONT}`).catch(() => {}) ?? Promise.resolve());
+    // Both subsets of the font (Latin and Persian) before any text is drawn to a canvas.
+    await (document.fonts?.load(`600 40px ${FONT}`, 'Ab اب').catch(() => {}) ?? Promise.resolve());
     const doc = opts.doc;
     buildPlatform();
     await nextFrame();
@@ -1071,7 +1072,10 @@ export function createPipeline(container, opts) {
     renderer.render(scene, camera);
     onReady?.();
   }
-  build().catch((err) => console.error('[ParsRAG] 3D pipeline', err));
+  build().catch((err) => {
+    console.error('[ParsRAG] 3D pipeline', err);
+    opts.onError?.();
+  });
 
   return {
     canvas,
