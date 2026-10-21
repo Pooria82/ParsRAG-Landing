@@ -25,7 +25,7 @@
               },
               {
                 "t": "Check every answer",
-                "d": "Answers carry numbered citations that open the exact passage, with its page, slide, paragraph or section."
+                "d": "Answers carry numbered citations that open the exact passage, with its page, slide, paragraph, table or image. A passage read from a picture shows the picture too."
               },
               {
                 "t": "Local by design",
@@ -63,8 +63,12 @@
                 "React 19, TypeScript 7, Vite, KaTeX"
               ],
               [
-                "Default local model",
-                "gemma3:12b through Ollama"
+                "Recommended model setup",
+                "The Ollama already installed on your computer, with its models and GPU; .env.example names qwen2.5:7b"
+              ],
+              [
+                "Settings",
+                "27 options change in the app without a restart; each can be reset to its .env value"
               ]
             ]
           },
@@ -80,20 +84,43 @@
       {
         "id": "install",
         "title": "Install and first start",
-        "lede": "The supported way to run ParsRAG is Docker Compose: one app container that serves the interface and API, Qdrant for vectors, and, optionally, Ollama for a local model.",
+        "lede": "The recommended way to run ParsRAG is Docker Compose with the Ollama already installed on your computer: one app container serves the interface and API, Qdrant stores the vectors, and your own Ollama writes the answers. Ollama inside Docker and API models are the other ways to run it.",
         "blocks": [
           {
             "h": "What you need"
           },
           {
             "list": [
-              "Docker Engine with Compose, and 8–16 GB of RAM depending on the model.{{ref:ram}}",
-              "Disk space for the images and model weights.",
-              "For an NVIDIA GPU: a current driver and the NVIDIA Container Toolkit. For AMD: a Linux host with ROCm."
+              "Docker Desktop on Windows or macOS, or Docker Engine with Compose on Linux, and 8–16 GB of RAM.{{ref:ram}}",
+              "Ollama installed on the computer, for the recommended setup. Without it, run Ollama inside Docker or use an API model.",
+              "Disk space for the images and model weights."
             ]
           },
           {
-            "h": "Choose a setup"
+            "h": "The complete setup"
+          },
+          {
+            "p": "The recommended setup uses the Ollama already installed on your computer, with the models you already have and its GPU.{{ref:host-ollama}} The app reaches it at host.docker.internal, so no Compose profile or override file is needed and the app container needs no GPU.{{ref:no-gpu-container}} On a Mac this is the way to generate on the GPU, because Docker can't pass a Mac's GPU to a container."
+          },
+          {
+            "list": [
+              "Install Ollama and pull a model. On a GPU with about 6 GB of memory, a 3–4B model runs fully on the GPU.",
+              "Copy .env.example to .env and set LLM_MODEL_NAME to the model you pulled. Its defaults already point the app at the Ollama on this computer: OLLAMA_DOCKER_BASE_URL=http://host.docker.internal:11434.",
+              "Linux only: Ollama listens on 127.0.0.1 by default, where containers can't reach it. Make the Ollama service listen on the Docker bridge address, for example OLLAMA_HOST=172.17.0.1:11434. Windows and macOS need nothing.",
+              "Start ParsRAG, open http://127.0.0.1:8000 (or the port in PARSRAG_PORT), upload documents and ask."
+            ]
+          },
+          {
+            "code": "ollama pull qwen2.5:7b\nCopy-Item .env.example .env\ndocker compose up -d --build\nollama ps"
+          },
+          {
+            "p": "On macOS or Linux, copy the settings file with cp .env.example .env. While an answer is being written, ollama ps shows where the model runs; 100% GPU means it runs entirely on the GPU. The port is bound to 127.0.0.1 unless you change PARSRAG_BIND_HOST."
+          },
+          {
+            "note": "Ollama has no authentication. On Linux, prefer the bridge address: OLLAMA_HOST=0.0.0.0 opens Ollama to every network the computer is on, so if you use it, allow port 11434 only from Docker's networks."
+          },
+          {
+            "h": "Other ways to run"
           },
           {
             "table": {
@@ -104,13 +131,13 @@
               ],
               "rows": [
                 [
-                  "Local model on CPU",
-                  "Portable default on every system",
-                  "The local-model Compose profile"
+                  "Ollama in Docker on CPU",
+                  "No Ollama on the computer; portable on every system",
+                  "The local-model profile, with OLLAMA_DOCKER_BASE_URL=http://ollama:11434 and OLLAMA_MODEL in .env"
                 ],
                 [
                   "NVIDIA GPU",
-                  "Faster embeddings and generation on Windows or Linux",
+                  "Ollama in Docker with faster embeddings and generation, on Windows or Linux",
                   "Add the compose.gpu.yaml overlay"
                 ],
                 [
@@ -126,19 +153,13 @@
                 [
                   "API model",
                   "No suitable local hardware",
-                  "Set LLM_PROVIDER=api and the endpoint in .env"
+                  "Set LLM_PROVIDER=api and the endpoint in .env, or switch to it in Settings"
                 ]
               ]
             }
           },
           {
-            "h": "Start it"
-          },
-          {
-            "code": "Copy-Item .env.example .env\ndocker compose config --quiet\ndocker compose --profile local-model up -d qdrant ollama\ndocker compose --profile local-model run --rm ollama-init\ndocker compose --profile local-model up -d --build app"
-          },
-          {
-            "p": "On macOS or Linux, copy the settings file with cp .env.example .env; the Compose commands are the same. Then open http://127.0.0.1:8000. The port is bound to 127.0.0.1 unless you change PARSRAG_BIND_HOST."
+            "code": "docker compose --profile local-model up -d qdrant ollama\ndocker compose --profile local-model run --rm ollama-init\ndocker compose --profile local-model up -d --build app"
           },
           {
             "h": "The first start"
@@ -146,8 +167,9 @@
           {
             "list": [
               "The embedding model (intfloat/multilingual-e5-base) and the Hybrid reranker (about 100 MB) download into the model cache.",
-              "Ollama pulls the configured model once into its own volume.",
+              "With the computer's own Ollama, ParsRAG never pulls models. With Ollama in Docker, ollama-init pulls the configured model once into its own volume.",
               "Until everything is ready, /health/ready answers 503 with status preparing, and the interface shows that it is preparing the model and document store.",
+              "If Ollama is off when the app starts, the app still becomes ready. Questions report that the model service is unreachable until Ollama starts, then work without a restart.",
               "After the first downloads, a local Ollama setup can run offline.{{ref:offline}}"
             ]
           },
@@ -155,13 +177,13 @@
             "h": "Without Docker"
           },
           {
-            "p": "Native development needs Python 3.12, Node.js 22, a running Qdrant, Ollama or an OpenAI-compatible endpoint, and Tesseract with Persian and English data for OCR."
+            "p": "Native development needs Python 3.12, Node.js 22, a running Qdrant, Ollama or an OpenAI-compatible endpoint, and Tesseract with Persian and English data for OCR. Copy .env.example to .env and remove the # from the lines under “Running without Docker” at its end: the Qdrant address, the Ollama URL, the settings file and OCR_ENABLED=1."
           },
           {
             "code": "py -3.12 -m venv .venv\n.\\.venv\\Scripts\\python.exe -m pip install -r requirements-runtime.txt -c requirements.lock\nSet-Location frontend\nnpm ci\nnpm run build\nSet-Location ..\n.\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000"
           },
           {
-            "note": "In a native install without a .env file, OCR stays off until OCR_ENABLED=1 is set; the Docker setup turns it on."
+            "note": "In a native run, OCR stays off until OCR_ENABLED=1 is set; the Docker setup turns it on."
           },
           {
             "h": "Day-to-day"
@@ -170,7 +192,7 @@
             "code": "docker compose ps\ndocker compose logs -f app\ndocker compose down"
           },
           {
-            "p": "docker compose down keeps your data. docker compose down -v permanently removes vectors, saved model settings, caches and model weights."
+            "p": "docker compose down keeps your data. docker compose down -v permanently removes vectors, settings saved in the app, caches and the weights of Ollama in Docker."
           }
         ]
       },
@@ -210,11 +232,12 @@
           },
           {
             "list": [
-              "Model runtime: OpenAI-compatible API or Local Ollama.",
-              "Model service URL and model name. For Ollama, Find installed models lists what is already pulled.",
+              "Model runtime: OpenAI-compatible API or Local Ollama. A change applies to the next question without a restart.",
+              "For Ollama, the address defaults to http://host.docker.internal:11434, and Find installed models offers the installed models in a menu with their sizes.{{ref:ollama-menu}}",
               "API key: held only in the service's memory, never in the browser or the configuration file. After a restart, enter it again or provide it as an environment variable.",
               "API privacy boundary: before an external API can be used, you confirm that your question and relevant passages will be sent to it.",
-              "Verify connection and apply checks the connection before saving the non-secret settings."
+              "The connection is checked before the non-secret settings are saved. When Ollama fails, Settings says why (the address isn't allowed, or Ollama didn't answer), and when an API is active it offers the server's own Ollama URL.",
+              "Advanced model settings hold the context sizes, thinking, retries and timeouts."
             ]
           },
           {
@@ -224,15 +247,26 @@
             "list": [
               "Public API endpoints must use HTTPS; HTTP is allowed only for loopback and private-network addresses.",
               "Link-local, multicast and reserved addresses are refused.",
-              "Ollama must be on localhost or the Compose service, without credentials in the URL.",
+              "Ollama URLs must be plain http://host:port on localhost, 127.0.0.1, ::1, ollama, host.docker.internal or a host listed in OLLAMA_ALLOWED_HOSTS, such as a GPU server on your LAN. Credentials, paths, query strings and HTTPS are rejected.{{ref:ollama-hosts}}",
               "Private OpenAI-compatible services can run without a key."
+            ]
+          },
+          {
+            "h": "Thinking models and API quirks"
+          },
+          {
+            "list": [
+              "ParsRAG asks Ollama not to think before answering (OLLAMA_THINK=0). Otherwise models such as qwen3, qwen3.5 or deepseek-r1 can spend the whole answer budget on reasoning and return an empty answer. Set OLLAMA_THINK=1 only with a larger OLLAMA_CONTEXT_LENGTH.{{ref:think}}",
+              "Reasoning that some APIs put inside answers (&lt;thought&gt; or &lt;think&gt; blocks) is removed from answers, streams, conversation titles and suggested questions.",
+              "Temporary API failures (HTTP 5xx and 429) are retried with growing delays, up to MODEL_API_MAX_RETRIES times.{{ref:api-retries}}",
+              "Google AI Studio works through its OpenAI-compatible endpoint, and the models/ prefix it requires is added automatically. A provider that is out of credit (HTTP 402) is reported as such."
             ]
           },
           {
             "kv": [
               [
-                "Default local model",
-                "gemma3:12b"
+                "Model in .env.example",
+                "qwen2.5:7b on the Ollama installed on the computer"
               ],
               [
                 "Default API endpoint",
@@ -240,7 +274,11 @@
               ],
               [
                 "Answer timeout",
-                "120 seconds by default, with one retry for APIs"
+                "120 seconds by default; a timed-out API request is retried once"
+              ],
+              [
+                "API retries",
+                "4 by default, for HTTP 5xx and 429"
               ],
               [
                 "Context window",
@@ -251,8 +289,8 @@
           {
             "figure": {
               "src": "model-en-light",
-              "alt": "Model and connection settings with Local Ollama selected",
-              "cap": "Model & connection settings with Local Ollama selected.",
+              "alt": "Model and connection settings with Local Ollama at http://host.docker.internal:11434 and the model menu open, listing qwen3.5:4b (3.3 GB), qwen2.5:7b (4.7 GB) and gemma3:12b (8.1 GB)",
+              "cap": "Model & connection: the installed Ollama models, with their sizes, in a menu.",
               "narrow": true
             }
           }
@@ -269,7 +307,7 @@
           {
             "list": [
               "Drop files or choose them. Each file shows three steps: Transfer file, Extract and index, Ready to ask, followed by the number of passages indexed.",
-              "Default capacity: 10 files per conversation, 100 MiB per file, 500 MiB per upload. The interface reads the real limits from the service.{{ref:limits}}",
+              "Default capacity: 10 files per conversation, 100 MiB per file, 500 MiB per upload. The interface reads the real limits from the service, and you can change them in Settings → Documents & speed.{{ref:limits}}",
               "A batch is all or nothing: if one file fails, nothing from that request is left half-indexed.{{ref:partial-index}}"
             ]
           },
@@ -339,7 +377,7 @@
                 ],
                 [
                   "OCR image limit",
-                  "Some images inside a Word or PowerPoint file were skipped (30 by default)."
+                  "Some images inside a Word or PowerPoint file were skipped (200 by default)."
                 ],
                 [
                   "OCR partial",
@@ -359,15 +397,18 @@
             "list": [
               "Use in answers: tick or clear each document; you can clear every selection.",
               "From earlier conversations: add an indexed file without uploading it again. The copy becomes independent once it finishes.{{ref:reuse}}",
-              "Delete a document with a two-step confirmation; its passages are removed from the index."
+              "Delete a document with a two-step confirmation; its passages and image previews are removed from the index."
             ]
+          },
+          {
+            "note": "Documents indexed by 1.0.0 keep working. Upload Word and PowerPoint files again to gain image and table citations, image previews next to sources, images past the 30th and better OCR of screenshots.{{ref:upgrade-1-1}}"
           }
         ]
       },
       {
         "id": "reading",
         "title": "How documents are read",
-        "lede": "Before anything can be cited, ParsRAG turns each file into located passages: text with the file name and the page, slide, paragraph or section it came from.{{ref:traceable}}",
+        "lede": "Before anything can be cited, ParsRAG turns each file into located passages: text with the file name and the page, slide, paragraph, table or image it came from.{{ref:traceable}}",
         "blocks": [
           {
             "h": "PDF"
@@ -387,7 +428,9 @@
               "Tesseract with Persian and English data, on grayscale pages rendered at 200 dpi, without contrast stretching.",
               "A second, single-block pass runs when the first reading is weak (mean confidence below 75), and the more confident reading wins.",
               "Pages turned 90, 180 or 270 degrees, and pages skewed by 2 degrees or more, are detected and read again.{{ref:ocr-rotated}}",
-              "Limits: 30 scanned pages and 30 images per file, 45 seconds per page and 40 million pixels per image by default."
+              "Pictures and screenshots also get a sparse-text pass on an enlarged black-and-white copy. It adds text the page layout pass skipped, such as status panels, dark toolbars and text on tinted panels.{{ref:ocr-sparse}}",
+              "Pictures in Word and PowerPoint are read several at a time (OCR_WORKERS: every CPU core, at most 8, by default), with the same text as reading them one by one.",
+              "Limits: 30 scanned pages per PDF and 200 images per Word or PowerPoint file, 45 seconds per page and 40 million pixels per image by default. Images under 10,000 pixels, such as icons, are skipped."
             ]
           },
           {
@@ -395,8 +438,10 @@
           },
           {
             "list": [
-              "Word: paragraphs are grouped under their headings, up to 180 words, and each passage carries its heading path. Tables become Markdown tables with row records.{{ref:word-headings}}",
-              "PowerPoint: one section per slide, including tables and text from pictures.",
+              "Word: paragraphs are grouped under their headings, up to 180 words, and each passage carries its heading path.{{ref:word-headings}} Commands and code in one-cell boxes stay with the sentence that introduces them.",
+              "Word tables become Markdown tables with row records, cited by number and the paragraph they follow, for example “paragraph 120 · table 3”.{{ref:word-tables}}",
+              "Images in Word and PowerPoint: the text read from each image is its own passage with the image's caption, cited as “paragraph 120 · image 7” or “slide 25 · image 9”. It also carries the text that introduces the image, and answers say when a fact comes from an image.{{ref:image-citations}}",
+              "PowerPoint: one section per slide, including its tables.",
               "HTML and XML keep only visible text; JSON is validated and re-written readably."
             ]
           },
@@ -405,9 +450,10 @@
           },
           {
             "list": [
-              "Text is split into passages of about 512 tokens with a 50-token overlap.",
+              "Text is split into passages of about 512 tokens with a 50-token overlap, and each document is embedded in batches sorted by length.",
               "For consecutive PDF pages, an extra passage joins the last 90 words of one page with the first 90 of the next, so a fact split by a page turn is cited as a page range.",
-              "Persian spelling is normalized in passages and questions: Arabic Yeh and Kaf, presentation forms, diacritics and digits. The ezafe hamza is kept.{{ref:persian-normalization}}"
+              "Persian spelling is normalized in passages and questions: Arabic Yeh and Kaf, presentation forms, diacritics and digits. The ezafe hamza is kept.{{ref:persian-normalization}}",
+              "For every image read with OCR, a WebP copy at most 1280 px wide is kept so the source can show it.{{ref:image-previews}}"
             ]
           }
         ]
@@ -433,9 +479,18 @@
           },
           {
             "list": [
-              "Depth adapts to the question, between 8 and 30 passages: more for summaries, comparisons and lists, fewer for short factual questions.",
-              "With several files, each one gets its own share, at least 3 passages in Documents only and 5 in Hybrid.",
-              "You can fix the number yourself in Settings, from 1 to 50 (15 by default when automatic depth is off)."
+              "Depth adapts to the question, between 8 and 30 passages: more for summaries, comparisons, lists and tables, fewer for short factual questions.",
+              "With several files, broad questions spread retrieval across them so one large document can't crowd out the rest. Specific questions search all files together, so the file that holds the answer can provide most passages; every other file still contributes its best match, and passages repeated across files are kept once.{{ref:multi-doc}}",
+              "You can fix the number yourself in Settings → Answers, from 1 to 50, or leave it empty so it is chosen per question."
+            ]
+          },
+          {
+            "h": "Questions with several parts"
+          },
+          {
+            "list": [
+              "A question that asks several things, such as “which key opens Edit mode, and which fields did the example add?”, is also searched part by part. Each part keeps its best passages, and the model is asked to answer every part and say which one the documents don't cover.{{ref:multi-part}}",
+              "When part of a table is retrieved, the rest of the table comes with it, so questions about the largest or smallest value see every row.{{ref:whole-table}}"
             ]
           },
           {
@@ -475,7 +530,7 @@
             "h": "The evidence gate"
           },
           {
-            "p": "Documents only refuses only when three things are true: the best passage scores below 0.75, the question isn't about the whole document, and the passages don't contain enough of the question's distinctive words. With @ mentions, every mentioned file must have its own evidence.{{ref:strict-refuses}}"
+            "p": "Documents only refuses only when three things are true: the best passage scores below the threshold (0.75 by default, adjustable in Settings → Answers), the question isn't about the whole document, and the passages don't contain enough of the question's distinctive words. With @ mentions, every mentioned file must have its own evidence.{{ref:strict-refuses}}"
           },
           {
             "note": "The gate is an application safeguard, not a guarantee. Check important answers against their sources."
@@ -494,6 +549,7 @@
             "list": [
               "Enter sends; Shift+Enter adds a line. Up to 30,000 characters.",
               "Type @ to mention an indexed document. The question is split into clauses, and each clause is searched in its file.{{ref:mentions}}",
+              "Without @, naming a file in the question narrows the search to it, but sharing an ordinary word with a file name no longer does.",
               "Type / at the start of a line for quick commands.",
               "While an answer streams, the send button becomes Stop; what was already written is kept."
             ]
@@ -561,7 +617,7 @@
             "h": "While it works"
           },
           {
-            "p": "The real processing stages appear in order: Understanding the question and conversation, Finding relevant evidence in documents, and Writing the final answer. Then the answer streams in word by word.{{ref:streaming}}"
+            "p": "The real processing stages appear in order: Understanding the question and conversation, Finding relevant evidence in documents, and Writing the final answer. Then the answer streams in word by word.{{ref:streaming}} Every prompt names the answer language, detected from your question, so English questions get English answers in Hybrid and Open conversation too.{{ref:answer-language}}"
           }
         ]
       },
@@ -576,7 +632,8 @@
           {
             "list": [
               "The model cites passages as [n]; the interface turns them into numbered chips that open the passage.{{ref:numbered-citations}}",
-              "The Sources list shows each cited passage with a short preview, file name and location. Expanded, it shows up to 1,600 characters with the question's words highlighted.",
+              "The Sources list shows each cited passage with a short preview, file name and location, such as “paragraph 812 · table 6” or “paragraph 845 · image 15”. Expanded, it shows up to 1,600 characters with the question's words highlighted.",
+              "Table passages render as tables, and a passage read from a picture shows the picture itself next to the text.{{ref:image-sources}}",
               "Passages that were consulted but not cited fold under “more passages consulted”."
             ]
           },
@@ -640,16 +697,16 @@
           {
             "list": [
               "Copy, Try again, Copy prompt and Edit prompt. Retrying or editing adds a new version you can page through; editing a prompt starts a branch that keeps its own continuation.",
-              "Math is rendered with KaTeX. Persian words are never typeset as math, and unclosed delimiters are removed.",
+              "Math is rendered with KaTeX. Persian words are never typeset as math, unclosed delimiters are removed, and the math markup some Gemini models leak into answers is shown as math.",
               "External images in answers are not loaded.",
-              "Errors are explained by their code, for example a password-protected PDF, a rejected API key or a model that isn't installed."
+              "Errors are explained by their code, for example a password-protected PDF, a rejected API key, a model that isn't installed or an API account that is out of credit."
             ]
           },
           {
             "figure": {
               "src": "sources-en-light",
-              "alt": "An answer with its sources listed below it",
-              "cap": "An answer grounded in two sample files, with their locations."
+              "alt": "A Documents only answer about load test results with two sources expanded: Table 3-1, cumulative test data (paragraph 812 · table 6), shown as a table, and a Reliability calculator panel (paragraph 845 · image 15), shown as the image it was read from",
+              "cap": "An answer that cites a Word table and the image a passage was read from, each with its location. The files are synthetic samples."
             }
           }
         ]
@@ -664,7 +721,7 @@
           },
           {
             "list": [
-              "Uploaded files: they exist in memory and a RAM-backed temporary folder only while they are processed.",
+              "Uploaded files: they exist in memory and a RAM-backed temporary folder only while they are processed. What stays is the extracted text, its vectors and a small copy of each image read with OCR, all in Qdrant; SOURCE_IMAGE_PREVIEWS=0 stops keeping the images.",
               "Prompts and retrieved excerpts: they are not logged.",
               "Conversations: they live in your browser's IndexedDB, not on the server.",
               "API keys: process memory or environment variables only.{{ref:local-in-all-modes}}"
@@ -677,6 +734,8 @@
             "list": [
               "Only requests addressed to localhost, 127.0.0.1 or ::1 are accepted, which blocks DNS rebinding. PARSRAG_ALLOWED_HOSTS adds names for LAN use.{{ref:dns-rebinding}}",
               "Requests that change data must come from the app's own address or an allowed origin.",
+              "Ollama URLs are limited to loopback, the ollama service, host.docker.internal and hosts listed in OLLAMA_ALLOWED_HOSTS. The browser can't widen this list.{{ref:ollama-locked}}",
+              "Settings changed in the app can't touch what guards the trust boundary: ports, allowed hosts and origins, OLLAMA_ALLOWED_HOSTS, the request ceiling, memory limits and model downloads.{{ref:settings-guard}}",
               "The app listens on 127.0.0.1 by default, and Qdrant sits on an internal network with no outside access."
             ]
           },
@@ -687,11 +746,11 @@
             "list": [
               "Read-only file system, a RAM-backed /tmp, no new privileges and every Linux capability dropped.",
               "Runs as a non-root user, and pip is removed from the runtime image.",
-              "Memory ceilings: 6 GB for the app, 2 GB for Qdrant and 12 GB for Ollama by default."
+              "Memory ceilings: 6 GB for the app, 2 GB for Qdrant and 12 GB for Ollama in Docker by default."
             ]
           },
           {
-            "note": "Putting ParsRAG on a shared or untrusted network needs an authenticated reverse proxy. Vulnerabilities are reported privately through GitHub's security tab."
+            "note": "Putting ParsRAG on a shared or untrusted network needs an authenticated reverse proxy. Ollama itself has no authentication, so keep the computer's Ollama off public networks. Vulnerabilities are reported privately through GitHub's security tab."
           }
         ]
       },
@@ -709,6 +768,15 @@
               "Each conversation can be renamed, downloaded as Markdown or deleted.",
               "Back up every conversation and preference to a JSON file and restore it on another machine; documents are uploaded again there.{{ref:backup}}",
               "Clear all local data removes every conversation and indexed document, and keeps browser data if the service can't confirm the deletion."
+            ]
+          },
+          {
+            "h": "Settings"
+          },
+          {
+            "list": [
+              "Four tabs: Appearance, Answers, Model & connection, and Documents & speed.",
+              "Changes to the model, retrieval, uploads, OCR and indexing speed apply while ParsRAG runs, without a restart. Each setting shows its .env value and can be reset to it."
             ]
           },
           {
@@ -776,7 +844,7 @@
           },
           {
             "list": [
-              "A 33-step tour opens on first visit, walks through every control in place, and never changes your settings or data. Replay it any time.",
+              "A 33-step tour opens on first visit, walks through every control in place, and never changes your settings or data. Replay it any time from Settings → Appearance → Workspace tour.",
               "Install ParsRAG as an app. The interface opens offline, but answers still need the service; model requests and document data are never cached.{{ref:pwa}}",
               "If something fails while drawing the page, a recovery screen replaces the blank page and your data stays saved."
             ]
@@ -804,7 +872,7 @@
               "rows": [
                 [
                   "Domain",
-                  "Documents, sections, query modes, upload policy, errors"
+                  "Documents, sections, query modes, upload policy, runtime settings, errors"
                 ],
                 [
                   "DTOs",
@@ -812,11 +880,11 @@
                 ],
                 [
                   "Ports",
-                  "Repository, parser, chunker, condenser, model gateway, progress, reranker"
+                  "Repository, parser, chunker, condenser, model gateway, progress, reranker, runtime settings store"
                 ],
                 [
                   "Use cases",
-                  "14 operations, one class each: ingest, answer, suggest questions, reuse, delete, configure model…"
+                  "One class per operation: ingest, answer, suggest questions, reuse, delete, configure the model, list Ollama models, change runtime settings, show a cited image…"
                 ],
                 [
                   "Strategies",
@@ -832,6 +900,9 @@
                 ]
               ]
             }
+          },
+          {
+            "p": "Compose defines three containers: the app, Qdrant and Ollama, which runs only with the local-model profile. Instead of the Ollama container, the app can use the Ollama installed on the host, reached at host.docker.internal; the host's models and GPU are then used directly. Failures are reported as ollama_url_not_allowed or ollama_unreachable."
           },
           {
             "h": "HTTP API"
@@ -856,6 +927,14 @@
                   "Read or verify and apply the model connection"
                 ],
                 [
+                  "GET /models/ollama",
+                  "The installed Ollama models"
+                ],
+                [
+                  "GET, PUT, DELETE /settings/runtime",
+                  "Read, change or reset the settings changed in the app"
+                ],
+                [
                   "POST /ingest",
                   "Upload and index files"
                 ],
@@ -870,6 +949,10 @@
                 [
                   "POST /sessions/{id}/files/reuse",
                   "Copy an indexed document from another conversation"
+                ],
+                [
+                  "GET /sessions/{id}/images/{n}",
+                  "The image a cited passage was read from"
                 ],
                 [
                   "GET, DELETE /sessions/{id}/files",
@@ -907,6 +990,7 @@
               "Frontend: dependency audit, unit tests, type-checked build, and Playwright browser and app-install tests.",
               "Both run on Linux, Windows and macOS.{{ref:ci-matrix}}",
               "End to end: real parsing, embeddings, Qdrant, reranking and streaming, with a stand-in model. At least 7 of 8 paraphrased Persian questions must cite their own section first.{{ref:e2e-gate}}",
+              "Locally, every backend test runs without skips and without Docker: PARSRAG_E2E=1 runs the end-to-end tests against an in-memory Qdrant unless QDRANT_HOST names a server.{{ref:tests-no-docker}}",
               "Packaging: the Docker image is built and the app imported inside it."
             ]
           },
@@ -931,6 +1015,17 @@
             ]
           },
           {
+            "h": "Measured improvements in 1.1"
+          },
+          {
+            "list": [
+              "Questions with several parts: 5 of the 6 answers that missed a part became complete, with no regressions.{{ref:multi-part-eval}}",
+              "Pictures read several at a time: a report with 96 images parsed in 33 s instead of 121 s, with identical text.{{ref:ocr-workers}} Indexing the whole report went from about 4.5 minutes to about 3.{{ref:indexing-time}}",
+              "Screenshot OCR: facts read from 33 to 37 of 40, for about a third more time per image.{{ref:ocr-sparse}}",
+              "Thinking models: on a 6 GB GPU with qwen3.5:4b, an empty reply after 59 s became a cited answer in 7 s.{{ref:think-eval}}"
+            ]
+          },
+          {
             "note": "These measurements were made on document sets that aren't published, so they can't be reproduced from the public repository."
           }
         ]
@@ -941,6 +1036,25 @@
         "lede": "Settings are environment variables in .env, and 27 of them can also be changed in the app's Settings without a restart. These are the ones you are most likely to change; defaults are the Docker values.",
         "blocks": [
           {
+            "h": "In the app"
+          },
+          {
+            "list": [
+              "Settings changes 27 options in four groups: model (context sizes, thinking, retries, timeouts), retrieval (threshold, depths, keyword search), documents (upload limits, OCR, image previews) and indexing speed (OCR workers, CPU threads, batches).{{ref:settings-groups}}",
+              "Each option shows its .env value and can be reset to it, one at a time or with Reset all to .env. Values saved in the app take precedence over .env and survive restarts; they live in the app_config volume.{{ref:settings-precedence}}",
+              "Ports, allowed addresses, Qdrant, memory limits, the largest upload request and the embedding model stay in .env and apply after a restart.{{ref:env-only}}",
+              ".env.example has only the model choice active. Every other line shows its default, grouped by whether Settings can also change it."
+            ]
+          },
+          {
+            "figure": {
+              "src": "settings-en-light",
+              "alt": "The Indexing speed group in Settings: Images read at the same time set to Automatic, CPU threads for embeddings changed to 8 with a Changed in the app badge, its .env value of 4 with a reset button, a Reset all to .env button, and a note that ports, allowed addresses, Qdrant, memory limits and the embedding model change only in .env",
+              "cap": "Documents & speed settings. A value changed in the app shows its .env value and can be reset to it.",
+              "narrow": true
+            }
+          },
+          {
             "h": "Model"
           },
           {
@@ -948,43 +1062,81 @@
               "head": [
                 "Variable",
                 "Default",
-                "Purpose"
+                "Purpose",
+                "In the app"
               ],
               "rows": [
                 [
                   "LLM_PROVIDER",
                   "ollama",
-                  "ollama or api"
+                  "ollama or api",
+                  "Model & connection"
                 ],
                 [
                   "LLM_MODEL_NAME",
-                  "gemma3:12b",
-                  "Model that writes answers"
+                  "qwen2.5:7b in .env.example",
+                  "Model that writes answers",
+                  "Model & connection"
+                ],
+                [
+                  "OLLAMA_DOCKER_BASE_URL",
+                  "http://host.docker.internal:11434 in .env.example",
+                  "Ollama address as the app container sees it; http://ollama:11434 for Ollama in Docker",
+                  "Model & connection"
                 ],
                 [
                   "MODEL_API_BASE_URL",
                   "https://openrouter.ai/api/v1",
-                  "OpenAI-compatible endpoint"
+                  "OpenAI-compatible endpoint",
+                  "Model & connection"
                 ],
                 [
                   "MODEL_API_KEY",
                   "empty",
-                  "Runtime secret, never written to disk"
+                  "Runtime secret, never written to disk",
+                  "Model & connection"
                 ],
                 [
                   "MODEL_API_DISCLOSURE_ACKNOWLEDGED",
                   "0",
-                  "Consent for an external API"
+                  "Consent for an external API",
+                  "Model & connection"
                 ],
                 [
                   "OLLAMA_CONTEXT_LENGTH",
                   "8192",
-                  "Context requested from Ollama"
+                  "Context Ollama allocates per question",
+                  "Model & connection"
+                ],
+                [
+                  "OLLAMA_THINK",
+                  "0",
+                  "Let thinking models reason before answering",
+                  "Model & connection"
+                ],
+                [
+                  "MODEL_CONTEXT_WINDOW",
+                  "32768",
+                  "Context assumed for API models",
+                  "Model & connection"
+                ],
+                [
+                  "MODEL_API_MAX_RETRIES",
+                  "4",
+                  "Retries for HTTP 5xx and 429",
+                  "Model & connection"
                 ],
                 [
                   "LLM_REQUEST_TIMEOUT_SECONDS",
                   "120",
-                  "Per-answer timeout"
+                  "Per-answer timeout",
+                  "Model & connection"
+                ],
+                [
+                  "OLLAMA_ALLOWED_HOSTS",
+                  "empty",
+                  "Extra hosts an Ollama URL may use",
+                  ".env only"
                 ]
               ]
             }
@@ -997,38 +1149,51 @@
               "head": [
                 "Variable",
                 "Default",
-                "Purpose"
+                "Purpose",
+                "In the app"
               ],
               "rows": [
                 [
-                  "EMBED_MODEL_NAME",
-                  "intfloat/multilingual-e5-base",
-                  "Embedding model"
-                ],
-                [
-                  "EMBED_DEVICE",
-                  "auto",
-                  "auto, cpu, cuda or mps"
-                ],
-                [
-                  "KEYWORD_SEARCH",
-                  "1",
-                  "BM25 fused with vector search"
-                ],
-                [
-                  "RERANK_MODEL",
-                  "miniReranker_arabic_v1",
-                  "Hybrid reranker; none disables it"
-                ],
-                [
                   "STRICT_RAG_THRESHOLD",
                   "0.75",
-                  "Documents only evidence gate"
+                  "Documents only evidence gate",
+                  "Answers"
+                ],
+                [
+                  "STRICT_RAG_TOP_K",
+                  "empty",
+                  "Fixed Documents only depth, 1–50; empty chooses per question",
+                  "Answers"
                 ],
                 [
                   "HYBRID_RETRIEVE_TOP_K",
                   "25",
-                  "Hybrid candidate pool"
+                  "Hybrid candidate pool",
+                  "Answers"
+                ],
+                [
+                  "KEYWORD_SEARCH",
+                  "1",
+                  "BM25 fused with vector search",
+                  "Answers"
+                ],
+                [
+                  "EMBED_MODEL_NAME",
+                  "intfloat/multilingual-e5-base",
+                  "Embedding model; changing it means uploading documents again",
+                  ".env only"
+                ],
+                [
+                  "EMBED_DEVICE",
+                  "auto",
+                  "auto, cpu, cuda or mps",
+                  ".env only"
+                ],
+                [
+                  "RERANK_MODEL",
+                  "miniReranker_arabic_v1",
+                  "Hybrid reranker; none disables it",
+                  ".env only"
                 ]
               ]
             }
@@ -1041,43 +1206,108 @@
               "head": [
                 "Variable",
                 "Default",
-                "Purpose"
+                "Purpose",
+                "In the app"
               ],
               "rows": [
                 [
                   "PARSRAG_MAX_FILES_PER_SESSION",
                   "10",
-                  "Files per conversation"
+                  "Files per conversation",
+                  "Documents & speed"
                 ],
                 [
                   "PARSRAG_MAX_FILE_BYTES",
                   "104857600",
-                  "100 MiB per file"
+                  "100 MiB per file",
+                  "Documents & speed"
                 ],
                 [
                   "PARSRAG_MAX_BATCH_BYTES",
                   "524288000",
-                  "500 MiB per upload"
+                  "500 MiB per upload",
+                  "Documents & speed"
                 ],
                 [
                   "OCR_ENABLED",
                   "1",
-                  "Turn OCR on or off"
+                  "Turn OCR on or off",
+                  "Documents & speed"
                 ],
                 [
                   "OCR_LANGUAGES",
                   "fas+eng",
-                  "Tesseract languages"
+                  "Tesseract languages",
+                  "Documents & speed"
                 ],
                 [
                   "OCR_DPI",
                   "200",
-                  "Rendering resolution for scanned pages"
+                  "Rendering resolution for scanned pages",
+                  "Documents & speed"
                 ],
                 [
                   "OCR_MAX_PAGES",
                   "30",
-                  "Scanned pages read per file"
+                  "Scanned pages read per file",
+                  "Documents & speed"
+                ],
+                [
+                  "OCR_MAX_IMAGES",
+                  "200",
+                  "Images read per Word or PowerPoint file",
+                  "Documents & speed"
+                ],
+                [
+                  "SOURCE_IMAGE_PREVIEWS",
+                  "1",
+                  "Keep a copy of each image to show next to its source",
+                  "Documents & speed"
+                ],
+                [
+                  "PARSRAG_MAX_REQUEST_BYTES",
+                  "534773760",
+                  "Largest upload request; the limits above can't exceed it",
+                  ".env only"
+                ]
+              ]
+            }
+          },
+          {
+            "h": "Indexing speed"
+          },
+          {
+            "table": {
+              "head": [
+                "Variable",
+                "Default",
+                "Purpose",
+                "In the app"
+              ],
+              "rows": [
+                [
+                  "OCR_WORKERS",
+                  "empty",
+                  "Images read at the same time; empty uses every CPU core, at most 8",
+                  "Documents & speed"
+                ],
+                [
+                  "PARSRAG_CPU_THREADS",
+                  "4",
+                  "CPU threads for embeddings, up to the physical cores",
+                  "Documents & speed"
+                ],
+                [
+                  "EMBED_BATCH_SIZE",
+                  "8",
+                  "Texts per embedding pass; 32 with the GPU overlay",
+                  "Documents & speed"
+                ],
+                [
+                  "QDRANT_UPSERT_BATCH_SIZE",
+                  "64",
+                  "Passages saved per write",
+                  "Documents & speed"
                 ]
               ]
             }
@@ -1090,38 +1320,45 @@
               "head": [
                 "Variable",
                 "Default",
-                "Purpose"
+                "Purpose",
+                "In the app"
               ],
               "rows": [
                 [
                   "PARSRAG_PORT",
                   "8000",
-                  "Port on your machine"
+                  "Port on your machine",
+                  ".env only"
                 ],
                 [
                   "PARSRAG_BIND_HOST",
                   "127.0.0.1",
-                  "Address the port is bound to"
+                  "Address the port is bound to",
+                  ".env only"
                 ],
                 [
                   "PARSRAG_ALLOWED_HOSTS",
-                  "localhost, 127.0.0.1, ::1",
-                  "Accepted host names"
+                  "empty",
+                  "Host names accepted besides localhost, 127.0.0.1 and ::1",
+                  ".env only"
                 ],
                 [
                   "PARSRAG_APP_MEMORY_LIMIT",
                   "6g",
-                  "App container ceiling"
+                  "App container ceiling",
+                  ".env only"
                 ],
                 [
                   "QDRANT_MEMORY_LIMIT",
                   "2g",
-                  "Qdrant ceiling"
+                  "Qdrant ceiling",
+                  ".env only"
                 ],
                 [
                   "OLLAMA_MEMORY_LIMIT",
                   "12g",
-                  "Ollama ceiling"
+                  "Ollama container ceiling",
+                  ".env only"
                 ]
               ]
             }

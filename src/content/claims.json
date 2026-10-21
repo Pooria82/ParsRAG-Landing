@@ -146,5 +146,109 @@
   "partial-index": {
     "en": { "file": "CHANGELOG.md", "quote": "A failed upload no longer leaves a partly indexed document behind." },
     "fa": { "file": "CHANGELOG.md", "quote": "A failed upload no longer leaves a partly indexed document behind.", "display": "بارگذاری ناموفق دیگر سندی نیمه‌ایندکس‌شده باقی نمی‌گذارد." }
+  },
+  "host-ollama": {
+    "en": { "file": "README.md", "quote": "answers from the Ollama already installed on your computer, on its GPU, with the models you already have" },
+    "fa": { "file": "README.fa.md", "quote": "پاسخ با Ollamaی نصب‌شده روی همین رایانه، روی GPU آن و با مدل‌هایی که از قبل دارید" }
+  },
+  "no-gpu-container": {
+    "en": { "file": "CHANGELOG.md", "quote": "No override file is needed, and the app container needs no GPU." },
+    "fa": { "file": "CHANGELOG.md", "quote": "No override file is needed, and the app container needs no GPU.", "display": "به فایل override نیازی نیست و کانتینر برنامه هم GPU لازم ندارد." }
+  },
+  "ollama-menu": {
+    "en": { "file": "CHANGELOG.md", "quote": "Installed Ollama models are offered in a menu, with their sizes." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Installed Ollama models are offered in a menu, with their sizes.", "display": "مدل‌های نصب‌شدهٔ Ollama همراه با حجمشان در یک فهرست پیشنهاد می‌شوند." }
+  },
+  "ollama-hosts": {
+    "en": { "file": "README.md", "quote": "Credentials, paths, query strings, and HTTPS URLs are rejected." },
+    "fa": { "file": "README.fa.md", "quote": "نام کاربری، مسیر، پارامتر و HTTPS پذیرفته نمی‌شوند." }
+  },
+  "think": {
+    "en": { "file": "README.md", "quote": "Otherwise models such as qwen3, qwen3.5, or deepseek-r1 can spend the whole answer budget on reasoning and return an empty answer." },
+    "fa": { "file": "README.fa.md", "quote": "وگرنه مدل‌هایی مثل qwen3، qwen3.5 یا deepseek-r1 ممکن است همهٔ بودجهٔ پاسخ را صرف استدلال کنند و پاسخ خالی برگردانند." }
+  },
+  "api-retries": {
+    "en": { "file": "README.md", "quote": "ParsRAG retries those up to MODEL_API_MAX_RETRIES times (default 4), waiting up to a minute for rate limits." },
+    "fa": { "file": "README.fa.md", "quote": "پارس‌رگ این درخواست‌ها را تا MODEL_API_MAX_RETRIES بار (پیش‌فرض ۴) دوباره می‌فرستد و برای محدودیت نرخ تا یک دقیقه صبر می‌کند." }
+  },
+  "answer-language": {
+    "en": { "file": "CHANGELOG.md", "quote": "Every prompt now names the answer language, detected from the question." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Every prompt now names the answer language, detected from the question.", "display": "اکنون هر پرامپت زبان پاسخ را مشخص می‌کند و این زبان از روی خود پرسش تشخیص داده می‌شود." }
+  },
+  "upgrade-1-1": {
+    "en": { "file": "README.md", "quote": "Upload Word and PowerPoint files again to gain image and table citations, image previews next to sources, images past the 30th, and better OCR of screenshots." },
+    "fa": { "file": "README.fa.md", "quote": "فایل‌های Word و PowerPoint را دوباره بارگذاری کنید تا ارجاع به تصویر و جدول، نمایش تصویر کنار منبع، خواندن تصویرهای بعد از سی‌امین و OCR بهتر اسکرین‌شات‌ها را داشته باشید." }
+  },
+  "image-citations": {
+    "en": { "file": "CHANGELOG.md", "quote": "Images inside Word and PowerPoint files are cited by number: text read from an image is its own excerpt with the image's caption" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Images inside Word and PowerPoint files are cited by number: text read from an image is its own excerpt with the image's caption", "display": "به تصویرهای درون فایل‌های Word و PowerPoint با شماره ارجاع داده می‌شود: متنی که از هر تصویر خوانده شده، همراه با عنوان تصویر، بخش جداگانه‌ای است." }
+  },
+  "word-tables": {
+    "en": { "file": "CHANGELOG.md", "quote": "Word tables are cited by number and the paragraph they follow" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Word tables are cited by number and the paragraph they follow", "display": "به جدول‌های Word با شمارهٔ جدول و بندی که پیش از آن آمده ارجاع داده می‌شود." }
+  },
+  "whole-table": {
+    "en": { "file": "CHANGELOG.md", "quote": "When part of a table is retrieved, the rest of the table comes with it, so questions about the largest or smallest value see every row." },
+    "fa": { "file": "CHANGELOG.md", "quote": "When part of a table is retrieved, the rest of the table comes with it, so questions about the largest or smallest value see every row.", "display": "وقتی بخشی از یک جدول بازیابی شود، بقیهٔ جدول هم همراهش می‌آید تا پرسش دربارهٔ بیشترین یا کمترین مقدار، همهٔ سطرها را ببیند." }
+  },
+  "multi-part": {
+    "en": { "file": "DATA.md", "quote": "Each part keeps its best excerpts (three in documents-only mode) even when filtering or reranking against the whole question would drop them." },
+    "fa": { "file": "DATA.md", "quote": "Each part keeps its best excerpts (three in documents-only mode) even when filtering or reranking against the whole question would drop them.", "display": "هر تکه از پرسش بهترین بخش‌های خودش را نگه می‌دارد (در حالت فقط اسناد سه بخش)، حتی اگر پالایش یا رتبه‌بندی بر اساس کل پرسش آن‌ها را کنار بگذارد." }
+  },
+  "multi-doc": {
+    "en": { "file": "CHANGELOG.md", "quote": "With several documents, specific questions search all files together, so the file that holds the answer can provide most excerpts" },
+    "fa": { "file": "CHANGELOG.md", "quote": "With several documents, specific questions search all files together, so the file that holds the answer can provide most excerpts", "display": "وقتی چند سند در کار است، پرسش‌های مشخص در همهٔ فایل‌ها با هم جست‌وجو می‌شوند تا فایلی که پاسخ در آن است بتواند بیشترِ بخش‌ها را بدهد." }
+  },
+  "image-sources": {
+    "en": { "file": "README.md", "quote": "Table excerpts render as tables, and a source read from a picture shows the picture itself." },
+    "fa": { "file": "README.fa.md", "quote": "بخش‌های جدولی به شکل جدول نمایش داده می‌شوند و منبعی که از یک تصویر خوانده شده، خود تصویر را هم نشان می‌دهد." }
+  },
+  "image-previews": {
+    "en": { "file": "README.md", "quote": "Keep a WebP copy (at most 1280 px) of each image read with OCR, shown next to its source excerpt" },
+    "fa": { "file": "README.fa.md", "quote": "نگه‌داشتن نسخهٔ WebP (حداکثر ۱۲۸۰ پیکسل) از هر تصویر خوانده‌شده تا کنار منبع پاسخ نمایش داده شود" }
+  },
+  "ocr-sparse": {
+    "en": { "file": "backend/infrastructure/parsers/ocr.py", "quote": "On the screenshots of the final acceptance set this raised the facts read from 33 to 37 of 40, never lowering a case, for about a third more time per image." },
+    "fa": { "file": "backend/infrastructure/parsers/ocr.py", "quote": "On the screenshots of the final acceptance set this raised the facts read from 33 to 37 of 40, never lowering a case, for about a third more time per image.", "display": "روی اسکرین‌شات‌های مجموعهٔ پذیرش نهایی، این کار تعداد واقعیت‌های خوانده‌شده را از ۳۳ به ۳۷ از ۴۰ رساند، بی‌آنکه حتی یک مورد بدتر شود، به بهای حدود یک‌سوم زمان بیشتر برای هر تصویر." }
+  },
+  "ocr-workers": {
+    "en": { "file": "CHANGELOG.md", "quote": "The 96-image final report parsed in 33 s instead of 121 s, with identical text." },
+    "fa": { "file": "CHANGELOG.md", "quote": "The 96-image final report parsed in 33 s instead of 121 s, with identical text.", "display": "گزارش نهایی ۹۶ تصویری به‌جای ۱۲۱ ثانیه در ۳۳ ثانیه پردازش شد و متن به‌دست‌آمده دقیقاً همان بود." }
+  },
+  "indexing-time": {
+    "en": { "file": "CHANGELOG.md", "quote": "Indexing that whole report went from about 4.5 minutes to about 3." },
+    "fa": { "file": "CHANGELOG.md", "quote": "Indexing that whole report went from about 4.5 minutes to about 3.", "display": "ایندکس کل همان گزارش از حدود ۴٫۵ دقیقه به حدود ۳ دقیقه رسید." }
+  },
+  "multi-part-eval": {
+    "en": { "file": "CHANGELOG.md", "quote": "In the acceptance set, 5 of the 6 answers that missed a part became complete, with no regressions among the questions that were already right." },
+    "fa": { "file": "CHANGELOG.md", "quote": "In the acceptance set, 5 of the 6 answers that missed a part became complete, with no regressions among the questions that were already right.", "display": "در مجموعهٔ پذیرش، ۵ پاسخ از ۶ پاسخی که بخشی از پرسش را جا انداخته بودند کامل شدند و هیچ‌کدام از پرسش‌هایی که از قبل درست پاسخ می‌گرفتند بدتر نشد." }
+  },
+  "think-eval": {
+    "en": { "file": "CHANGELOG.md", "quote": "On a 6 GB GPU with qwen3.5:4b, an empty reply after 59 s became a cited answer in 7 s." },
+    "fa": { "file": "CHANGELOG.md", "quote": "On a 6 GB GPU with qwen3.5:4b, an empty reply after 59 s became a cited answer in 7 s.", "display": "روی یک GPU شش‌گیگابایتی با qwen3.5:4b، به‌جای پاسخ خالی پس از ۵۹ ثانیه، پاسخی با ارجاع در ۷ ثانیه به دست آمد." }
+  },
+  "tests-no-docker": {
+    "en": { "file": "CHANGELOG.md", "quote": "Every backend test runs without skips and without Docker" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Every backend test runs without skips and without Docker", "display": "همهٔ آزمون‌های بک‌اند بدون ردشدن هیچ آزمونی و بدون Docker اجرا می‌شوند." }
+  },
+  "ollama-locked": {
+    "en": { "file": "SECURITY.md", "quote": "The browser cannot widen this list, so a page cannot point the app at an arbitrary internal service through the Ollama setting." },
+    "fa": { "file": "SECURITY.md", "quote": "The browser cannot widen this list, so a page cannot point the app at an arbitrary internal service through the Ollama setting.", "display": "مرورگر نمی‌تواند این فهرست را گسترش دهد؛ پس هیچ صفحه‌ای نمی‌تواند از راه تنظیم Ollama برنامه را به سرویس داخلی دلخواهی بفرستد." }
+  },
+  "settings-guard": {
+    "en": { "file": "SECURITY.md", "quote": "Settings that guard the trust boundary cannot be changed this way" },
+    "fa": { "file": "SECURITY.md", "quote": "Settings that guard the trust boundary cannot be changed this way", "display": "تنظیماتی که از مرز اعتماد محافظت می‌کنند از این راه تغییر نمی‌کنند." }
+  },
+  "settings-groups": {
+    "en": { "file": "CHANGELOG.md", "quote": "Settings in the app can change the options that used to need .env and a restart (27 in all), in four groups" },
+    "fa": { "file": "CHANGELOG.md", "quote": "Settings in the app can change the options that used to need .env and a restart (27 in all), in four groups", "display": "تنظیمات برنامه می‌تواند گزینه‌هایی را که قبلاً به .env و راه‌اندازی دوباره نیاز داشتند (روی‌هم ۲۷ گزینه) در چهار گروه تغییر دهد." }
+  },
+  "settings-precedence": {
+    "en": { "file": "README.md", "quote": "Values saved in Settings take precedence over .env and survive restarts; each shows its .env value and can be reset to it." },
+    "fa": { "file": "README.fa.md", "quote": "مقدارهایی که در تنظیمات ذخیره می‌شوند بر .env مقدم‌اند و پس از راه‌اندازی دوباره هم می‌مانند؛ کنار هرکدام مقدار .env آمده و می‌توان به آن برگشت." }
+  },
+  "env-only": {
+    "en": { "file": "README.md", "quote": "Only settings that need a restart or protect the service stay in .env: ports, allowed addresses, Qdrant, memory limits, the largest upload request, and the embedding model." },
+    "fa": { "file": "README.fa.md", "quote": "فقط تنظیماتی که راه‌اندازی دوباره لازم دارند یا از سرویس محافظت می‌کنند در .env می‌مانند: پورت، نشانی‌های مجاز، Qdrant، سقف حافظه، بزرگ‌ترین درخواست بارگذاری و مدل بردارسازی." }
   }
 }
