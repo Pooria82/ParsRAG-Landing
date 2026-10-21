@@ -186,16 +186,23 @@
         <h2 data-reveal style="--i:1" class="h2" id="how-title">{{how.title}}</h2>
         <p class="lead" data-reveal style="--i:2">{{how.lead}}</p>
       </div>
-      <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}" data-hint="{{how.hint}}" data-close="{{a11y.close}}">
+      <div class="journey__pin" data-journey data-file="{{how.file}}" data-lang-tag="{{how.lang}}" data-collection="{{how.collection}}" data-other="{{how.other}}" data-answer="{{how.answer}}" data-cite="{{how.cite}}" data-checks="{{how.checks}}" data-vec="{{how.vec}}" data-kw="{{how.kw}}" data-question="{{hero.demo.q}}" data-answer-text="{{hero.demo.a1}}" data-src="{{root}}assets/demo/{{lang}}.json" data-step-of="{{how.stepOf}}">
         <ol class="steps">
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.1}}</span><div><h3>{{how.s1t}}</h3><div class="step__body"><p>{{how.s1d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s1x}}{{ref:archives}}{{ref:duplicates}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.2}}</span><div><h3>{{how.s2t}}</h3><div class="step__body"><p>{{how.s2d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s2x}}{{ref:persian-pdf}}{{ref:ocr-rotated}}</p></div></div></li>
-          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.3}}</span><div><h3>{{how.s3t}}</h3><div class="step__body"><p>{{how.s3d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s3x}}{{ref:persian-normalization}}{{ref:word-headings}}</p></div></div></li>
+          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.3}}</span><div><h3>{{how.s3t}}</h3><div class="step__body"><p>{{how.s3d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s3x}}{{ref:persian-normalization}}{{ref:word-headings}}{{ref:image-citations}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.4}}</span><div><h3>{{how.s4t}}</h3><div class="step__body"><p>{{how.s4d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s4x}}{{ref:bm25-fusion}}</p></div></div></li>
           <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.5}}</span><div><h3>{{how.s5t}}</h3><div class="step__body"><p>{{how.s5d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s5x}}{{ref:reuse}}</p></div></div></li>
-          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.6}}</span><div><h3>{{how.s6t}}</h3><div class="step__body"><p>{{how.s6d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s6x}}{{ref:reranker}}{{ref:streaming}}</p></div></div></li>
+          <li class="step" data-step><span class="step__n" aria-hidden="true">{{n.6}}</span><div><h3>{{how.s6t}}</h3><div class="step__body"><p>{{how.s6d}}</p><p class="step__more"><span>{{how.under}}:</span> {{how.s6x}}{{ref:multi-part}}{{ref:reranker}}{{ref:streaming}}</p></div></div></li>
         </ol>
-        <div class="jstage" aria-hidden="true"><div class="jstage__box" data-jstage></div></div>
+        <div class="jstage"><div class="jstage__box" data-jstage aria-hidden="true"></div>
+          <div class="jnav">
+            <button class="icon-btn jnav__btn jnav__prev" type="button" data-jprev aria-label="{{how.prev}}">{{@chev}}</button>
+            <p class="jnav__count" data-jcount aria-live="polite"></p>
+            <button class="icon-btn jnav__btn jnav__next" type="button" data-jnext aria-label="{{how.next}}">{{@chev}}</button>
+          </div>
+          <p class="jnav__cue" data-jcue data-start="{{how.scroll}}" data-end="{{how.more}}" aria-hidden="true"><span>{{how.scroll}}</span><i></i></p>
+        </div>
       </div>
     </section>
 

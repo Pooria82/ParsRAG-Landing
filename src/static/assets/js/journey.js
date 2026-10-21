@@ -22,7 +22,9 @@ function supportsWebGL() {
   return 'WebGLRenderingContext' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-export function initJourney({ gsap, ST, reduce, rtl, lang }) {
+export function initJourney(ctx) {
+  const { gsap, ST, reduce, rtl, lang } = ctx;
+  const ctxLenis = () => ctx.lenis;
   const root = document.querySelector('[data-journey]');
   if (!root) return;
   const box = root.querySelector('[data-jstage]');
@@ -191,45 +193,99 @@ export function initJourney({ gsap, ST, reduce, rtl, lang }) {
   }
   setActive(0, 0);
 
-  // Where WebGL is available, the drawing is replaced by a 3D stack of layers (three.js,
-  // loaded only now). It follows the same scrubbed timeline, so the steps stay in sync.
-  let stack3d = null;
-  // three.js loads only when the section is about to come into view.
-  const load3d = () => {
-    import('./scenes/stack3d.js').then(({ createStack }) => {
-      stack3d = createStack(frame, {
+  // Where WebGL is available, the drawing is replaced by the 3D assembly line (three.js,
+  // loaded only when the section is near). It follows the same scrubbed timeline.
+  let scene3d = null;
+  const D = () => tl.duration();
+  const load3d = async () => {
+    try {
+      const [{ createPipeline }, demo] = await Promise.all([
+        import('./scenes/pipeline3d.js'),
+        fetch(root.dataset.src).then((r) => r.json()),
+      ]);
+      const corpus = demo.corpora[0];
+      const doc = corpus.docs[0];
+      const own = corpus.passages.filter((p) => p.doc === doc.id);
+      scene3d = createPipeline(frame, {
         rtl, lang,
+        steps: steps.map((li) => ({ title: li.querySelector('h3').textContent })),
+        doc: { title: doc.title, name: doc.name, p1: own[0].text, p2: own[1].text },
+        stopwords: demo.stopwords,
         file: root.dataset.file,
-        answer: root.dataset.answer,
+        ocr: root.dataset.langTag,
+        checks: root.dataset.checks.split(','),
+        vecLabel: root.dataset.vec,
+        kwLabel: root.dataset.kw,
+        collection: root.dataset.collection,
+        other: root.dataset.other,
+        question: root.dataset.question,
+        answerTitle: root.dataset.answer,
+        answerText: root.dataset.answerText,
         cite: root.dataset.cite,
-        hint: root.dataset.hint,
-        closeLabel: root.dataset.close,
-        // Each part of the model opens the same details as its step in the list.
-        steps: steps.map((li) => ({ title: li.querySelector('h3').textContent, html: li.querySelector('.step__body').innerHTML })),
-        onSelect: (i) => steps.forEach((li, k) => li.classList.toggle('is-focus', k === i)),
+        onSelect: (i) => go(i),
+        onReady: () => frame.classList.add('is-3d'),
       });
-      stack3d.setTime(tl.time());
-      frame.classList.add('is-3d');
-    }).catch(() => {});
+      scene3d.setTime((tl.time() / D()) * 6);
+    } catch (error) {
+      console.error('[ParsRAG] 3D', error);
+    }
   };
   if (supportsWebGL()) {
     const io = new IntersectionObserver((entries) => {
       if (!entries.some((e) => e.isIntersecting)) return;
       io.disconnect();
       load3d();
-    }, { rootMargin: '600px 0px' });
+    }, { rootMargin: '900px 0px' });
     io.observe(section);
   }
 
   // Step labels follow the drawing itself, so they never run ahead of the scrubbed animation.
   tl.eventCallback('onUpdate', () => {
-    const t = tl.time();
-    setActive(Math.min(5, Math.floor(t + 0.05)), Math.min(1, t / 5.4));
-    stack3d?.setTime(t);
+    // One clock for the list, the controls and the scene: 0 to 6, one unit per step.
+    const T = (tl.time() / D()) * 6;
+    setActive(Math.min(5, Math.floor(T + 0.02)), Math.min(1, T / 5.6));
+    scene3d?.setTime(T);
+    updateNav(T);
   });
+  // Previous and next: each moves the scroll to the middle of a step, so the steps stay tied
+  // to the scroll. The cue says to scroll at the start, and that the page goes on at the end.
+  const count = root.querySelector('[data-jcount]');
+  const prevBtn = root.querySelector('[data-jprev]');
+  const nextBtn = root.querySelector('[data-jnext]');
+  const cue = root.querySelector('[data-jcue]');
+  const cueText = cue.querySelector('span');
+  let current = -1;
+  function updateNav(t) {
+    const i = Math.min(5, Math.floor(t + 0.02));
+    const p = t / 6;
+    if (i !== current) {
+      current = i;
+      count.textContent = localDigits(root.dataset.stepOf.replace('{n}', i + 1).replace('{total}', 6), lang);
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i === 5;
+    }
+    const end = p > 0.97;
+    cue.classList.toggle('is-end', end);
+    cue.classList.toggle('is-on', p < 0.08 || end);
+    cueText.textContent = end ? cue.dataset.end : cue.dataset.start;
+  }
+  let trigger = null;
+  function go(i) {
+    if (!trigger) return;
+    const k = Math.max(0, Math.min(5, i));
+    // Land where that step's scene has settled (the last step: at its end).
+    const t = k === 5 ? 6 : k + 0.62;
+    const y = trigger.start + (trigger.end - trigger.start) * (t / 6);
+    if (ctxLenis()) ctxLenis().scrollTo(y, { duration: 1.1 });
+    else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  prevBtn.addEventListener('click', () => go(current - 1));
+  nextBtn.addEventListener('click', () => go(current + 1));
+  updateNav(0);
+
   // Wide screens pin the whole section (heading, steps and model share one view, so there is
   // no gap above the steps); narrow screens pin the steps and model under the heading.
-  ST.create({
+  trigger = ST.create({
     trigger: pinTarget,
     pin: pinTarget,
     start: 'top top',
