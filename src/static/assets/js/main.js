@@ -47,6 +47,14 @@ function whenNear(selector, fn, ctx, margin = '600px') {
   io.observe(el);
 }
 
+// The first move, scroll or key press wakes the page's ambient motion.
+const wake = ['pointermove', 'scroll', 'touchstart', 'keydown', 'wheel'];
+const onWake = () => {
+  wake.forEach((e) => removeEventListener(e, onWake));
+  html.classList.add('is-awake');
+};
+wake.forEach((e) => addEventListener(e, onWake, { passive: true }));
+
 function boot() {
   const { gsap, ScrollTrigger, Lenis } = window;
   const ctx = {

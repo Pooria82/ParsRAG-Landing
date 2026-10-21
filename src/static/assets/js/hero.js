@@ -152,11 +152,27 @@ export function initHero({ reduce, rtl }) {
     app.classList.add('is-done');
   }
 
-  // Start once the window is on screen (it is below the fold on short phones).
+  // Start once the window is on screen (it is below the fold on short phones) and the visitor
+  // has moved, scrolled or pressed a key: the page settles first, then the exchange plays.
+  let seen = false;
+  let moved = false;
+  const start = () => {
+    if (!seen || !moved || app.dataset.played) return;
+    app.dataset.played = '1';
+    setTimeout(() => play().catch(finish), 350);
+  };
+  const events = ['pointermove', 'scroll', 'touchstart', 'keydown', 'wheel'];
+  const onMove = () => {
+    events.forEach((e) => removeEventListener(e, onMove));
+    moved = true;
+    start();
+  };
+  events.forEach((e) => addEventListener(e, onMove, { passive: true }));
   const io = new IntersectionObserver((entries) => {
     if (!entries.some((e) => e.isIntersecting)) return;
     io.disconnect();
-    setTimeout(() => play().catch(finish), 500);
+    seen = true;
+    start();
   }, { threshold: 0.15 });
   io.observe(app);
 }

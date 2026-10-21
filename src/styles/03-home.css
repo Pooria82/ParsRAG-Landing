@@ -18,7 +18,10 @@
     radial-gradient(closest-side at 42% 48%, rgba(62, 224, 207, 0.2), transparent 72%),
     radial-gradient(closest-side at 64% 58%, rgba(246, 185, 77, 0.12), transparent 70%);
   animation: glow-drift 18s var(--ease-in-out) infinite alternate;
+  /* Ambient motion waits for the visitor's first move, so the first view settles at once. */
+  animation-play-state: paused;
 }
+html.is-awake .hero__glow, html.is-awake .app__local i { animation-play-state: running; }
 @keyframes glow-drift {
   from { transform: translate3d(-3%, 0, 0) scale(1); }
   to { transform: translate3d(3%, 2%, 0) scale(1.06); }
@@ -200,7 +203,7 @@
 }
 .app__mode i { width: 7px; height: 7px; border-radius: 2px; background: var(--saffron); }
 .app__local { margin-inline-start: auto; }
-.app__local i { width: 7px; height: 7px; border-radius: 50%; background: var(--turq); box-shadow: 0 0 8px var(--turq); animation: breathe 2.4s var(--ease-in-out) infinite; }
+.app__local i { width: 7px; height: 7px; border-radius: 50%; background: var(--turq); box-shadow: 0 0 8px var(--turq); animation: breathe 2.4s var(--ease-in-out) infinite paused; }
 @keyframes breathe { 50% { opacity: 0.45; } }
 
 .app__body { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); }
@@ -279,7 +282,8 @@
 .app.is-answered .app__stages { opacity: 0; }
 /* Words are in place from the start and fade in as the answer "streams". */
 .app__text .w { transition: opacity 0.35s var(--ease-out), filter 0.45s var(--ease-out); }
-.app.is-playing:not(.is-answered) .app__text .w:not(.is-on) { opacity: 0; filter: blur(4px); }
+/* Words not yet streamed wait as faint ink (never fully hidden: the answer is painted at once). */
+.app.is-playing:not(.is-answered) .app__text .w:not(.is-on) { opacity: 0.1; filter: blur(4px); }
 @keyframes spin { to { transform: rotate(360deg); } }
 .app__text { margin-top: 12px; font-size: clamp(1.02rem, 1.35vw, 1.15rem); line-height: 1.75; color: var(--text); }
 :lang(fa) .app__text { line-height: 2; }
