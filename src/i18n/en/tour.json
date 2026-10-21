@@ -938,7 +938,7 @@
       {
         "id": "config",
         "title": "Configuration reference",
-        "lede": "Everything is set through environment variables in .env. These are the ones you are most likely to change; defaults are the Docker values.",
+        "lede": "Settings are environment variables in .env, and 27 of them can also be changed in the app's Settings without a restart. These are the ones you are most likely to change; defaults are the Docker values.",
         "blocks": [
           {
             "h": "Model"
