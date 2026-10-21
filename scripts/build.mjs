@@ -454,6 +454,9 @@ await writeFile(
   join(dist, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
 );
+// The same URLs as plain text, a format Search Console also accepts.
+const allUrls = [...PAGES, ...guidePaths.map((path) => ({ path }))].flatMap((p) => ['', 'fa/'].map((prefix) => `${SITE}${prefix}${p.path}`));
+await writeFile(join(dist, 'sitemap.txt'), `${allUrls.join('\n')}\n`);
 await writeFile(join(dist, '.nojekyll'), '');
 await writeFile(join(dist, 'release.json'), `${JSON.stringify(release)}\n`);
 
